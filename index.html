@@ -105,7 +105,6 @@
             min-width: 0;
         }
 
-        /* 視認性向上のための修正：アイブロー（カテゴリ名）の強調 */
         .media-eyebrow {
             font-size: 11px;
             font-weight: 700;
@@ -140,17 +139,17 @@
 
         /* アドバイス・コスト表示ボックス */
         .advice-box {
-            background-color: rgba(41, 151, 255, 0.08);
-            border: 1px solid rgba(41, 151, 255, 0.2);
+            background-color: rgba(255, 159, 10, 0.12);
+            border: 1px solid rgba(255, 159, 10, 0.3);
             border-radius: 12px;
-            padding: 8px 12px;
+            padding: 10px 14px;
             margin-bottom: 10px;
             font-size: 12px;
             font-weight: 500;
-            color: #70b5ff;
+            color: #ffd60a;
             display: none;
             flex-shrink: 0;
-            line-height: 1.3;
+            line-height: 1.4;
         }
         .advice-box.visible {
             display: block;
@@ -809,6 +808,7 @@
 
     <div class="views-container" id="viewsContainer">
         
+        <!-- 1ページ目：培地ビュー -->
         <div class="view-panel" id="panel0">
             <div class="main-display">
                 <div class="display-header">
@@ -830,6 +830,7 @@
             </div>
         </div>
 
+        <!-- 2ページ目：PCRビュー -->
         <div class="view-panel" id="panel1">
             <div class="main-display">
                 <div class="display-header">
@@ -856,6 +857,7 @@
             </div>
         </div>
 
+        <!-- 3ページ目：ガイドビュー -->
         <div class="view-panel" id="panel2">
             <div class="main-display">
                 <div class="display-header">
@@ -866,11 +868,13 @@
                 </div>
                 <div class="list-container-wrapper">
                     <div class="guide-container" id="guideContentContainer">
-                        </div>
+                        <!-- 動的にガイド内容を描画 -->
+                    </div>
                 </div>
             </div>
         </div>
 
+        <!-- 4ページ目：オプションビュー -->
         <div class="view-panel" id="panel3">
             <div class="main-display">
                 <div class="display-header">
@@ -946,6 +950,7 @@
 
     <div class="control-bar" id="controlBar"></div>
 
+    <!-- モーダル各種 -->
     <div class="modal-overlay" id="mediaModal" onclick="outsideClose(event, 'mediaModal')">
         <div class="modal-content">
             <div class="modal-header">培地を選択</div>
@@ -1016,6 +1021,7 @@
         </div>
     </div>
 
+    <!-- ガイド選択用モーダル -->
     <div class="modal-overlay" id="guideModal" onclick="outsideClose(event, 'guideModal')">
         <div class="modal-content">
             <div class="modal-header">ガイドを選択</div>
@@ -1090,11 +1096,34 @@
                 ingredients: [
                     { name: "LB (粉)", amount: 2.0, unit: "g" }, { name: "寒天", amount: 1.5, unit: "g" }, { name: "水", amount: 100.0, unit: "mL" }
                 ]
+            },
+            "im": {
+                name: "IM培地",
+                baseVolume: 100,
+                getAdvice: (vol) => `⚠️ <b>オートクレーブ後にアセトシリンゴンを添加してください</b><br>💡 55mmシャーレ換算: 約 ${(vol / 6).toFixed(1)} 枚分`,
+                calculateCost: (vol) => {
+                    const ratio = vol / 100;
+                    // 400mM MES(10mL): 4000円/100mL = 400円分
+                    // グルコース(0.1g): 0.1 * 4 = 0.4円
+                    // グリセロール(1mL): 1 * 4 = 4円
+                    // 寒天(1.5g): 1.5 * 42 = 63円
+                    const cost = (400 + 0.4 + 4 + (1.5 * 42)) * ratio;
+                    return `💰 概算コスト: 約 ${Math.round(cost)} 円 (${vol} mLあたり)`;
+                },
+                ingredients: [
+                    { name: "MM salt solution 1", amount: 10.0, unit: "mL" },
+                    { name: "MM salt solution 2", amount: 10.0, unit: "mL" },
+                    { name: "400mM MES", amount: 10.0, unit: "mL" },
+                    { name: "グルコース", amount: 0.1, unit: "g" },
+                    { name: "グリセロール", amount: 1.0, unit: "mL" },
+                    { name: "蒸留水", amount: 70.0, unit: "mL" },
+                    { name: "寒天", amount: 1.5, unit: "g" }
+                ]
             }
         };
 
         let mediaOrderConfig = JSON.parse(localStorage.getItem('lab_mediaOrderConfig')) || [
-            { key: "cm", visible: true }, { key: "v30", visible: true }, { key: "pda", visible: true }, { key: "lb", visible: true }
+            { key: "cm", visible: true }, { key: "v30", visible: true }, { key: "pda", visible: true }, { key: "lb", visible: true }, { key: "im", visible: true }
         ];
 
         const pcrDatabase = {
@@ -1734,7 +1763,7 @@
                 document.getElementById("displayVolume").textContent = `${currentVolume} mL`;
 
                 if (adviceFeatureEnabled) {
-                    mediaAdviceBox.textContent = media.getAdvice(currentVolume);
+                    mediaAdviceBox.innerHTML = media.getAdvice(currentVolume);
                     mediaAdviceBox.classList.add("visible");
                 } else {
                     mediaAdviceBox.classList.remove("visible");
@@ -1785,7 +1814,7 @@
                 document.getElementById("displayPcrVolume").textContent = `${currentPcrVolume} µL`;
 
                 if (adviceFeatureEnabled) {
-                    pcrAdviceBox.textContent = pcr.getAdvice(currentPcrVolume);
+                    pcrAdviceBox.innerHTML = pcr.getAdvice(currentPcrVolume);
                     pcrAdviceBox.classList.add("visible");
                 } else {
                     pcrAdviceBox.classList.remove("visible");
