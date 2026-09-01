@@ -100,17 +100,19 @@
         .media-title-wrapper {
             display: flex;
             flex-direction: column;
-            gap: 2px;
+            gap: 3px;
             flex: 1;
             min-width: 0;
         }
 
+        /* 視認性向上のための修正：アイブロー（カテゴリ名）の強調 */
         .media-eyebrow {
-            font-size: 10px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            color: var(--text-secondary);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            color: var(--accent-color);
             text-transform: uppercase;
+            opacity: 0.9;
         }
 
         .media-title {
@@ -807,7 +809,6 @@
 
     <div class="views-container" id="viewsContainer">
         
-        <!-- 1ページ目：培地ビュー -->
         <div class="view-panel" id="panel0">
             <div class="main-display">
                 <div class="display-header">
@@ -829,7 +830,6 @@
             </div>
         </div>
 
-        <!-- 2ページ目：PCRビュー -->
         <div class="view-panel" id="panel1">
             <div class="main-display">
                 <div class="display-header">
@@ -856,7 +856,6 @@
             </div>
         </div>
 
-        <!-- 3ページ目：ガイドビュー -->
         <div class="view-panel" id="panel2">
             <div class="main-display">
                 <div class="display-header">
@@ -867,13 +866,11 @@
                 </div>
                 <div class="list-container-wrapper">
                     <div class="guide-container" id="guideContentContainer">
-                        <!-- 動的にガイド内容を描画 -->
-                    </div>
+                        </div>
                 </div>
             </div>
         </div>
 
-        <!-- 4ページ目：オプションビュー -->
         <div class="view-panel" id="panel3">
             <div class="main-display">
                 <div class="display-header">
@@ -949,7 +946,6 @@
 
     <div class="control-bar" id="controlBar"></div>
 
-    <!-- モーダル各種 -->
     <div class="modal-overlay" id="mediaModal" onclick="outsideClose(event, 'mediaModal')">
         <div class="modal-content">
             <div class="modal-header">培地を選択</div>
@@ -1020,7 +1016,6 @@
         </div>
     </div>
 
-    <!-- ガイド選択用モーダル -->
     <div class="modal-overlay" id="guideModal" onclick="outsideClose(event, 'guideModal')">
         <div class="modal-content">
             <div class="modal-header">ガイドを選択</div>
@@ -1682,7 +1677,6 @@
                     </button>
                 `;
             } else if (currentViewIndex === 2) {
-                // ガイドページ：ボタンを画面幅いっぱい（grid-column: span 2）に拡張
                 const guide = guideDatabase[currentGuideKey];
                 bar.innerHTML = `
                     <button class="trigger-btn" onclick="openModal('guideModal')" style="grid-column: span 2; width: 100%;">
