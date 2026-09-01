@@ -1,0 +1,1665 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Lab Recipe</title>
+    <style>
+        :root {
+            --bg-color: #08080a;
+            --card-bg: #121215;
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-primary: #ffffff;
+            --text-secondary: #98989f;
+            --accent-color: #2997ff;
+            --accent-soft: rgba(41, 151, 255, 0.15);
+            --reset-btn-bg: #ff453a;
+            --border-radius: 24px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            height: 100vh;
+            height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            padding: 10px 16px env(safe-area-inset-bottom, 16px) 16px;
+            max-width: 460px;
+            margin: 0 auto;
+            justify-content: space-between;
+            overflow: hidden;
+        }
+
+        /* 3画面分の横長コンテナ */
+        .views-container {
+            display: flex;
+            width: 100%;
+            flex: 1;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 8px;
+            scrollbar-width: none;
+            min-height: 0;
+        }
+
+        .views-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .view-panel {
+            min-width: 100%;
+            width: 100%;
+            flex-shrink: 0;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        /* メインディスプレイカード */
+        .main-display {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--border-radius);
+            padding: 18px 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .display-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 10px;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .media-title-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .media-eyebrow {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        .media-title {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .volume-badge {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--accent-color);
+            background: var(--accent-soft);
+            padding: 5px 12px;
+            border-radius: 18px;
+            letter-spacing: -0.3px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        /* アドバイス・コスト表示ボックス */
+        .advice-box {
+            background-color: rgba(41, 151, 255, 0.08);
+            border: 1px solid rgba(41, 151, 255, 0.2);
+            border-radius: 12px;
+            padding: 8px 12px;
+            margin-bottom: 10px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #70b5ff;
+            display: none;
+            flex-shrink: 0;
+            line-height: 1.3;
+        }
+        .advice-box.visible {
+            display: block;
+        }
+
+        .cost-box {
+            background-color: rgba(52, 199, 89, 0.08);
+            border: 1px solid rgba(52, 199, 89, 0.2);
+            border-radius: 12px;
+            padding: 8px 12px;
+            margin-bottom: 10px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #30d158;
+            display: none;
+            flex-shrink: 0;
+            line-height: 1.3;
+        }
+        .cost-box.visible {
+            display: block;
+        }
+
+        /* PCR用の切り替えボタン */
+        .mode-switch-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 10px;
+            flex-shrink: 0;
+        }
+
+        .mode-btn {
+            background-color: #1c1c20;
+            border: 1px solid var(--card-border);
+            color: var(--text-secondary);
+            border-radius: 12px;
+            padding: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .mode-btn.active {
+            background-color: var(--accent-soft);
+            color: var(--accent-color);
+            border-color: rgba(41, 151, 255, 0.4);
+        }
+
+        /* スクロールエリア */
+        .list-container-wrapper {
+            flex: 1;
+            overflow-y: auto;
+            min-height: 0;
+            padding-top: 6px;
+            padding-right: 2px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .list-container-wrapper::-webkit-scrollbar {
+            width: 4px;
+        }
+        .list-container-wrapper::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        .ingredient-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding-bottom: 16px;
+        }
+
+        .ingredient-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            transition: opacity 0.2s;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .ingredient-item.checked .ing-name,
+        .ingredient-item.checked .ing-amount,
+        .ingredient-item.checked .ing-unit {
+            color: #48484a !important;
+            text-decoration: line-through;
+        }
+        .ingredient-item.checked {
+            opacity: 0.5;
+        }
+
+        .ing-name {
+            color: #e5e5ea;
+            font-size: 16px;
+            font-weight: 500;
+            letter-spacing: -0.3px;
+            transition: color 0.2s;
+        }
+
+        .ing-amount-wrapper {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+        }
+
+        .ing-amount {
+            font-size: 18px;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+            transition: color 0.2s;
+        }
+
+        .ing-unit {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        /* サイクル条件ビューのデザイン */
+        .cycle-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding-top: 14px;
+            padding-bottom: 16px;
+        }
+
+        .cycle-loop-group {
+            position: relative;
+            background: rgba(41, 151, 255, 0.04);
+            border: 1px solid rgba(41, 151, 255, 0.2);
+            border-radius: 16px;
+            padding: 16px 12px 12px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .cycle-loop-badge {
+            position: absolute;
+            top: -10px;
+            right: 14px;
+            background: var(--accent-color);
+            color: #ffffff;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 10px;
+            border-radius: 10px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(41, 151, 255, 0.4);
+            z-index: 2;
+        }
+
+        .cycle-step {
+            background-color: #1a1a1f;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 10px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cycle-step-left {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .cycle-step-name {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .cycle-main-val {
+            font-size: 18px;
+            font-weight: 700;
+            color: #ffffff;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+
+        .cycle-time {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent-color);
+            text-align: right;
+        }
+
+        .cycle-single-step {
+            background-color: #1a1a1f;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 10px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cycle-divider {
+            text-align: center;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin: 2px 0;
+            letter-spacing: 1px;
+        }
+
+        /* 選び方ガイド専用の美しいレイアウトカード */
+        .guide-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding-bottom: 16px;
+        }
+
+        .guide-card {
+            background-color: #18181d;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 14px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .guide-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--accent-color);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .guide-desc {
+            font-size: 13px;
+            color: #d1d1d6;
+            line-height: 1.4;
+        }
+
+        /* 一括リセットバナー */
+        .reset-banner {
+            position: absolute;
+            bottom: 12px;
+            left: 16px;
+            right: 16px;
+            background: rgba(28, 28, 32, 0.95);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 69, 58, 0.3);
+            border-radius: 16px;
+            padding: 10px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+            opacity: 0;
+            transform: translateY(15px);
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 10;
+        }
+
+        .reset-banner.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .reset-text {
+            font-size: 13px;
+            font-weight: 600;
+            color: #ffb3b0;
+        }
+
+        .reset-btn {
+            background-color: var(--reset-btn-bg);
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.15s;
+        }
+
+        .reset-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* オプション画面のスタイル */
+        .option-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #1c1c20;
+            padding: 14px 16px;
+            border-radius: 16px;
+            border: 1px solid var(--card-border);
+        }
+
+        .option-label-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .option-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .option-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .option-action-btn {
+            background-color: var(--accent-soft);
+            color: var(--accent-color);
+            border: 1px solid rgba(41, 151, 255, 0.3);
+            border-radius: 12px;
+            padding: 8px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .option-danger-btn {
+            background-color: rgba(255, 69, 58, 0.12);
+            color: var(--reset-btn-bg);
+            border: 1px solid rgba(255, 69, 58, 0.3);
+            border-radius: 12px;
+            padding: 8px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* iOS風トグルスイッチ */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 46px;
+            height: 26px;
+            flex-shrink: 0;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #39393d;
+            transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            border-radius: 26px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            border-radius: 50%;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+
+        /* ページインジケータードット */
+        .pagination-dots {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 6px;
+            flex-shrink: 0;
+        }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.2);
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .dot.active {
+            background-color: var(--accent-color);
+            transform: scale(1.25);
+        }
+
+        /* 下部コントロールバー */
+        .control-bar {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .trigger-btn {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-primary);
+            border-radius: 16px;
+            padding: 12px 16px;
+            font-size: 15px;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .trigger-btn:active {
+            transform: scale(0.97);
+            background-color: #1c1c20;
+        }
+
+        .trigger-btn .arrow-icon {
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* モーダル */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 1000;
+            padding: 16px;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            width: 100%;
+            max-width: 420px;
+            background-color: #16161a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 28px;
+            padding: 22px 20px 24px;
+            transform: scale(0.95);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+            text-align: center;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .option-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option-item {
+            background-color: #222228;
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 14px;
+            padding: 14px 18px;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .option-item:active {
+            transform: scale(0.98);
+        }
+
+        .option-item.selected {
+            background-color: var(--accent-color);
+            color: #ffffff;
+            border-color: transparent;
+            box-shadow: 0 6px 16px rgba(41, 151, 255, 0.3);
+        }
+
+        .volume-grid-modal {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .custom-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #222228;
+            border-radius: 14px;
+            padding: 12px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .custom-row-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .order-btn-group {
+            display: flex;
+            gap: 4px;
+        }
+        .order-btn {
+            background: #2c2c34;
+            color: var(--text-primary);
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .order-btn:active {
+            background: var(--accent-color);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="views-container" id="viewsContainer">
+        
+        <!-- 1ページ目：培地ビュー -->
+        <div class="view-panel" id="panel0">
+            <div class="main-display">
+                <div class="display-header">
+                    <div class="media-title-wrapper">
+                        <span class="media-eyebrow">Medium Recipe</span>
+                        <h1 class="media-title" id="displayMediaName">培地名</h1>
+                    </div>
+                    <span class="volume-badge" id="displayVolume">100 mL</span>
+                </div>
+                <div class="advice-box" id="mediaAdviceBox"></div>
+                <div class="cost-box" id="mediaCostBox"></div>
+                <div class="list-container-wrapper">
+                    <ul class="ingredient-list" id="ingredientList"></ul>
+                </div>
+                <div class="reset-banner" id="mediaResetBanner">
+                    <span class="reset-text">チェックが入っています</span>
+                    <button class="reset-btn" onclick="resetChecks('media')">すべて外す</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2ページ目：PCRビュー -->
+        <div class="view-panel" id="panel1">
+            <div class="main-display">
+                <div class="display-header">
+                    <div class="media-title-wrapper">
+                        <span class="media-eyebrow" id="displayPcrSub">PCR Master Mix</span>
+                        <h1 class="media-title" id="displayPcrName">PCR酵素</h1>
+                    </div>
+                    <span class="volume-badge" id="displayPcrVolume">50 µL</span>
+                </div>
+                <div class="mode-switch-container">
+                    <button class="mode-btn active" id="btnModeRecipe" onclick="setPcrMode('recipe')">反応液組成</button>
+                    <button class="mode-btn" id="btnModeCycle" onclick="setPcrMode('cycle')">サイクル条件</button>
+                </div>
+                <div class="advice-box" id="pcrAdviceBox"></div>
+                <div class="cost-box" id="pcrCostBox"></div>
+                <div class="list-container-wrapper">
+                    <ul class="ingredient-list" id="pcrIngredientList"></ul>
+                    <div class="cycle-container" id="pcrCycleContainer" style="display: none;"></div>
+                    <!-- 酵素の使い分けガイド -->
+                    <div class="guide-container" id="pcrGuideContainer" style="display: none;">
+                        <div class="guide-card">
+                            <span class="guide-title">🧬 プラスミドクローニング（正確性重視）</span>
+                            <span class="guide-desc">高正確性が必要なため <b>PrimeSTAR MAX</b> がベストチョイス。MAXで増えない場合の2ndチョイスとして <b>PrimeSTAR GXL</b> がおすすめ。</span>
+                        </div>
+                        <div class="guide-card">
+                            <span class="guide-title">🎯 遺伝子破壊チェックなど（確実性・コスパ重視）</span>
+                            <span class="guide-desc">とにかくPCRを成功させたい場合は、高成功率を誇る <b>ExPremier</b> が最適。また、コスパを優先したいルーチンPCRには <b>EmeraldAmp</b> もおすすめ。</span>
+                        </div>
+                        <div class="guide-card">
+                            <span class="guide-title">🧪 大腸菌のコロニーPCR</span>
+                            <span class="guide-desc">大腸菌のコロニーPCRには、ゲルにそのままローディングできてコスパも最強な <b>EmeraldAmp</b> が最適。</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="reset-banner" id="pcrResetBanner">
+                    <span class="reset-text">チェックが入っています</span>
+                    <button class="reset-btn" onclick="resetChecks('pcr')">すべて外す</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3ページ目：オプションビュー -->
+        <div class="view-panel" id="panel2">
+            <div class="main-display">
+                <div class="display-header">
+                    <div class="media-title-wrapper">
+                        <span class="media-eyebrow">Preferences</span>
+                        <h1 class="media-title">オプション設定</h1>
+                    </div>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <div class="option-group">
+                        <div class="option-label-wrapper">
+                            <span class="option-title">チェック機能</span>
+                            <span class="option-desc">項目タップで消込線を表示</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="checkFeatureToggle" onchange="toggleCheckFeature()">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="option-group">
+                        <div class="option-label-wrapper">
+                            <span class="option-title">アドバイスコメント</span>
+                            <span class="option-desc">シャーレ換算や実験メモを表示</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="adviceFeatureToggle" onchange="toggleAdviceFeature()">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <!-- コスト表示設定追加（初期値オフ） -->
+                    <div class="option-group">
+                        <div class="option-label-wrapper">
+                            <span class="option-title">コスト（費用）表示</span>
+                            <span class="option-desc">試薬や酵素の概算費用を表示</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="costFeatureToggle" onchange="toggleCostFeature()">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <!-- 培地カスタム設定ボタン -->
+                    <div class="option-group">
+                        <div class="option-label-wrapper">
+                            <span class="option-title">培地の表示・並び替え</span>
+                            <span class="option-desc">学生ごとの使用培地をカスタム</span>
+                        </div>
+                        <button class="option-action-btn" onclick="openModal('mediaConfigModal')">設定する</button>
+                    </div>
+                    <!-- PCR酵素カスタム設定ボタン -->
+                    <div class="option-group">
+                        <div class="option-label-wrapper">
+                            <span class="option-title">PCR酵素の表示・並び替え</span>
+                            <span class="option-desc">使用する酵素やガイドをカスタム</span>
+                        </div>
+                        <button class="option-action-btn" onclick="openModal('pcrConfigModal')">設定する</button>
+                    </div>
+                    <!-- 初期状態に戻すボタン -->
+                    <div class="option-group">
+                        <div class="option-label-wrapper">
+                            <span class="option-title">設定の初期化</span>
+                            <span class="option-desc">保存データをすべて消去してリセット</span>
+                        </div>
+                        <button class="option-danger-btn" onclick="resetAllSettings()">初期に戻す</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="pagination-dots">
+        <div class="dot active" id="dot0"></div>
+        <div class="dot" id="dot1"></div>
+        <div class="dot" id="dot2"></div>
+    </div>
+
+    <div class="control-bar" id="controlBar"></div>
+
+    <!-- モーダル各種 -->
+    <div class="modal-overlay" id="mediaModal" onclick="outsideClose(event, 'mediaModal')">
+        <div class="modal-content">
+            <div class="modal-header">培地を選択</div>
+            <div class="option-list" id="mediaOptionsList"></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="volumeModal" onclick="outsideClose(event, 'volumeModal')">
+        <div class="modal-content">
+            <div class="modal-header">作製容量を選択</div>
+            <div class="option-list volume-grid-modal" id="volumeOptionsList"></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="pcrModal" onclick="outsideClose(event, 'pcrModal')">
+        <div class="modal-content">
+            <div class="modal-header">PCR酵素を選択</div>
+            <div class="option-list" id="pcrOptionsList"></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="pcrVolumeModal" onclick="outsideClose(event, 'pcrVolumeModal')">
+        <div class="modal-content">
+            <div class="modal-header">反応液量を選択</div>
+            <div class="option-list volume-grid-modal" id="pcrVolumeOptionsList"></div>
+        </div>
+    </div>
+
+    <!-- 培地カスタム設定用モーダル -->
+    <div class="modal-overlay" id="mediaConfigModal" onclick="outsideClose(event, 'mediaConfigModal')">
+        <div class="modal-content">
+            <div class="modal-header">培地の表示と並び替え</div>
+            <div class="option-list" id="mediaConfigList"></div>
+        </div>
+    </div>
+
+    <!-- PCR酵素カスタム設定用モーダル -->
+    <div class="modal-overlay" id="pcrConfigModal" onclick="outsideClose(event, 'pcrConfigModal')">
+        <div class="modal-content">
+            <div class="modal-header">PCR酵素の表示と並び替え</div>
+            <div class="option-list" id="pcrConfigList"></div>
+        </div>
+    </div>
+
+    <script>
+        const mediaDatabase = {
+            "cm": { 
+                name: "CM培地", 
+                baseVolume: 100, 
+                getAdvice: (vol) => `💡 55mmシャーレ換算: 約 ${(vol / 6).toFixed(1)} 枚分`, 
+                calculateCost: (vol) => {
+                    const ratio = vol / 100;
+                    const cost = (1.0 * 4.4 + 0.1 * 16 + 0.1 * 26 + 1.5 * 42) * ratio;
+                    return `💰 概算コスト: 約 ${Math.round(cost)} 円 (${vol} mLあたり)`;
+                },
+                ingredients: [
+                    { name: "グルコース", amount: 1.0, unit: "g" }, { name: "Yeast extract", amount: 0.1, unit: "g" }, { name: "Tryptone", amount: 0.1, unit: "g" }, { name: "Solution A", amount: 1.0, unit: "mL" }, { name: "Solution B", amount: 1.0, unit: "mL" }, { name: "寒天", amount: 1.5, unit: "g" }, { name: "蒸留水", amount: 98.0, unit: "mL" }
+                ]
+            },
+            "v30": { 
+                name: "V30培地", 
+                baseVolume: 100, 
+                getAdvice: (vol) => `💡 55mmシャーレ換算: 約 ${(vol / 6).toFixed(1)} 枚分`, 
+                calculateCost: (vol) => {
+                    const ratio = vol / 100;
+                    const cost = (16.0 * 0.3 + 0.2 * 5.9 + 1.5 * 42) * ratio;
+                    return `💰 概算コスト: 約 ${Math.round(cost)} 円 (${vol} mLあたり)`;
+                },
+                ingredients: [
+                    { name: "V30ジュース", amount: 16.0, unit: "mL" }, { name: "CaCO3", amount: 0.2, unit: "g" }, { name: "寒天", amount: 1.5, unit: "g" }, { name: "水", amount: 84.0, unit: "mL" }
+                ]
+            },
+            "pda": { 
+                name: "PDA培地", 
+                baseVolume: 100, 
+                getAdvice: (vol) => `💡 55mmシャーレ換算: 約 ${(vol / 6).toFixed(1)} 枚分`, 
+                calculateCost: (vol) => {
+                    const ratio = vol / 100;
+                    const cost = (3.9 * 27.17) * ratio;
+                    return `💰 概算コスト: 約 ${Math.round(cost)} 円 (${vol} mLあたり)`;
+                },
+                ingredients: [
+                    { name: "PDA (粉)", amount: 3.9, unit: "g" }, { name: "水", amount: 100.0, unit: "mL" }
+                ]
+            },
+            "lb": { 
+                name: "LB培地", 
+                baseVolume: 100, 
+                getAdvice: (vol) => `💡 55mmシャーレ換算: 約 ${(vol / 6).toFixed(1)} 枚分`, 
+                calculateCost: (vol) => {
+                    const ratio = vol / 100;
+                    const cost = (2.0 * 66 + 1.5 * 42) * ratio;
+                    return `💰 概算コスト: 約 ${Math.round(cost)} 円 (${vol} mLあたり)`;
+                },
+                ingredients: [
+                    { name: "LB (粉)", amount: 2.0, unit: "g" }, { name: "寒天", amount: 1.5, unit: "g" }, { name: "水", amount: 100.0, unit: "mL" }
+                ]
+            }
+        };
+
+        let mediaOrderConfig = JSON.parse(localStorage.getItem('lab_mediaOrderConfig')) || [
+            { key: "cm", visible: true }, { key: "v30", visible: true }, { key: "pda", visible: true }, { key: "lb", visible: true }
+        ];
+
+        const pcrDatabase = {
+            "ex_premier": {
+                shortName: "ExPremier",
+                fullName: "ExPremier (Premix)",
+                baseVolume: 50,
+                getAdvice: (vol) => `💡 高成功率を誇るファーストチョイス酵素`,
+                calculateCost: (vol) => {
+                    const cost = (21.4 / 10) * vol;
+                    return `💰 概算コスト: 約 ${Math.round(cost)} 円 (${vol} µLあたり)`;
+                },
+                cycles: [
+                    { type: 'single', name: "初期変性", temp: "94 °C", time: "1 min" },
+                    { type: 'loop_start', name: "30 Cycles" },
+                    { type: 'loop_step', name: "変性", temp: "98 °C", time: "10 sec" },
+                    { type: 'loop_step', name: "アニーリング", temp: "55–60 °C", time: "15 sec" },
+                    { type: 'loop_step', name: "伸長", temp: "68 °C", time: "30 sec / kb" },
+                    { type: 'loop_end' }
+                ],
+                ingredients: [
+                    { name: "Ex Premier DNA Polymerase (2x)", amount: 25.0, unit: "µL" },
+                    { name: "Forward Primer (10 µM)", amount: 1.0, unit: "µL" },
+                    { name: "Reverse Primer (10 µM)", amount: 1.0, unit: "µL" },
+                    { name: "滅菌水 (dH2O)", amount: 23.0, unit: "µL" }
+                ]
+            },
+            "prime_star_max": {
+                shortName: "PrimeSTAR MAX",
+                fullName: "PrimeSTAR MAX (Premix)",
+                baseVolume: 50,
+                getAdvice: (vol) => `💡 最高レベルの正確性、In-Fusion Cloningにベストマッチ`,
+                calculateCost: (vol) => {
+                    const cost = (56.0 / 10) * vol;
+                    return `💰 概算コスト: 約 ${Math.round(cost)} 円 (${vol} µLあたり)`;
+                },
+                cycles: [
+                    { type: 'loop_start', name: "30–35 Cycles (通常条件: >200ng)" },
+                    { type: 'loop_step', name: "変性", temp: "98 °C", time: "10 sec" },
+                    { type: 'loop_step', name: "アニーリング", temp: "55 °C", time: "5 or 15 sec" },
+                    { type: 'loop_step', name: "伸長", temp: "72 °C", time: "30–60 sec/kb" },
+                    { type: 'loop_end' },
+                    { type: 'divider', text: "もしくは" },
+                    { type: 'loop_start', name: "30–35 Cycles (≦200ng ※あまり増えない)" },
+                    { type: 'loop_step', name: "変性", temp: "98 °C", time: "10 sec" },
+                    { type: 'loop_step', name: "アニーリング", temp: "55 °C", time: "5 or 15 sec" },
+                    { type: 'loop_step', name: "伸長", temp: "72 °C", time: "5 sec/kb" },
+                    { type: 'loop_end' }
+                ],
+                ingredients: [
+                    { name: "PrimeSTAR Max Premix (2x)", amount: 25.0, unit: "µL" },
+                    { name: "Forward Primer (10 µM)", amount: 1.0, unit: "µL" },
+                    { name: "Reverse Primer (10 µM)", amount: 1.0, unit: "µL" },
+                    { name: "滅菌水 (dH2O)", amount: 23.0, unit: "µL" }
+                ]
+            },
+            "prime_star_gxl": {
+                shortName: "PrimeSTAR GXL",
+                fullName: "PrimeSTAR GXL (Premix)",
+                baseVolume: 50,
+                getAdvice: (vol) => `💡 高正確性だがMAXに劣る。GCリッチに強い。`,
+                calculateCost: (vol) => {
+                    const cost = (26.6 / 10) * vol;
+                    return `💰 概算コスト: 約 ${Math.round(cost)} 円 (${vol} µLあたり)`;
+                },
+                cycles: [
+                    { type: 'loop_start', name: "30 Cycles" },
+                    { type: 'loop_step', name: "変性", temp: "98 °C", time: "10 sec" },
+                    { type: 'loop_step', name: "アニーリング", temp: "55 or 60 °C", time: "15 sec" },
+                    { type: 'loop_step', name: "伸長", temp: "68 °C", time: "1 min / kb" },
+                    { type: 'loop_end' }
+                ],
+                ingredients: [
+                    { name: "PrimeSTAR GXL Premix (2x)", amount: 25.0, unit: "µL" },
+                    { name: "Forward Primer (10 µM)", amount: 1.0, unit: "µL" },
+                    { name: "Reverse Primer (10 µM)", amount: 1.0, unit: "µL" },
+                    { name: "滅菌水 (dH2O)", amount: 23.0, unit: "µL" }
+                ]
+            },
+            "emerald_amp": {
+                shortName: "EmeraldAmp",
+                fullName: "EmeraldAmp (Premix)",
+                baseVolume: 50,
+                getAdvice: (vol) => `💡 コスパ最強。コロニーPCR、ルーチンPCRに。`,
+                calculateCost: (vol) => {
+                    const cost = (16.7 / 10) * vol;
+                    return `💰 概算コスト: 約 ${Math.round(cost)} 円 (${vol} µLあたり)`;
+                },
+                cycles: [
+                    { type: 'loop_start', name: "30 Cycles" },
+                    { type: 'loop_step', name: "変性", temp: "98 °C", time: "10 sec" },
+                    { type: 'loop_step', name: "アニーリング", temp: "55 or 60 °C", time: "30 sec" },
+                    { type: 'loop_step', name: "伸長", temp: "72 °C", time: "1 min / kb" },
+                    { type: 'loop_end' }
+                ],
+                ingredients: [
+                    { name: "EmeraldAmp PCR Master Mix (2x)", amount: 25.0, unit: "µL" },
+                    { name: "Forward Primer (10 µM)", amount: 1.0, unit: "µL" },
+                    { name: "Reverse Primer (10 µM)", amount: 1.0, unit: "µL" },
+                    { name: "滅菌水 (dH2O)", amount: 23.0, unit: "µL" }
+                ]
+            },
+            "guide": {
+                shortName: "PCR酵素の使い分け",
+                fullName: "PCR酵素の使い分けガイド",
+                isGuide: true
+            }
+        };
+
+        let pcrOrderConfig = JSON.parse(localStorage.getItem('lab_pcrOrderConfig')) || [
+            { key: "ex_premier", visible: true }, { key: "prime_star_max", visible: true }, { key: "prime_star_gxl", visible: true }, { key: "emerald_amp", visible: true }, { key: "guide", visible: true }
+        ];
+
+        let currentViewIndex = parseInt(localStorage.getItem('lab_viewIndex')) || 0;
+        let currentMediaKey = localStorage.getItem('lab_mediaKey') || "cm";
+        let currentVolume = parseInt(localStorage.getItem('lab_mediaVolume')) || 100;
+        const mediaVolumes = [50, 100, 150, 200, 250, 300, 350, 400, 450, 500];
+
+        let storedPcrKey = localStorage.getItem('lab_pcrKey');
+        let visiblePcrKeys = pcrOrderConfig.filter(p => p.visible).map(p => p.key);
+        let currentPcrKey = (storedPcrKey && visiblePcrKeys.includes(storedPcrKey)) ? storedPcrKey : (visiblePcrKeys[0] || "ex_premier");
+        
+        let currentPcrVolume = parseInt(localStorage.getItem('lab_pcrVolume')) || 50;
+        let currentPcrMode = "recipe";
+        const pcrVolumes = [];
+        for(let v = 50; v <= 250; v += 10) { pcrVolumes.push(v); }
+
+        let checkFeatureEnabled = localStorage.getItem('lab_checkFeature') !== null ? localStorage.getItem('lab_checkFeature') === 'true' : true;
+        let adviceFeatureEnabled = localStorage.getItem('lab_adviceFeature') !== null ? localStorage.getItem('lab_adviceFeature') === 'true' : true;
+        
+        // コスト表示の初期値をオフ（false）に設定
+        let costFeatureEnabled = localStorage.getItem('lab_costFeature') !== null ? localStorage.getItem('lab_costFeature') === 'true' : false;
+
+        function initApp() {
+            document.getElementById("checkFeatureToggle").checked = checkFeatureEnabled;
+            document.getElementById("adviceFeatureToggle").checked = adviceFeatureEnabled;
+            document.getElementById("costFeatureToggle").checked = costFeatureEnabled;
+
+            buildMediaModals();
+            buildPcrModals();
+
+            const volListEl = document.getElementById("volumeOptionsList");
+            mediaVolumes.forEach(vol => {
+                const btn = document.createElement("button");
+                btn.className = `option-item ${vol === currentVolume ? 'selected' : ''}`;
+                btn.textContent = `${vol} mL`;
+                btn.onclick = () => {
+                    currentVolume = vol;
+                    localStorage.setItem('lab_mediaVolume', vol);
+                    closeModal('volumeModal');
+                    updateView();
+                };
+                volListEl.appendChild(btn);
+            });
+
+            const pcrVolListEl = document.getElementById("pcrVolumeOptionsList");
+            pcrVolumes.forEach(vol => {
+                const btn = document.createElement("button");
+                btn.className = `option-item ${vol === currentPcrVolume ? 'selected' : ''}`;
+                btn.textContent = `${vol} µL`;
+                btn.onclick = () => {
+                    currentPcrVolume = vol;
+                    localStorage.setItem('lab_pcrVolume', vol);
+                    closeModal('pcrVolumeModal');
+                    updateView();
+                };
+                pcrVolListEl.appendChild(btn);
+            });
+
+            const container = document.getElementById("viewsContainer");
+            setTimeout(() => {
+                container.scrollLeft = currentViewIndex * container.clientWidth;
+            }, 50);
+
+            setupScrollListener();
+            updateView();
+        }
+
+        function resetAllSettings() {
+            if (confirm("すべてのカスタム設定（表示・並び替え・チェック状態など）を初期状態に戻しますか？")) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
+
+        function buildMediaModals() {
+            const mediaListEl = document.getElementById("mediaOptionsList");
+            mediaListEl.innerHTML = "";
+            let visibleList = mediaOrderConfig.filter(m => m.visible);
+            
+            if (!visibleList.map(m => m.key).includes(currentMediaKey) && visibleList.length > 0) {
+                currentMediaKey = visibleList[0].key;
+            }
+
+            visibleList.forEach(mObj => {
+                const key = mObj.key;
+                const media = mediaDatabase[key];
+                if (!media) return;
+                const btn = document.createElement("button");
+                btn.className = `option-item ${key === currentMediaKey ? 'selected' : ''}`;
+                btn.textContent = media.name;
+                btn.onclick = () => {
+                    currentMediaKey = key;
+                    localStorage.setItem('lab_mediaKey', key);
+                    closeModal('mediaModal');
+                    updateView();
+                };
+                mediaListEl.appendChild(btn);
+            });
+
+            const configListEl = document.getElementById("mediaConfigList");
+            configListEl.innerHTML = "";
+            mediaOrderConfig.forEach((mObj, index) => {
+                const media = mediaDatabase[mObj.key];
+                if (!media) return;
+
+                const row = document.createElement("div");
+                row.className = "custom-row";
+                row.innerHTML = `
+                    <div class="custom-row-left">
+                        <span style="font-weight: 600; font-size: 15px; color: var(--text-primary);">${media.name}</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div class="order-btn-group">
+                            <button class="order-btn" onclick="moveMedia(${index}, -1)" ${index === 0 ? 'style="opacity:0.3;pointer-events:none;"' : ''}>▲</button>
+                            <button class="order-btn" onclick="moveMedia(${index}, 1)" ${index === mediaOrderConfig.length - 1 ? 'style="opacity:0.3;pointer-events:none;"' : ''}>▼</button>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" ${mObj.visible ? 'checked' : ''} onchange="toggleMediaVisible('${mObj.key}')">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                `;
+                configListEl.appendChild(row);
+            });
+        }
+
+        function buildPcrModals() {
+            const pcrListEl = document.getElementById("pcrOptionsList");
+            pcrListEl.innerHTML = "";
+            let visibleList = pcrOrderConfig.filter(p => p.visible);
+
+            if (!visibleList.map(p => p.key).includes(currentPcrKey) && visibleList.length > 0) {
+                currentPcrKey = visibleList[0].key;
+            }
+
+            visibleList.forEach(pObj => {
+                const key = pObj.key;
+                const pcr = pcrDatabase[key];
+                if (!pcr) return;
+                const btn = document.createElement("button");
+                btn.className = `option-item ${key === currentPcrKey ? 'selected' : ''}`;
+                btn.textContent = pcr.shortName;
+                btn.onclick = () => {
+                    currentPcrKey = key;
+                    localStorage.setItem('lab_pcrKey', key);
+                    closeModal('pcrModal');
+                    updateView();
+                };
+                pcrListEl.appendChild(btn);
+            });
+
+            const configListEl = document.getElementById("pcrConfigList");
+            configListEl.innerHTML = "";
+            pcrOrderConfig.forEach((pObj, index) => {
+                const pcr = pcrDatabase[pObj.key];
+                if (!pcr) return;
+
+                const row = document.createElement("div");
+                row.className = "custom-row";
+                row.innerHTML = `
+                    <div class="custom-row-left">
+                        <span style="font-weight: 600; font-size: 15px; color: var(--text-primary);">${pcr.shortName}</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div class="order-btn-group">
+                            <button class="order-btn" onclick="movePcr(${index}, -1)" ${index === 0 ? 'style="opacity:0.3;pointer-events:none;"' : ''}>▲</button>
+                            <button class="order-btn" onclick="movePcr(${index}, 1)" ${index === pcrOrderConfig.length - 1 ? 'style="opacity:0.3;pointer-events:none;"' : ''}>▼</button>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" ${pObj.visible ? 'checked' : ''} onchange="togglePcrVisible('${pObj.key}')">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                `;
+                configListEl.appendChild(row);
+            });
+        }
+
+        function toggleMediaVisible(key) {
+            const target = mediaOrderConfig.find(m => m.key === key);
+            if (target) {
+                target.visible = !target.visible;
+                localStorage.setItem('lab_mediaOrderConfig', JSON.stringify(mediaOrderConfig));
+                buildMediaModals();
+                updateView();
+            }
+        }
+
+        function moveMedia(index, direction) {
+            const newIndex = index + direction;
+            if (newIndex < 0 || newIndex >= mediaOrderConfig.length) return;
+            const temp = mediaOrderConfig[index];
+            mediaOrderConfig[index] = mediaOrderConfig[newIndex];
+            mediaOrderConfig[newIndex] = temp;
+            localStorage.setItem('lab_mediaOrderConfig', JSON.stringify(mediaOrderConfig));
+            buildMediaModals();
+            updateView();
+        }
+
+        function togglePcrVisible(key) {
+            const target = pcrOrderConfig.find(p => p.key === key);
+            if (target) {
+                target.visible = !target.visible;
+                localStorage.setItem('lab_pcrOrderConfig', JSON.stringify(pcrOrderConfig));
+                buildPcrModals();
+                updateView();
+            }
+        }
+
+        function movePcr(index, direction) {
+            const newIndex = index + direction;
+            if (newIndex < 0 || newIndex >= pcrOrderConfig.length) return;
+            const temp = pcrOrderConfig[index];
+            pcrOrderConfig[index] = pcrOrderConfig[newIndex];
+            pcrOrderConfig[newIndex] = temp;
+            localStorage.setItem('lab_pcrOrderConfig', JSON.stringify(pcrOrderConfig));
+            buildPcrModals();
+            updateView();
+        }
+
+        function setPcrMode(mode) {
+            currentPcrMode = mode;
+            const btnRecipe = document.getElementById("btnModeRecipe");
+            const btnCycle = document.getElementById("btnModeCycle");
+            const recipeList = document.getElementById("pcrIngredientList");
+            const cycleContainer = document.getElementById("pcrCycleContainer");
+            const guideContainer = document.getElementById("pcrGuideContainer");
+            const resetBanner = document.getElementById("pcrResetBanner");
+            const pcr = pcrDatabase[currentPcrKey];
+
+            if (pcr.isGuide) return;
+
+            if (mode === 'recipe') {
+                btnRecipe.classList.add("active");
+                btnCycle.classList.remove("active");
+                recipeList.style.display = "flex";
+                cycleContainer.style.display = "none";
+                guideContainer.style.display = "none";
+                checkResetButtonState('pcr');
+            } else {
+                btnCycle.classList.add("active");
+                btnRecipe.classList.remove("active");
+                recipeList.style.display = "none";
+                cycleContainer.style.display = "flex";
+                guideContainer.style.display = "none";
+                resetBanner.classList.remove("visible");
+            }
+        }
+
+        function toggleCheckFeature() {
+            checkFeatureEnabled = document.getElementById("checkFeatureToggle").checked;
+            localStorage.setItem('lab_checkFeature', checkFeatureEnabled);
+            if (!checkFeatureEnabled) {
+                document.querySelectorAll('.ingredient-item.checked').forEach(el => el.classList.remove('checked'));
+                checkResetButtonState('media');
+                checkResetButtonState('pcr');
+            }
+        }
+
+        function toggleAdviceFeature() {
+            adviceFeatureEnabled = document.getElementById("adviceFeatureToggle").checked;
+            localStorage.setItem('lab_adviceFeature', adviceFeatureEnabled);
+            updateView();
+        }
+
+        function toggleCostFeature() {
+            costFeatureEnabled = document.getElementById("costFeatureToggle").checked;
+            localStorage.setItem('lab_costFeature', costFeatureEnabled);
+            updateView();
+        }
+
+        function setupScrollListener() {
+            const container = document.getElementById("viewsContainer");
+            let isScrolling;
+
+            container.addEventListener('scroll', () => {
+                window.clearTimeout(isScrolling);
+                isScrolling = setTimeout(() => {
+                    const index = Math.round(container.scrollLeft / container.clientWidth);
+                    if (index !== currentViewIndex) {
+                        currentViewIndex = index;
+                        localStorage.setItem('lab_viewIndex', index);
+                        updateDotsAndBar();
+                    }
+                }, 50);
+            }, { passive: true });
+        }
+
+        function updateDotsAndBar() {
+            document.getElementById("dot0").classList.toggle('active', currentViewIndex === 0);
+            document.getElementById("dot1").classList.toggle('active', currentViewIndex === 1);
+            document.getElementById("dot2").classList.toggle('active', currentViewIndex === 2);
+            updateControlBar();
+        }
+
+        function updateControlBar() {
+            const bar = document.getElementById("controlBar");
+            bar.innerHTML = "";
+
+            if (currentViewIndex === 0) {
+                bar.innerHTML = `
+                    <button class="trigger-btn" onclick="openModal('mediaModal')">
+                        <span style="font-weight: 700;">${mediaDatabase[currentMediaKey] ? mediaDatabase[currentMediaKey].name : '選択'}</span>
+                        <span class="arrow-icon">▾</span>
+                    </button>
+                    <button class="trigger-btn" onclick="openModal('volumeModal')">
+                        <span style="font-weight: 700;">${currentVolume} mL</span>
+                        <span class="arrow-icon">▾</span>
+                    </button>
+                `;
+            } else if (currentViewIndex === 1) {
+                const pcr = pcrDatabase[currentPcrKey];
+                bar.innerHTML = `
+                    <button class="trigger-btn" onclick="openModal('pcrModal')">
+                        <span style="font-weight: 700; font-size: 14px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${pcr.shortName}</span>
+                        <span class="arrow-icon">▾</span>
+                    </button>
+                    <button class="trigger-btn" onclick="openModal('pcrVolumeModal')" ${pcr.isGuide ? 'style="opacity: 0.4; pointer-events: none;"' : ''}>
+                        <span style="font-weight: 700;">${currentPcrVolume} µL</span>
+                        <span class="arrow-icon">▾</span>
+                    </button>
+                `;
+            } else {
+                bar.innerHTML = `
+                    <div style="grid-column: span 2; text-align: center; color: var(--text-secondary); font-size: 13px; padding: 8px 0;">
+                        Lab Recipe Settings
+                    </div>
+                `;
+            }
+        }
+
+        function checkResetButtonState(type) {
+            if (type === 'pcr' && (currentPcrMode === 'cycle' || pcrDatabase[currentPcrKey].isGuide)) return;
+            const containerId = type === 'media' ? 'ingredientList' : 'pcrIngredientList';
+            const bannerId = type === 'media' ? 'mediaResetBanner' : 'pcrResetBanner';
+            
+            const list = document.getElementById(containerId);
+            const banner = document.getElementById(bannerId);
+            if (!list || !banner) return;
+
+            const checkedCount = list.querySelectorAll('.ingredient-item.checked').length;
+            if (checkedCount > 0 && checkFeatureEnabled) {
+                banner.classList.add('visible');
+            } else {
+                banner.classList.remove('visible');
+            }
+        }
+
+        function resetChecks(type) {
+            const containerId = type === 'media' ? 'ingredientList' : 'pcrIngredientList';
+            const list = document.getElementById(containerId);
+            if (list) {
+                list.querySelectorAll('.ingredient-item.checked').forEach(el => {
+                    el.classList.remove('checked');
+                });
+            }
+            checkResetButtonState(type);
+        }
+
+        function updateView() {
+            const mediaAdviceBox = document.getElementById("mediaAdviceBox");
+            const mediaCostBox = document.getElementById("mediaCostBox");
+            const pcrAdviceBox = document.getElementById("pcrAdviceBox");
+            const pcrCostBox = document.getElementById("pcrCostBox");
+
+            // 1. 培地ビュー更新
+            const media = mediaDatabase[currentMediaKey];
+            if (media) {
+                document.getElementById("displayMediaName").textContent = media.name;
+                document.getElementById("displayVolume").textContent = `${currentVolume} mL`;
+
+                if (adviceFeatureEnabled) {
+                    mediaAdviceBox.textContent = media.getAdvice(currentVolume);
+                    mediaAdviceBox.classList.add("visible");
+                } else {
+                    mediaAdviceBox.classList.remove("visible");
+                }
+
+                if (costFeatureEnabled) {
+                    mediaCostBox.textContent = media.calculateCost(currentVolume);
+                    mediaCostBox.classList.add("visible");
+                } else {
+                    mediaCostBox.classList.remove("visible");
+                }
+
+                const listContainer = document.getElementById("ingredientList");
+                listContainer.innerHTML = "";
+                const ratio = currentVolume / media.baseVolume;
+
+                media.ingredients.forEach(ing => {
+                    const calcAmount = ing.amount * ratio;
+                    const formatted = calcAmount >= 10 
+                        ? calcAmount.toFixed(1) 
+                        : calcAmount.toFixed(2).replace(/\.?0+$/, "");
+
+                    const li = document.createElement("li");
+                    li.className = "ingredient-item";
+                    li.onclick = () => {
+                        if (checkFeatureEnabled) {
+                            li.classList.toggle('checked');
+                            checkResetButtonState('media');
+                        }
+                    };
+                    li.innerHTML = `
+                        <span class="ing-name">${ing.name}</span>
+                        <div class="ing-amount-wrapper">
+                            <span class="ing-amount">${formatted}</span>
+                            <span class="ing-unit">${ing.unit}</span>
+                        </div>
+                    `;
+                    listContainer.appendChild(li);
+                });
+                checkResetButtonState('media');
+            }
+
+            // 2. PCRビュー更新
+            const pcr = pcrDatabase[currentPcrKey];
+            document.getElementById("displayPcrSub").textContent = pcr.isGuide ? "Guide" : "PCR Master Mix";
+            document.getElementById("displayPcrName").textContent = pcr.fullName;
+            document.getElementById("displayPcrVolume").textContent = `${currentPcrVolume} µL`;
+
+            const modeSwitchEl = document.querySelector(".mode-switch-container");
+            const recipeList = document.getElementById("pcrIngredientList");
+            const cycleContainer = document.getElementById("pcrCycleContainer");
+            const guideContainer = document.getElementById("pcrGuideContainer");
+
+            if (pcr.isGuide) {
+                modeSwitchEl.style.display = "none";
+                recipeList.style.display = "none";
+                cycleContainer.style.display = "none";
+                guideContainer.style.display = "flex";
+                if (adviceFeatureEnabled) {
+                    pcrAdviceBox.textContent = "💡 実験目的に応じた最適な酵素選びをサポート";
+                    pcrAdviceBox.classList.add("visible");
+                } else {
+                    pcrAdviceBox.classList.remove("visible");
+                }
+                pcrCostBox.classList.remove("visible");
+            } else {
+                modeSwitchEl.style.display = "grid";
+                if (adviceFeatureEnabled) {
+                    pcrAdviceBox.textContent = pcr.getAdvice(currentPcrVolume);
+                    pcrAdviceBox.classList.add("visible");
+                } else {
+                    pcrAdviceBox.classList.remove("visible");
+                }
+
+                if (costFeatureEnabled) {
+                    pcrCostBox.textContent = pcr.calculateCost(currentPcrVolume);
+                    pcrCostBox.classList.add("visible");
+                } else {
+                    pcrCostBox.classList.remove("visible");
+                }
+
+                if (currentPcrMode === 'recipe') {
+                    recipeList.style.display = "flex";
+                    cycleContainer.style.display = "none";
+                    guideContainer.style.display = "none";
+                    checkResetButtonState('pcr');
+                } else {
+                    recipeList.style.display = "none";
+                    cycleContainer.style.display = "flex";
+                    guideContainer.style.display = "none";
+                    const resetBanner = document.getElementById("pcrResetBanner");
+                    resetBanner.classList.remove("visible");
+                }
+
+                // 反応液組成リストの再構築
+                recipeList.innerHTML = "";
+                const pcrRatio = currentPcrVolume / pcr.baseVolume;
+
+                pcr.ingredients.forEach(ing => {
+                    const calcAmount = ing.amount * pcrRatio;
+                    const formatted = calcAmount >= 10 
+                        ? calcAmount.toFixed(1) 
+                        : calcAmount.toFixed(2).replace(/\.?0+$/, "");
+
+                    const li = document.createElement("li");
+                    li.className = "ingredient-item";
+                    li.onclick = () => {
+                        if (checkFeatureEnabled) {
+                            li.classList.toggle('checked');
+                            checkResetButtonState('pcr');
+                        }
+                    };
+                    li.innerHTML = `
+                        <span class="ing-name">${ing.name}</span>
+                        <div class="ing-amount-wrapper">
+                            <span class="ing-amount">${formatted}</span>
+                            <span class="ing-unit">${ing.unit}</span>
+                        </div>
+                    `;
+                    recipeList.appendChild(li);
+                });
+                checkResetButtonState('pcr');
+
+                // サイクル条件の再構築
+                cycleContainer.innerHTML = "";
+                let currentGroup = null;
+
+                pcr.cycles.forEach(cyc => {
+                    if (cyc.type === 'single') {
+                        const div = document.createElement("div");
+                        div.className = "cycle-single-step";
+                        div.innerHTML = `
+                            <div class="cycle-step-left">
+                                <span class="cycle-step-name">${cyc.name}</span>
+                            </div>
+                            <div class="cycle-main-val">
+                                <span>${cyc.temp}</span>
+                                <span class="cycle-time">${cyc.time}</span>
+                            </div>
+                        `;
+                        cycleContainer.appendChild(div);
+                    } else if (cyc.type === 'divider') {
+                        const div = document.createElement("div");
+                        div.className = "cycle-divider";
+                        div.textContent = cyc.text;
+                        cycleContainer.appendChild(div);
+                    } else if (cyc.type === 'loop_start') {
+                        currentGroup = document.createElement("div");
+                        currentGroup.className = "cycle-loop-group";
+                        
+                        const badge = document.createElement("div");
+                        badge.className = "cycle-loop-badge";
+                        badge.textContent = cyc.name;
+                        currentGroup.appendChild(badge);
+
+                        cycleContainer.appendChild(currentGroup);
+                    } else if (cyc.type === 'loop_step') {
+                        if (currentGroup) {
+                            const stepDiv = document.createElement("div");
+                            stepDiv.className = "cycle-step";
+                            stepDiv.innerHTML = `
+                                <div class="cycle-step-left">
+                                    <span class="cycle-step-name">${cyc.name}</span>
+                                </div>
+                                <div class="cycle-main-val">
+                                    <span>${cyc.temp}</span>
+                                    <span class="cycle-time">${cyc.time}</span>
+                                </div>
+                            `;
+                            currentGroup.appendChild(stepDiv);
+                        }
+                    } else if (cyc.type === 'loop_end') {
+                        currentGroup = null;
+                    }
+                });
+            }
+
+            buildMediaModals();
+            buildPcrModals();
+            updateControlBar();
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add("active");
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove("active");
+        }
+
+        function outsideClose(event, modalId) {
+            if (event.target.id === modalId) {
+                closeModal(modalId);
+            }
+        }
+
+        window.onload = initApp;
+    </script>
+</body>
+</html>
