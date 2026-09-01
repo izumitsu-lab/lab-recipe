@@ -42,7 +42,7 @@
             overflow: hidden;
         }
 
-        /* 3画面分の横長コンテナ */
+        /* 4画面分の横長コンテナ */
         .views-container {
             display: flex;
             width: 100%;
@@ -848,21 +848,6 @@
                 <div class="list-container-wrapper">
                     <ul class="ingredient-list" id="pcrIngredientList"></ul>
                     <div class="cycle-container" id="pcrCycleContainer" style="display: none;"></div>
-                    <!-- 酵素の使い分けガイド -->
-                    <div class="guide-container" id="pcrGuideContainer" style="display: none;">
-                        <div class="guide-card">
-                            <span class="guide-title">🧬 プラスミドクローニング（正確性重視）</span>
-                            <span class="guide-desc">高正確性が必要なため <b>PrimeSTAR MAX</b> がベストチョイス。MAXで増えない場合の2ndチョイスとして <b>PrimeSTAR GXL</b> がおすすめ。</span>
-                        </div>
-                        <div class="guide-card">
-                            <span class="guide-title">🎯 遺伝子破壊チェックなど（確実性・コスパ重視）</span>
-                            <span class="guide-desc">とにかくPCRを成功させたい場合は、高成功率を誇る <b>ExPremier</b> が最適。また、コスパを優先したいルーチンPCRには <b>EmeraldAmp</b> もおすすめ。</span>
-                        </div>
-                        <div class="guide-card">
-                            <span class="guide-title">🧪 大腸菌のコロニーPCR</span>
-                            <span class="guide-desc">大腸菌のコロニーPCRには、ゲルにそのままローディングできてコスパも最強な <b>EmeraldAmp</b> が最適。</span>
-                        </div>
-                    </div>
                 </div>
                 <div class="reset-banner" id="pcrResetBanner">
                     <span class="reset-text">チェックが入っています</span>
@@ -871,8 +856,25 @@
             </div>
         </div>
 
-        <!-- 3ページ目：オプションビュー -->
+        <!-- 3ページ目：ガイドビュー -->
         <div class="view-panel" id="panel2">
+            <div class="main-display">
+                <div class="display-header">
+                    <div class="media-title-wrapper">
+                        <span class="media-eyebrow" id="displayGuideEyebrow">Selection Guide</span>
+                        <h1 class="media-title" id="displayGuideName">PCR酵素の使い分け</h1>
+                    </div>
+                </div>
+                <div class="list-container-wrapper">
+                    <div class="guide-container" id="guideContentContainer">
+                        <!-- 動的にガイド内容を描画 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4ページ目：オプションビュー -->
+        <div class="view-panel" id="panel3">
             <div class="main-display">
                 <div class="display-header">
                     <div class="media-title-wrapper">
@@ -901,7 +903,6 @@
                             <span class="slider"></span>
                         </label>
                     </div>
-                    <!-- コスト表示設定追加（初期値オフ） -->
                     <div class="option-group">
                         <div class="option-label-wrapper">
                             <span class="option-title">コスト（費用）表示</span>
@@ -912,7 +913,6 @@
                             <span class="slider"></span>
                         </label>
                     </div>
-                    <!-- 培地カスタム設定ボタン -->
                     <div class="option-group">
                         <div class="option-label-wrapper">
                             <span class="option-title">培地の表示・並び替え</span>
@@ -920,15 +920,13 @@
                         </div>
                         <button class="option-action-btn" onclick="openModal('mediaConfigModal')">設定する</button>
                     </div>
-                    <!-- PCR酵素カスタム設定ボタン -->
                     <div class="option-group">
                         <div class="option-label-wrapper">
                             <span class="option-title">PCR酵素の表示・並び替え</span>
-                            <span class="option-desc">使用する酵素やガイドをカスタム</span>
+                            <span class="option-desc">使用する酵素をカスタム</span>
                         </div>
                         <button class="option-action-btn" onclick="openModal('pcrConfigModal')">設定する</button>
                     </div>
-                    <!-- 初期状態に戻すボタン -->
                     <div class="option-group">
                         <div class="option-label-wrapper">
                             <span class="option-title">設定の初期化</span>
@@ -946,6 +944,7 @@
         <div class="dot active" id="dot0"></div>
         <div class="dot" id="dot1"></div>
         <div class="dot" id="dot2"></div>
+        <div class="dot" id="dot3"></div>
     </div>
 
     <div class="control-bar" id="controlBar"></div>
@@ -958,12 +957,10 @@
         </div>
     </div>
 
-    <!-- 培地容量選択モーダル -->
     <div class="modal-overlay" id="volumeModal" onclick="outsideClose(event, 'volumeModal')">
         <div class="modal-content">
             <div class="modal-header" id="volumeModalHeader">作製容量を選択</div>
             <div class="option-list volume-grid-modal" id="volumeOptionsList"></div>
-            <!-- 培地カスタムテンキービュー -->
             <div class="keypad-container" id="keypadContainer" style="display: none;">
                 <div class="keypad-display-area">
                     <div class="keypad-preview-value" id="keypadPreview">0 mL</div>
@@ -995,12 +992,10 @@
         </div>
     </div>
 
-    <!-- PCR液量選択モーダル -->
     <div class="modal-overlay" id="pcrVolumeModal" onclick="outsideClose(event, 'pcrVolumeModal')">
         <div class="modal-content">
             <div class="modal-header" id="pcrVolumeModalHeader">反応液量を選択</div>
             <div class="option-list volume-grid-modal" id="pcrVolumeOptionsList"></div>
-            <!-- PCRカスタムテンキービュー -->
             <div class="keypad-container" id="pcrKeypadContainer" style="display: none;">
                 <div class="keypad-display-area">
                     <div class="keypad-preview-value" id="pcrKeypadPreview">0 µL</div>
@@ -1025,7 +1020,14 @@
         </div>
     </div>
 
-    <!-- 培地カスタム設定用モーダル -->
+    <!-- ガイド選択用モーダル -->
+    <div class="modal-overlay" id="guideModal" onclick="outsideClose(event, 'guideModal')">
+        <div class="modal-content">
+            <div class="modal-header">ガイドを選択</div>
+            <div class="option-list" id="guideOptionsList"></div>
+        </div>
+    </div>
+
     <div class="modal-overlay" id="mediaConfigModal" onclick="outsideClose(event, 'mediaConfigModal')">
         <div class="modal-content">
             <div class="modal-header">培地の表示と並び替え</div>
@@ -1033,7 +1035,6 @@
         </div>
     </div>
 
-    <!-- PCR酵素カスタム設定用モーダル -->
     <div class="modal-overlay" id="pcrConfigModal" onclick="outsideClose(event, 'pcrConfigModal')">
         <div class="modal-content">
             <div class="modal-header">PCR酵素の表示と並び替え</div>
@@ -1200,16 +1201,23 @@
                     { name: "Reverse Primer (10 µM)", amount: 1.0, unit: "µL" },
                     { name: "滅菌水 (dH2O)", amount: 23.0, unit: "µL" }
                 ]
-            },
-            "guide": {
-                shortName: "PCR酵素の使い分け",
-                fullName: "PCR酵素の使い分けガイド",
-                isGuide: true
+            }
+        };
+
+        const guideDatabase = {
+            "pcr_enzyme_guide": {
+                name: "PCR酵素の使い分け",
+                eyebrow: "Selection Guide",
+                cards: [
+                    { title: "🧬 プラスミドクローニング（正確性重視）", desc: "高正確性が必要なため <b>PrimeSTAR MAX</b> がベストチョイス。MAXで増えない場合の2ndチョイスとして <b>PrimeSTAR GXL</b> がおすすめ。" },
+                    { title: "🎯 遺伝子破壊チェックなど（確実性・コスパ重視）", desc: "とにかくPCRを成功させたい場合は、高成功率を誇る <b>ExPremier</b> が最適。また、コスパを優先したいルーチンPCRには <b>EmeraldAmp</b> もおすすめ。" },
+                    { title: "🧪 大腸菌のコロニーPCR", desc: "大腸菌のコロニーPCRには、ゲルにそのままローディングできてコスパも最強な <b>EmeraldAmp</b> が最適。" }
+                ]
             }
         };
 
         let pcrOrderConfig = JSON.parse(localStorage.getItem('lab_pcrOrderConfig')) || [
-            { key: "ex_premier", visible: true }, { key: "prime_star_max", visible: true }, { key: "prime_star_gxl", visible: true }, { key: "emerald_amp", visible: true }, { key: "guide", visible: true }
+            { key: "ex_premier", visible: true }, { key: "prime_star_max", visible: true }, { key: "prime_star_gxl", visible: true }, { key: "emerald_amp", visible: true }
         ];
 
         let currentViewIndex = parseInt(localStorage.getItem('lab_viewIndex')) || 0;
@@ -1217,7 +1225,6 @@
         let currentVolume = parseInt(localStorage.getItem('lab_mediaVolume')) || 100;
         const mediaVolumes = [50, 100, 150, 200, 250, 300, 350, 400, 450, 500];
 
-        // テンキー入力用一時変数
         let keypadInputStr = "0";
         let pcrKeypadInputStr = "0";
 
@@ -1227,9 +1234,9 @@
         
         let currentPcrVolume = parseInt(localStorage.getItem('lab_pcrVolume')) || 50;
         let currentPcrMode = "recipe";
-        
-        // ご指定の50〜200まで10刻みのリストに変更
         const pcrVolumes = [50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200];
+
+        let currentGuideKey = "pcr_enzyme_guide";
 
         let checkFeatureEnabled = localStorage.getItem('lab_checkFeature') !== null ? localStorage.getItem('lab_checkFeature') === 'true' : true;
         let adviceFeatureEnabled = localStorage.getItem('lab_adviceFeature') !== null ? localStorage.getItem('lab_adviceFeature') === 'true' : true;
@@ -1242,8 +1249,8 @@
 
             buildMediaModals();
             buildPcrModals();
+            buildGuideModals();
 
-            // 培地容量リスト構築
             const volListEl = document.getElementById("volumeOptionsList");
             volListEl.innerHTML = "";
             mediaVolumes.forEach(vol => {
@@ -1268,7 +1275,6 @@
             };
             volListEl.appendChild(customBtn);
 
-            // PCR容量リスト構築（50〜200 µL ＋ CUSTOM）
             const pcrVolListEl = document.getElementById("pcrVolumeOptionsList");
             pcrVolListEl.innerHTML = "";
             pcrVolumes.forEach(vol => {
@@ -1302,7 +1308,6 @@
             updateView();
         }
 
-        // 培地用テンキー制御
         function openKeypadModal() {
             document.getElementById("volumeOptionsList").style.display = "none";
             document.getElementById("keypadContainer").style.display = "flex";
@@ -1356,7 +1361,6 @@
             }
         }
 
-        // PCR用テンキー制御
         function openPcrKeypadModal() {
             document.getElementById("pcrVolumeOptionsList").style.display = "none";
             document.getElementById("pcrKeypadContainer").style.display = "flex";
@@ -1521,6 +1525,23 @@
             });
         }
 
+        function buildGuideModals() {
+            const guideListEl = document.getElementById("guideOptionsList");
+            guideListEl.innerHTML = "";
+            Object.keys(guideDatabase).forEach(key => {
+                const guide = guideDatabase[key];
+                const btn = document.createElement("button");
+                btn.className = `option-item ${key === currentGuideKey ? 'selected' : ''}`;
+                btn.textContent = guide.name;
+                btn.onclick = () => {
+                    currentGuideKey = key;
+                    closeModal('guideModal');
+                    updateView();
+                };
+                guideListEl.appendChild(btn);
+            });
+        }
+
         function toggleMediaVisible(key) {
             const target = mediaOrderConfig.find(m => m.key === key);
             if (target) {
@@ -1569,25 +1590,19 @@
             const btnCycle = document.getElementById("btnModeCycle");
             const recipeList = document.getElementById("pcrIngredientList");
             const cycleContainer = document.getElementById("pcrCycleContainer");
-            const guideContainer = document.getElementById("pcrGuideContainer");
             const resetBanner = document.getElementById("pcrResetBanner");
-            const pcr = pcrDatabase[currentPcrKey];
-
-            if (pcr.isGuide) return;
 
             if (mode === 'recipe') {
                 btnRecipe.classList.add("active");
                 btnCycle.classList.remove("active");
                 recipeList.style.display = "flex";
                 cycleContainer.style.display = "none";
-                guideContainer.style.display = "none";
                 checkResetButtonState('pcr');
             } else {
                 btnCycle.classList.add("active");
                 btnRecipe.classList.remove("active");
                 recipeList.style.display = "none";
                 cycleContainer.style.display = "flex";
-                guideContainer.style.display = "none";
                 resetBanner.classList.remove("visible");
             }
         }
@@ -1635,6 +1650,7 @@
             document.getElementById("dot0").classList.toggle('active', currentViewIndex === 0);
             document.getElementById("dot1").classList.toggle('active', currentViewIndex === 1);
             document.getElementById("dot2").classList.toggle('active', currentViewIndex === 2);
+            document.getElementById("dot3").classList.toggle('active', currentViewIndex === 3);
             updateControlBar();
         }
 
@@ -1657,11 +1673,20 @@
                 const pcr = pcrDatabase[currentPcrKey];
                 bar.innerHTML = `
                     <button class="trigger-btn" onclick="openModal('pcrModal')">
-                        <span style="font-weight: 700; font-size: 14px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${pcr.shortName}</span>
+                        <span style="font-weight: 700; font-size: 14px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${pcr ? pcr.shortName : '選択'}</span>
                         <span class="arrow-icon">▾</span>
                     </button>
-                    <button class="trigger-btn" onclick="openModal('pcrVolumeModal')" ${pcr.isGuide ? 'style="opacity: 0.4; pointer-events: none;"' : ''}>
+                    <button class="trigger-btn" onclick="openModal('pcrVolumeModal')">
                         <span style="font-weight: 700;">${currentPcrVolume} µL</span>
+                        <span class="arrow-icon">▾</span>
+                    </button>
+                `;
+            } else if (currentViewIndex === 2) {
+                // ガイドページ：ボタンを画面幅いっぱい（grid-column: span 2）に拡張
+                const guide = guideDatabase[currentGuideKey];
+                bar.innerHTML = `
+                    <button class="trigger-btn" onclick="openModal('guideModal')" style="grid-column: span 2; width: 100%;">
+                        <span style="font-weight: 700; font-size: 14px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${guide ? guide.name : '選択'}</span>
                         <span class="arrow-icon">▾</span>
                     </button>
                 `;
@@ -1675,7 +1700,7 @@
         }
 
         function checkResetButtonState(type) {
-            if (type === 'pcr' && (currentPcrMode === 'cycle' || pcrDatabase[currentPcrKey].isGuide)) return;
+            if (type === 'pcr' && currentPcrMode === 'cycle') return;
             const containerId = type === 'media' ? 'ingredientList' : 'pcrIngredientList';
             const bannerId = type === 'media' ? 'mediaResetBanner' : 'pcrResetBanner';
             
@@ -1760,29 +1785,11 @@
 
             // 2. PCRビュー更新
             const pcr = pcrDatabase[currentPcrKey];
-            document.getElementById("displayPcrSub").textContent = pcr.isGuide ? "Guide" : "PCR Master Mix";
-            document.getElementById("displayPcrName").textContent = pcr.fullName;
-            document.getElementById("displayPcrVolume").textContent = `${currentPcrVolume} µL`;
+            if (pcr) {
+                document.getElementById("displayPcrSub").textContent = "PCR Master Mix";
+                document.getElementById("displayPcrName").textContent = pcr.fullName;
+                document.getElementById("displayPcrVolume").textContent = `${currentPcrVolume} µL`;
 
-            const modeSwitchEl = document.querySelector(".mode-switch-container");
-            const recipeList = document.getElementById("pcrIngredientList");
-            const cycleContainer = document.getElementById("pcrCycleContainer");
-            const guideContainer = document.getElementById("pcrGuideContainer");
-
-            if (pcr.isGuide) {
-                modeSwitchEl.style.display = "none";
-                recipeList.style.display = "none";
-                cycleContainer.style.display = "none";
-                guideContainer.style.display = "flex";
-                if (adviceFeatureEnabled) {
-                    pcrAdviceBox.textContent = "💡 実験目的に応じた最適な酵素選びをサポート";
-                    pcrAdviceBox.classList.add("visible");
-                } else {
-                    pcrAdviceBox.classList.remove("visible");
-                }
-                pcrCostBox.classList.remove("visible");
-            } else {
-                modeSwitchEl.style.display = "grid";
                 if (adviceFeatureEnabled) {
                     pcrAdviceBox.textContent = pcr.getAdvice(currentPcrVolume);
                     pcrAdviceBox.classList.add("visible");
@@ -1797,20 +1804,20 @@
                     pcrCostBox.classList.remove("visible");
                 }
 
+                const recipeList = document.getElementById("pcrIngredientList");
+                const cycleContainer = document.getElementById("pcrCycleContainer");
+
                 if (currentPcrMode === 'recipe') {
                     recipeList.style.display = "flex";
                     cycleContainer.style.display = "none";
-                    guideContainer.style.display = "none";
                     checkResetButtonState('pcr');
                 } else {
                     recipeList.style.display = "none";
                     cycleContainer.style.display = "flex";
-                    guideContainer.style.display = "none";
                     const resetBanner = document.getElementById("pcrResetBanner");
                     resetBanner.classList.remove("visible");
                 }
 
-                // 反応液組成リストの再構築
                 recipeList.innerHTML = "";
                 const pcrRatio = currentPcrVolume / pcr.baseVolume;
 
@@ -1839,7 +1846,6 @@
                 });
                 checkResetButtonState('pcr');
 
-                // サイクル条件の再構築
                 cycleContainer.innerHTML = "";
                 let currentGroup = null;
 
@@ -1893,8 +1899,27 @@
                 });
             }
 
+            // 3. ガイドビュー更新
+            const guide = guideDatabase[currentGuideKey];
+            if (guide) {
+                document.getElementById("displayGuideEyebrow").textContent = guide.eyebrow;
+                document.getElementById("displayGuideName").textContent = guide.name;
+                const guideContentContainer = document.getElementById("guideContentContainer");
+                guideContentContainer.innerHTML = "";
+                guide.cards.forEach(card => {
+                    const cardEl = document.createElement("div");
+                    cardEl.className = "guide-card";
+                    cardEl.innerHTML = `
+                        <span class="guide-title">${card.title}</span>
+                        <span class="guide-desc">${card.desc}</span>
+                    `;
+                    guideContentContainer.appendChild(cardEl);
+                });
+            }
+
             buildMediaModals();
             buildPcrModals();
+            buildGuideModals();
             updateControlBar();
         }
 
