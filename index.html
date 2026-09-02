@@ -1396,6 +1396,7 @@
         const solutionDatabase = {
             "mm_sol_1": {
                 name: "MM salt sol. 1",
+                fullName: "MM salt solution 1",
                 baseVolume: 100,
                 getAdvice: (vol) => `💡 アグロバクテリウム法用 ストック液`,
                 calculateCost: (vol) => `💰 概算コスト: -`,
@@ -1411,6 +1412,7 @@
             },
             "mm_sol_2": {
                 name: "MM salt sol. 2",
+                fullName: "MM salt solution 2",
                 baseVolume: 100,
                 getAdvice: (vol) => `💡 アグロバクテリウム法用 ストック液`,
                 calculateCost: (vol) => `💰 概算コスト: -`,
@@ -1428,6 +1430,7 @@
             },
             "sol_a": {
                 name: "sol. A (CM)",
+                fullName: "Solution A (CM用)",
                 baseVolume: 500,
                 getAdvice: (vol) => `💡 CM培地用ストック溶液 A`,
                 calculateCost: (vol) => `💰 概算コスト: -`,
@@ -1442,6 +1445,7 @@
             },
             "sol_b": {
                 name: "sol. B (CM)",
+                fullName: "Solution B (CM用)",
                 baseVolume: 500,
                 getAdvice: (vol) => `💡 CM培地用ストック溶液 B`,
                 calculateCost: (vol) => `💰 概算コスト: -`,
@@ -1459,6 +1463,7 @@
             },
             "isotonic": {
                 name: "等張液",
+                fullName: "等張液",
                 baseVolume: 500,
                 getAdvice: (vol) => `💡 プロトプラスト作製・懸濁用`,
                 calculateCost: (vol) => `💰 概算コスト: -`,
@@ -1474,6 +1479,7 @@
             },
             "peg_40": {
                 name: "40%PEG",
+                fullName: "40%PEG",
                 baseVolume: 100,
                 getAdvice: (vol) => `💡 プロトプラストの形質転換用`,
                 calculateCost: (vol) => `💰 概算コスト: -`,
@@ -1492,6 +1498,7 @@
             },
             "stc": {
                 name: "STCバッファ",
+                fullName: "STCバッファ",
                 baseVolume: 100,
                 getAdvice: (vol) => `💡 プロトプラスト調製・洗浄用`,
                 calculateCost: (vol) => `💰 概算コスト: -`,
@@ -1959,7 +1966,7 @@
                 if (!sol) return;
                 const btn = document.createElement("button");
                 btn.className = `option-item ${key === currentSolutionKey ? 'selected' : ''}`;
-                btn.textContent = sol.name;
+                btn.textContent = sol.name; // モーダルや下部バーには省略名を表示
                 btn.onclick = () => {
                     currentSolutionKey = key;
                     localStorage.setItem('lab_solutionKey', key);
@@ -2138,9 +2145,10 @@
                     </button>
                 `;
             } else if (currentViewIndex === 2) {
+                const sol = solutionDatabase[currentSolutionKey];
                 bar.innerHTML = `
                     <button class="trigger-btn" onclick="openModal('solutionModal')">
-                        <span style="font-weight: 700;">${solutionDatabase[currentSolutionKey] ? solutionDatabase[currentSolutionKey].name : '選択'}</span>
+                        <span style="font-weight: 700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${sol ? sol.name : '選択'}</span>
                         <span class="arrow-icon">▾</span>
                     </button>
                     <button class="trigger-btn" onclick="openModal('solutionVolumeModal')">
@@ -2466,7 +2474,8 @@
 
             const sol = solutionDatabase[currentSolutionKey];
             if (sol) {
-                document.getElementById("displaySolutionName").textContent = sol.name;
+                // 左上のタイトルには長い「fullName」を表示、ボタンやリストには「name」を表示
+                document.getElementById("displaySolutionName").textContent = sol.fullName || sol.name;
                 document.getElementById("displaySolutionVolume").textContent = `${currentSolutionVolume} mL`;
 
                 if (adviceFeatureEnabled) {
