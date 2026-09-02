@@ -140,31 +140,35 @@
             text-overflow: ellipsis;
         }
 
-        /* カード下部の解説トリガーボタン */
+        /* ひっそりと馴染む解説トリガーボタン（組成の下） */
         .card-info-footer-btn {
-            background-color: rgba(41, 151, 255, 0.08);
-            color: var(--accent-color);
-            border: 1px solid rgba(41, 151, 255, 0.2);
-            border-radius: 12px;
-            padding: 8px 12px;
+            background: transparent;
+            color: var(--text-secondary);
+            border: none;
+            padding: 12px 4px 6px 4px;
             font-size: 12px;
             font-weight: 500;
             cursor: pointer;
-            display: none;
-            align-items: center;
-            justify-content: flex-start;
-            gap: 6px;
-            margin-top: 8px;
-            flex-shrink: 0;
-            line-height: 1.3;
-            transition: transform 0.15s, background-color 0.2s;
-        }
-        .card-info-footer-btn.visible {
             display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 12px;
+            flex-shrink: 0;
+            width: 100%;
+            transition: color 0.2s;
+        }
+        .card-info-footer-btn span {
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.15);
+            padding-bottom: 1px;
+            transition: border-color 0.2s, color 0.2s;
         }
         .card-info-footer-btn:active {
-            transform: scale(0.98);
-            background: rgba(41, 151, 255, 0.15);
+            opacity: 0.7;
+        }
+        .card-info-footer-btn:active span {
+            color: var(--text-primary);
+            border-color: var(--text-primary);
         }
 
         /* 右上の容量バッジ（クリック可能） - 拡大版 */
@@ -274,7 +278,7 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
-            padding-bottom: 16px;
+            padding-bottom: 8px;
         }
 
         /* レシピのセクション見出し */
@@ -943,7 +947,6 @@
                 <div class="list-container-wrapper">
                     <ul class="ingredient-list" id="pcrIngredientList"></ul>
                     <div class="cycle-container" id="pcrCycleContainer" style="display: none;"></div>
-                    <button class="card-info-footer-btn" id="pcrInfoBtn" onclick="openInfoModal()">💡 このレシピの解説・実験ノートを見る</button>
                 </div>
                 <div class="reset-banner" id="pcrResetBanner">
                     <span class="reset-text">チェックが入っています</span>
@@ -972,7 +975,6 @@
                 <div class="cost-box" id="mediaCostBox"></div>
                 <div class="list-container-wrapper">
                     <ul class="ingredient-list" id="ingredientList"></ul>
-                    <button class="card-info-footer-btn" id="mediaInfoBtn" onclick="openInfoModal()">💡 このレシピの解説・実験ノートを見る</button>
                 </div>
                 <div class="reset-banner" id="mediaResetBanner">
                     <span class="reset-text">チェックが入っています</span>
@@ -997,7 +999,6 @@
                 <div class="cost-box" id="solutionCostBox"></div>
                 <div class="list-container-wrapper">
                     <ul class="ingredient-list" id="solutionIngredientList"></ul>
-                    <button class="card-info-footer-btn" id="solutionInfoBtn" onclick="openInfoModal()">💡 このレシピの解説・実験ノートを見る</button>
                 </div>
                 <div class="reset-banner" id="solutionResetBanner">
                     <span class="reset-text">チェックが入っています</span>
@@ -1045,7 +1046,7 @@
                     </div>
                     <div class="option-group">
                         <div class="option-label-wrapper">
-                            <span class="option-title">インフォメーション</span>
+                            <span class="option-title">インフォメーション（上部）</span>
                             <span class="option-desc">シャーレ換算や実験メモを表示</span>
                         </div>
                         <label class="switch">
@@ -1055,8 +1056,8 @@
                     </div>
                     <div class="option-group">
                         <div class="option-label-wrapper">
-                            <span class="option-title">解説ボタン（下部バー）</span>
-                            <span class="option-desc">各ページの詳細解説ボタンの表示・非表示</span>
+                            <span class="option-title">解説リンク（下部）</span>
+                            <span class="option-desc">各ページ詳細の解説リンクを表示</span>
                         </div>
                         <label class="switch">
                             <input type="checkbox" id="infoButtonToggle" onchange="toggleInfoButtonFeature()">
@@ -1313,7 +1314,7 @@
                 },
                 info: {
                     title: "PDA培地についての解説",
-                    body: "Potato Dextrose Agarの略で、カビや酵母の分離・培養に最も汎用される標準的な培地です。名称はそれぞれ、<b>ポテト（Potato：じゃがいも）</b>、<b>ブドウ糖（Dextrose：デキストロース）</b>、<b>寒天（Agar：アガー）</b>のそれぞれの材料や成分の略語に由来しています。<br><br>💡 <b>豆知識:</b> PDAは製造する会社によって微妙に成分や組成が異なるようで、例えば<b>ウリ類炭疽病菌104T株</b>などはニッスイ（現アキュディア™）のPDAじゃないと本当にダメ（ちゃんと育たない）と言われているほどのこだわりポイントがあります。"
+                    body: "Potato Dextrose Agarの略で、カビや酵母の分離・培養に最も汎用される標準的な培地です。名称はそれぞれ、<b>ポテト（Potato：じゃがいも）</b>、<b>ブドウ糖（Dextrose：デキストロース）</b>、<b>寒天（Agar：アガー）</b>のそれぞれの材料や成分の略語に由来しています。<br><br>💡 <b>豆知識:</b> PDAは製造する会社によって微妙に成分や異なるようで、例えば<b>ウリ類炭疽病菌104T株</b>などはニッスイ（現アキュディア™）のPDAじゃないと本当にダメ（ちゃんと育たない）と言われているほどのこだわりポイントがあります。"
                 },
                 ingredients: [
                     { name: "PDA (粉)", amount: 3.9, unit: "g" }, { name: "水", amount: 100.0, unit: "mL" }
@@ -1765,7 +1766,7 @@
 
         let checkFeatureEnabled = localStorage.getItem('lab_checkFeature') !== null ? localStorage.getItem('lab_checkFeature') === 'true' : true;
         let adviceFeatureEnabled = localStorage.getItem('lab_adviceFeature') !== null ? localStorage.getItem('lab_adviceFeature') === 'true' : true;
-        let infoButtonFeatureEnabled = localStorage.getItem('lab_infoButtonFeature') !== null ? localStorage.getItem('lab_infoButtonFeature') === 'true' : false;
+        let infoButtonFeatureEnabled = localStorage.getItem('lab_infoButtonFeature') !== null ? localStorage.getItem('lab_infoButtonFeature') === 'true' : true;
         let costFeatureEnabled = localStorage.getItem('lab_costFeature') !== null ? localStorage.getItem('lab_costFeature') === 'true' : false;
 
         let currentOrderType = "";
@@ -2396,21 +2397,7 @@
             const solutionCostBox = document.getElementById("solutionCostBox");
             const pcrAdviceBox = document.getElementById("pcrAdviceBox");
             const pcrCostBox = document.getElementById("pcrCostBox");
-            
-            const pcrInfoBtn = document.getElementById("pcrInfoBtn");
-            const mediaInfoBtn = document.getElementById("mediaInfoBtn");
-            const solutionInfoBtn = document.getElementById("solutionInfoBtn");
             const mediaModeSwitch = document.getElementById("mediaModeSwitch");
-
-            if (infoButtonFeatureEnabled) {
-                if(pcrInfoBtn) pcrInfoBtn.classList.add("visible");
-                if(mediaInfoBtn) mediaInfoBtn.classList.add("visible");
-                if(solutionInfoBtn) solutionInfoBtn.classList.add("visible");
-            } else {
-                if(pcrInfoBtn) pcrInfoBtn.classList.remove("visible");
-                if(mediaInfoBtn) mediaInfoBtn.classList.remove("visible");
-                if(solutionInfoBtn) solutionInfoBtn.classList.remove("visible");
-            }
 
             const pcr = pcrDatabase[currentPcrKey];
             if (pcr) {
@@ -2469,6 +2456,16 @@
                     `;
                     recipeList.appendChild(li);
                 });
+
+                // オプションがONのときだけ「このレシピの解説を見る」をリストの最後尾に追加
+                if (infoButtonFeatureEnabled) {
+                    const pcrInfoBtn = document.createElement("button");
+                    pcrInfoBtn.className = "card-info-footer-btn";
+                    pcrInfoBtn.onclick = openInfoModal;
+                    pcrInfoBtn.innerHTML = "<span>このレシピの解説を見る</span>";
+                    recipeList.appendChild(pcrInfoBtn);
+                }
+
                 checkResetButtonState('pcr');
 
                 cycleContainer.innerHTML = "";
@@ -2637,6 +2634,15 @@
                     });
                 }
 
+                // オプションがONのときだけ「このレシピの解説を見る」をリストの最後尾に追加
+                if (infoButtonFeatureEnabled) {
+                    const mediaInfoBtn = document.createElement("button");
+                    mediaInfoBtn.className = "card-info-footer-btn";
+                    mediaInfoBtn.onclick = openInfoModal;
+                    mediaInfoBtn.innerHTML = "<span>このレシピの解説を見る</span>";
+                    listContainer.appendChild(mediaInfoBtn);
+                }
+
                 checkResetButtonState('media');
             }
 
@@ -2687,6 +2693,16 @@
                     `;
                     solListContainer.appendChild(li);
                 });
+
+                // オプションがONのときだけ「このレシピの解説を見る」をリストの最後尾に追加
+                if (infoButtonFeatureEnabled) {
+                    const solInfoBtn = document.createElement("button");
+                    solInfoBtn.className = "card-info-footer-btn";
+                    solInfoBtn.onclick = openInfoModal;
+                    solInfoBtn.innerHTML = "<span>このレシピの解説を見る</span>";
+                    solListContainer.appendChild(solInfoBtn);
+                }
+
                 checkResetButtonState('solution');
             }
 
@@ -2766,3 +2782,4 @@
     </script>
 </body>
 </html>
+```[cite: 1]
