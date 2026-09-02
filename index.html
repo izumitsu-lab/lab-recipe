@@ -436,7 +436,7 @@
             letter-spacing: 1px;
         }
 
-        /* 選び方ガイド専用の美しいレイアウトカード（スマホで見やすいよう文字を拡大） */
+        /* 選び方ガイド専用の美しいレイアウトカード（文字大きめ） */
         .guide-container {
             display: flex;
             flex-direction: column;
@@ -738,7 +738,7 @@
             gap: 8px !important;
         }
 
-        /* 大型・リッチ化された詳細解説ポップアップ用モーダル（文字サイズを大きく改善） */
+        /* 大型・リッチ化された詳細解説ポップアップ用モーダル */
         .info-modal-content {
             background: linear-gradient(145deg, #18181d, #121216);
             border: 1px solid rgba(41, 151, 255, 0.4);
@@ -1277,7 +1277,7 @@
                 },
                 info: {
                     title: "CM培地についての解説",
-                    body: "<b>CM（Complete Medium：完全培地）</b>は、多くの糸状菌などの培養に用いられる基本培地です。菌の種類や研究目的によって様々な処方のCMが存在しますが、本レシピは<b>トウモロコシごま葉枯病菌</b>の培養に適した配合になっています。<br><br><strong>💡 Solution AとBに関する注意:</strong> Solution AとBをわざわざ分けて配合しているのは、高濃度で直接混ぜ合わせると<b>不溶性の塩（沈澱）を形成してしまうため</b>です。そのため、液を作る際に高濃度な状態でソリューションA・Bを直接混ぜ合わせるのは厳禁です。"
+                    body: "<b>CM（Complete Medium：完全培地）</b>は、多くの糸状菌などの培養に用いられる基本培地です。菌の種類や研究目的によって様々な処方のCMが存在しますが、本レシピは<b>トウモロコシごま葉枯病菌</b>の培養に適した配合になっています。<br><br>💡 <b>豆知識（試験対策）:</b> 完全培地の反対は<b>最小培地（Minimal Medium）</b>と呼ばれ、各種試験やレポートなどにも頻出の重要キーワードなので覚えておくと便利です。<br><br><strong>💡 Solution AとBに関する注意:</strong> Solution Aに含まれる<b>カルシウムイオン（Ca<sup>2+</sup>）</b>と、Solution Bに含まれる<b>リン酸イオンや硫酸イオン</b>が高濃度な状態で直接結びつくと、<b>リン酸カルシウムや硫酸カルシウムなどの不溶性の塩になって沈殿・析出してしまうため</b>です。そのため、液を作る際は必ず高濃度な状態で直接混ぜ合わせず、薄めた状態で最後に合わせる必要があります。"
                 },
                 ingredients: [
                     { name: "グルコース", amount: 1.0, unit: "g" }, { name: "Yeast extract", amount: 0.1, unit: "g" }, { name: "Tryptone", amount: 0.1, unit: "g" }, { name: "sol. A (CM)", amount: 1.0, unit: "mL" }, { name: "sol. B (CM)", amount: 1.0, unit: "mL" }, { name: "寒天", amount: 1.5, unit: "g" }, { name: "蒸留水", amount: 98.0, unit: "mL" }
@@ -1295,7 +1295,7 @@
                 },
                 info: {
                     title: "V30培地についての解説",
-                    body: "V8野菜ジュースなどをベースにした植物病原菌の培養によく使われる培地です。<strong>CaCO<sub>3</sub></strong>を加えることでpHの急激な変動を防ぐ役割があります。"
+                    body: "V8野菜ジュースなどをベースにした植物病原菌の培養によく使われる培地です。<strong>CaCO<sub>3</sub></strong>を加えることでpHの急激な変動を防ぐ役割があります。<br><br>💡 <b>豆知識:</b> <b>V8ジュースが日本に輸入されなくなって以降</b>、いろいろな野菜ジュースを試した結果、うちでは野菜が30種類入っている<b>『野菜一日これ一本』</b>を使っています。"
                 },
                 ingredients: [
                     { name: "V30ジュース", amount: 16.0, unit: "mL" }, { name: "CaCO<sub>3</sub>", amount: 0.2, unit: "g" }, { name: "寒天", amount: 1.5, unit: "g" }, { name: "水", amount: 84.0, unit: "mL" }
@@ -1313,7 +1313,7 @@
                 },
                 info: {
                     title: "PDA培地についての解説",
-                    body: "Potato Dextrose Agarの略で、カビや酵母の分離・培養に最も汎用される標準的な培地です。<strong>市販の粉末培地</strong>を水に溶かしてオートクレーブするだけで簡単に調製できます。"
+                    body: "Potato Dextrose Agarの略で、カビや酵母の分離・培養に最も汎用される標準的な培地です。名称はそれぞれ、<b>ポテト（Potato：じゃがいも）</b>、<b>ブドウ糖（Dextrose：デキストロース）</b>、<b>寒天（Agar：アガー）</b>のそれぞれの材料や成分の略語に由来しています。<br><br>💡 <b>豆知識:</b> PDAは製造する会社によって微妙に成分や組成が異なるようで、例えば<b>ウリ類炭疽病菌104T株</b>などはニッスイ（現アキュディア™）のPDAじゃないと本当にダメ（ちゃんと育たない）と言われているほどのこだわりポイントがあります。"
                 },
                 ingredients: [
                     { name: "PDA (粉)", amount: 3.9, unit: "g" }, { name: "水", amount: 100.0, unit: "mL" }
@@ -1510,7 +1510,7 @@
                 calculateCost: (vol) => `💰 概算コスト: -`,
                 info: {
                     title: "Solution A (CM用) についての解説",
-                    body: "CM培地などで用いられるストック溶液Aです。Ca(NO<sub>3</sub>)<sub>2</sub>・4H<sub>2</sub>O 75g を 500mL に溶かして作製します。Solution Bと高濃度で直接混ぜると不溶性の塩（沈澱）を形成するため、必ず別々に調製・保管してください。"
+                    body: "CM培地などで用いられるストック溶液Aです。<br><br>💡 <b>豆知識（沈澱に関する注意）:</b> Solution Aに含まれる<b>カルシウムイオン（Ca<sup>2+</sup>）</b>が、Solution Bに含まれる<b>リン酸イオンや硫酸イオン</b>と高濃度な状態で結びつくと、<b>リン酸カルシウムや硫酸カルシウムなどの不溶性の塩になって沈殿・析出してしまうため</b>、必ず別々のストックとして保管し、調製時にそれぞれ薄めてから合わせる必要があります。"
                 },
                 ingredients: [
                     { name: "Ca(NO<sub>3</sub>)<sub>2</sub>・4H<sub>2</sub>O", amount: 75.0, unit: "g" },
@@ -1525,7 +1525,7 @@
                 calculateCost: (vol) => `💰 概算コスト: -`,
                 info: {
                     title: "Solution B (CM用) についての解説",
-                    body: "CM培地などで用いられるストック溶液Bです。MgSO<sub>4</sub>・7H<sub>2</sub>O 25g、KCl 25g、KH<sub>2</sub>PO<sub>4</sub> 20g、K<sub>2</sub>HPO<sub>4</sub> 1.5g を 500mL に溶かして作製します。Solution Aと同様に単体でストックし、培地調製時にそれぞれ希釈して加えます。"
+                    body: "CM培地などで用いられるストック溶液Bです。<br><br>💡 <b>豆知識（沈澱に関する注意）:</b> Solution Bに含まれる<b>リン酸イオンや硫酸イオン</b>が、Solution Aに含まれる<b>カルシウムイオン（Ca<sup>2+</sup>）</b>と高濃度な状態で結びつくと、<b>リン酸カルシウムや硫酸カルシウムなどの不溶性の塩になって沈殿・析出してしまうため</b>、必ず単体でストックし、培地作製時にそれぞれ希釈して加えます。"
                 },
                 ingredients: [
                     { name: "MgSO<sub>4</sub>・7H<sub>2</sub>O", amount: 25.0, unit: "g" },
@@ -1543,7 +1543,7 @@
                 calculateCost: (vol) => `💰 概算コスト: -`,
                 info: {
                     title: "等張液についての解説",
-                    body: "プロトプラストの作製や洗浄・懸濁に用いる等張液です。"
+                    body: "プロトプラストの作製や洗浄・懸濁に用いる等張液です。<br><br>💡 <b>豆知識:</b> うちの研究室では塩化カリウム（KCl）系を主に使用していますが、実験プロトコルや扱う生物種によっては、ソルビトールやマンニトールなどの糖アルコール系を浸透圧調整剤として使用しているところもあります。"
                 },
                 ingredients: [
                     { name: "KCl", amount: 26.1, unit: "g" },
@@ -1578,7 +1578,7 @@
                 calculateCost: (vol) => `💰 概算コスト: -`,
                 info: {
                     title: "STCバッファについての解説",
-                    body: "ソルビトール、Tris-HCl、塩化カルシウムを含み、プロトプラストの調製や懸濁・洗浄に広く用いられるバッファです。"
+                    body: "ソルビトール、Tris-HCl、塩化カルシウムを含み、プロトプラストの調製や懸濁・洗浄に広く用いられるバッファです。<br><br>💡 <b>カルシウムイオン（Ca<sup>2+</sup>）の意味:</b> PEG法による形質転換において、カルシウムイオンは<b>細胞膜の透過性を高める（DNAが細胞内に入りやすくする）働き</b>や、負に帯電しているDNAのリン酸骨格と細胞膜の間を中和・橋渡しして<b>DNAを細胞表面に吸着させやすくする役割</b>を担っています。"
                 },
                 ingredients: [
                     { name: "ソルビトール", amount: 21.8, unit: "g" },
@@ -1604,14 +1604,14 @@
                 shortName: "ExPremier",
                 fullName: "ExPremier (Premix)",
                 baseVolume: 50,
-                getAdvice: (vol) => `💡 高成功率を誇るファーストチョイス酵素`,
+                getAdvice: (vol) => `💡 タカラバイオが推す1stチョイス・高成功率酵素`,
                 calculateCost: (vol) => {
                     const cost = (21.4 / 10) * vol;
                     return `💰 概算コスト: 約 ${Math.round(cost)} 円 (${vol} µLあたり)`;
                 },
                 info: {
                     title: "ExPremierについての解説",
-                    body: "タカラバイオの高性能プレミックスPCR酵素。トラブルが少なく、通常のルーチンから遺伝子クローニングまで幅広く高い成功率を発揮します。"
+                    body: "タカラバイオが<b>1stチョイスPCR酵素</b>として強力に推しているプレミックス酵素です。最大の特徴は、何といってもその<b>圧倒的な成功率の高さ（高成功率）</b>にあります。<br><br>💡 <b>こんな実験にベスト:</b> 遺伝子破壊株か否かのチェックなど、<b>電気泳動で確認だけする実験（クローニングはしない）</b>で『ちゃんと増えてほしい』という場面においてベストな選択肢となります。トラブルが少なく、日常のルーチンワークで絶大な信頼性を誇ります。"
                 },
                 cycles: [
                     { type: 'single', name: "初期変性", temp: "94 °C", time: "1 min" },
@@ -1632,14 +1632,14 @@
                 shortName: "PrimeSTAR MAX",
                 fullName: "PrimeSTAR MAX (Premix)",
                 baseVolume: 50,
-                getAdvice: (vol) => `💡 最高レベルの正確性、In-Fusion Cloningにベスト`,
+                getAdvice: (vol) => `💡 クローニングの高正確性において最強の酵素`,
                 calculateCost: (vol) => {
                     const cost = (56.0 / 10) * vol;
                     return `💰 概算コスト: 約 ${Math.round(cost)} 円 (${vol} µLあたり)`;
                 },
                 info: {
                     title: "PrimeSTAR MAXについての解説",
-                    body: "世界最高水準の正確性（高fidelity）を誇る高スピード・高増幅酵素。In-Fusionクローニング用のインサート作製にはこれ一択といって良いほどのベストマッチ酵素です。"
+                    body: "プラスミドへのクローニングにおいて求められる<b>「高正確性」において最強の酵素</b>です。In-Fusion Cloningのインサート作製において、<b>完璧な1stチョイス</b>となります。<br><br>💰 <b>コスト：</b>性能が最高峰である分、<b>値段がめっちゃ高い</b>です。しかし、値段を気にしないのであれば<b>MAX一択</b>と言えます。<br><br>⚡ <b>サイクル条件（私見）：</b>メーカーは2sec/kbのような超高速で増幅可能としていますが、<b>60sec/kbで時間をかけて伸張反応を行う方が、圧倒的に増幅結果が良い</b>です。また、それでもMAXで増幅できない場合は、2ndチョイスとしてGXLがおすすめです。"
                 },
                 cycles: [
                     { type: 'loop_start', name: "30–35 Cycles (通常条件: >200ng)" },
@@ -1665,14 +1665,14 @@
                 shortName: "PrimeSTAR GXL",
                 fullName: "PrimeSTAR GXL (Premix)",
                 baseVolume: 50,
-                getAdvice: (vol) => `💡 高正確性だがMAXに劣る。GCリッチに強い。`,
+                getAdvice: (vol) => `💡 MAXが予算外や増えにくい時の強力な2ndチョイス`,
                 calculateCost: (vol) => {
                     const cost = (26.6 / 10) * vol;
                     return `💰 概算コスト: 約 ${Math.round(cost)} 円 (${vol} µLあたり)`;
                 },
                 info: {
                     title: "PrimeSTAR GXLについての解説",
-                    body: "ロングレンジPCRやGCリッチな配列の増幅に非常に強い高正確性酵素。MAXで増えにくい難関テンプレートに対して威力を発揮します。"
+                    body: "PrimeSTAR MAX譲りの優れた高正確性を持ちながら、ロングレンジやGCリッチな配列、難易度の高いテンプレートの増幅に非常に強い高正確性酵素です。<br><br>💡 <b>位置づけ:</b> MAXが値段的に高すぎる場合や、MAXの条件でいまいちうまく増えてくれない場合の<b>強力な2ndチョイス</b>として最適です。正確性と汎用性、コストパフォーマンスのバランスに優れています。"
                 },
                 cycles: [
                     { type: 'loop_start', name: "30 Cycles" },
@@ -1699,7 +1699,7 @@
                 },
                 info: {
                     title: "EmeraldAmpについての解説",
-                    body: "最初からローディングダイ（色素）が混ざっており、PCR後にそのままアガロースゲルへアプライできるため、コロニーPCRなどの数が多いスクリーニングに最適です。"
+                    body: "最初からローディングダイ（色素）が混ざっており、PCR後にそのままアガロースゲルへアプライできるため、コロニーPCRなどの数が多いスクリーニングに最適です。<br><br>価格も非常に安く、最もコスパに優れています。"
                 },
                 cycles: [
                     { type: 'loop_start', name: "30 Cycles" },
@@ -1722,9 +1722,17 @@
                 name: "PCR酵素の使い分け",
                 eyebrow: "Selection Guide",
                 cards: [
-                    { title: "🧬 プラスミドクローニング（正確性重視）", desc: "高正確性が必要なため <b>PrimeSTAR MAX</b> がベストチョイス。MAXで増えない場合の2ndチョイスとして <b>PrimeSTAR GXL</b> がおすすめ。" },
-                    { title: "🎯 遺伝子破壊チェックなど（確実性・コスパ重視）", desc: "とにかくPCRを成功させたい場合は、高成功率を誇る <b>ExPremier</b> が最適。また、コスパを優先したいルーチンPCRには <b>EmeraldAmp</b> もおすすめ。" },
-                    { title: "🧪 大腸菌のコロニーPCR", desc: "大腸菌のコロニーPCRには、ゲルにそのままローディングできてコスパも最強な <b>EmeraldAmp</b> が最適。" }
+                    { title: "🧬 プラスミドクローニング（正確性重視）", desc: "高正確性が必要なため <b>PrimeSTAR MAX</b> がベストチョイス。 MAXで増えない場合の2ndチョイスとして <b>PrimeSTAR GXL</b> がおすすめ。" },
+                    { title: "🎯 遺伝子破壊チェックなど（成功率重視）", desc: "とにかくPCRを成功させたい場合は、高成功率を誇る <b>ExPremier</b> が最適。また、コスパを優先したいルーチンPCRには <b>EmeraldAmp</b> もおすすめ。" },
+                    { title: "🧪 大腸菌のコロニーPCR（コスパ重視）", desc: "大腸菌のコロニーPCRには、ゲルにそのままローディングできてコスパも最強な <b>EmeraldAmp</b> が最適。" }
+                ]
+            },
+            "peg_method_guide": {
+                name: "プロトプラストPEG法の原理",
+                eyebrow: "Transformation Guide",
+                cards: [
+                    { title: "⚡ Ca²⁺の役割", desc: "プロトプラストの細胞膜表面（負電荷）とDNA（負電荷）は本来は静電的に反発し合います。しかし、添加されたCa²⁺が両者の橋渡しをして、電荷を中和することで、DNAが細胞膜表面に接近・吸着できるようになります。結果として、DNA分子が細胞膜表面に凝集・付着した「DNA-Ca²⁺-膜」の３者の複合体が形成されるのです。" },
+                    { title: "💧 PEGの役割", desc: "PEGは強い脱水作用を持ち、周囲の水分子を奪いとります。これによって、細胞膜が不安定化し、膜融合様の状態になることで、細胞膜に一過的な透過性（微小な穴）が生じて、表面に吸着していたDNA-Ca²⁺複合体が細胞内に取り込まれます。" }
                 ]
             }
         };
