@@ -166,19 +166,19 @@
             background: rgba(41, 151, 255, 0.25);
         }
 
-        /* 右上の容量バッジ（クリック可能） */
+        /* 右上の容量バッジ（クリック可能） - 拡大版 */
         .volume-badge {
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 16px;
+            font-weight: 700;
             color: var(--accent-color);
             background: var(--accent-soft);
-            padding: 5px 12px;
-            border-radius: 18px;
+            padding: 8px 16px;
+            border-radius: 20px;
             letter-spacing: -0.3px;
             white-space: nowrap;
             flex-shrink: 0;
             cursor: pointer;
-            border: 1px solid rgba(41, 151, 255, 0.2);
+            border: 1.5px solid rgba(41, 151, 255, 0.3);
             transition: transform 0.15s, background-color 0.2s;
         }
         .volume-badge:active {
@@ -1057,7 +1057,7 @@
                         </label>
                     </div>
                     
-                    <!-- リスト編集用ボタン群（PCR、培地、Solutionの順番に修正） -->
+                    <!-- リスト編集用ボタン群 -->
                     <div class="option-group">
                         <div class="option-label-wrapper">
                             <span class="option-title">PCR酵素リストの編集</span>
@@ -1239,7 +1239,6 @@
     </div>
 
     <script>
-        // 55mmシャーレ換算関数（6〜7mLに1枚）
         function getDishAdvice(vol) {
             const minDishes = Math.round(vol / 7);
             const maxDishes = Math.round(vol / 6);
@@ -1744,7 +1743,7 @@
         let infoButtonFeatureEnabled = localStorage.getItem('lab_infoButtonFeature') !== null ? localStorage.getItem('lab_infoButtonFeature') === 'true' : false;
         let costFeatureEnabled = localStorage.getItem('lab_costFeature') !== null ? localStorage.getItem('lab_costFeature') === 'true' : false;
 
-        let currentOrderType = ""; // 'media', 'solution', 'pcr'
+        let currentOrderType = "";
 
         function initApp() {
             document.getElementById("checkFeatureToggle").checked = checkFeatureEnabled;
@@ -1757,7 +1756,6 @@
             buildPcrModals();
             buildGuideModals();
 
-            // 培地容量リスト作成
             const volListEl = document.getElementById("volumeOptionsList");
             volListEl.innerHTML = "";
             mediaVolumes.forEach(vol => {
@@ -1779,7 +1777,6 @@
             customBtn.onclick = () => { openKeypadModal(); };
             volListEl.appendChild(customBtn);
 
-            // ソリューション容量リスト作成
             const solVolListEl = document.getElementById("solutionVolumeOptionsList");
             solVolListEl.innerHTML = "";
             mediaVolumes.forEach(vol => {
@@ -1801,7 +1798,6 @@
             solCustomBtn.onclick = () => { openSolutionKeypadModal(); };
             solVolListEl.appendChild(solCustomBtn);
 
-            // PCR容量リスト作成
             const pcrVolListEl = document.getElementById("pcrVolumeOptionsList");
             pcrVolListEl.innerHTML = "";
             pcrVolumes.forEach(vol => {
