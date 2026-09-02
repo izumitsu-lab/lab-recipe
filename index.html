@@ -97,12 +97,21 @@
             flex-shrink: 0;
         }
 
+        /* 左上のタイトルエリア（クリック可能） */
         .media-title-wrapper {
             display: flex;
             flex-direction: column;
             gap: 3px;
             flex: 1;
             min-width: 0;
+            cursor: pointer;
+            padding: 4px 6px;
+            margin: -4px -6px;
+            border-radius: 12px;
+            transition: background-color 0.2s;
+        }
+        .media-title-wrapper:active {
+            background-color: rgba(255, 255, 255, 0.04);
         }
 
         .media-eyebrow {
@@ -156,6 +165,7 @@
             transform: scale(0.92);
         }
 
+        /* 右上の容量バッジ（クリック可能） */
         .volume-badge {
             font-size: 14px;
             font-weight: 600;
@@ -166,9 +176,16 @@
             letter-spacing: -0.3px;
             white-space: nowrap;
             flex-shrink: 0;
+            cursor: pointer;
+            border: 1px solid rgba(41, 151, 255, 0.2);
+            transition: transform 0.15s, background-color 0.2s;
+        }
+        .volume-badge:active {
+            transform: scale(0.95);
+            background: rgba(41, 151, 255, 0.25);
         }
 
-        /* インフォメーションボックス（シャーレ換算など） */
+        /* インフォメーションボックス */
         .advice-box {
             background-color: rgba(41, 151, 255, 0.08);
             border: 1px solid rgba(41, 151, 255, 0.2);
@@ -258,7 +275,7 @@
             padding-bottom: 16px;
         }
 
-        /* レシピのセクション見出し（オートクレーブ後など） */
+        /* レシピのセクション見出し */
         .recipe-section-header {
             font-size: 11px;
             font-weight: 700;
@@ -899,14 +916,15 @@
         <div class="view-panel" id="panel0">
             <div class="main-display">
                 <div class="display-header">
-                    <div class="media-title-wrapper">
+                    <!-- 左上のタイトルエリア（クリック可能：培地選択モーダルを開く） -->
+                    <div class="media-title-wrapper" onclick="openModal('mediaModal')">
                         <span class="media-eyebrow">Medium Recipe</span>
                         <div class="media-title-row">
                             <h1 class="media-title" id="displayMediaName">培地名</h1>
-                            <button class="info-trigger-btn" id="mediaInfoBtn" onclick="openInfoModal()">i</button>
+                            <button class="info-trigger-btn" id="mediaInfoBtn" onclick="event.stopPropagation(); openInfoModal()">i</button>
                         </div>
                     </div>
-                    <span class="volume-badge" id="displayVolume">100 mL</span>
+                    <span class="volume-badge" id="displayVolume" onclick="openModal('volumeModal')">100 mL</span>
                 </div>
                 <div class="advice-box" id="mediaAdviceBox"></div>
                 <div class="cost-box" id="mediaCostBox"></div>
@@ -924,14 +942,15 @@
         <div class="view-panel" id="panel1">
             <div class="main-display">
                 <div class="display-header">
-                    <div class="media-title-wrapper">
+                    <!-- 左上のタイトルエリア（クリック可能：PCR酵素選択モーダルを開く） -->
+                    <div class="media-title-wrapper" onclick="openModal('pcrModal')">
                         <span class="media-eyebrow" id="displayPcrSub">PCR Master Mix</span>
                         <div class="media-title-row">
                             <h1 class="media-title" id="displayPcrName">PCR酵素</h1>
-                            <button class="info-trigger-btn" id="pcrInfoBtn" onclick="openInfoModal()">i</button>
+                            <button class="info-trigger-btn" id="pcrInfoBtn" onclick="event.stopPropagation(); openInfoModal()">i</button>
                         </div>
                     </div>
-                    <span class="volume-badge" id="displayPcrVolume">50 µL</span>
+                    <span class="volume-badge" id="displayPcrVolume" onclick="openModal('pcrVolumeModal')">50 µL</span>
                 </div>
                 <div class="mode-switch-container">
                     <button class="mode-btn active" id="btnModeRecipe" onclick="setPcrMode('recipe')">反応液組成</button>
@@ -954,7 +973,8 @@
         <div class="view-panel" id="panel2">
             <div class="main-display">
                 <div class="display-header">
-                    <div class="media-title-wrapper">
+                    <!-- 左上のタイトルエリア（クリック可能：ガイド選択モーダルを開く） -->
+                    <div class="media-title-wrapper" onclick="openModal('guideModal')">
                         <span class="media-eyebrow" id="displayGuideEyebrow">Selection Guide</span>
                         <div class="media-title-row">
                             <h1 class="media-title" id="displayGuideName">PCR酵素の使い分け</h1>
@@ -1481,8 +1501,10 @@
             pcrVolListEl.appendChild(pcrCustomBtn);
 
             const container = document.getElementById("viewsContainer");
+            
             setTimeout(() => {
                 container.scrollLeft = currentViewIndex * container.clientWidth;
+                updateDotsAndBar();
             }, 50);
 
             setupScrollListener();
