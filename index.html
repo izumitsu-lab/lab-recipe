@@ -71,7 +71,7 @@
             min-height: 0;
         }
 
-        /* メインディスプレイカード（縦スワイプカード入れ替えアニメーション対応） */
+        /* メインディスプレイカード（タイトルエリアのタッチ追従・アニメーション対応） */
         .main-display {
             background-color: var(--card-bg);
             border: 1px solid var(--card-border);
@@ -88,26 +88,6 @@
             transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* カードが上下にスパッと気持ちよく入れ替わるアニメーション状態 */
-        .main-display.slide-out-up {
-            transform: translateY(-40px) scale(0.96);
-            opacity: 0;
-        }
-        .main-display.slide-in-up {
-            transform: translateY(40px) scale(0.96);
-            opacity: 0;
-            transition: none !important;
-        }
-        .main-display.slide-out-down {
-            transform: translateY(40px) scale(0.96);
-            opacity: 0;
-        }
-        .main-display.slide-in-down {
-            transform: translateY(-40px) scale(0.96);
-            opacity: 0;
-            transition: none !important;
-        }
-
         .display-header {
             display: flex;
             justify-content: space-between;
@@ -117,6 +97,11 @@
             padding-bottom: 10px;
             gap: 12px;
             flex-shrink: 0;
+            cursor: grab;
+            touch-action: none; /* ヘルパー領域でのスクロールバグを防ぎ縦ドラッグを優先 */
+        }
+        .display-header:active {
+            cursor: grabbing;
         }
 
         /* 左上のタイトルエリア（クリック可能） */
@@ -126,7 +111,6 @@
             gap: 3px;
             flex: 1;
             min-width: 0;
-            cursor: pointer;
             padding: 4px 6px;
             margin: -4px -6px;
             border-radius: 12px;
@@ -951,7 +935,7 @@
         <!-- 1ページ目：PCRビュー -->
         <div class="view-panel" id="panel0">
             <div class="main-display" id="displayPCR">
-                <div class="display-header">
+                <div class="display-header" id="headerPCR">
                     <div class="media-title-wrapper" onclick="openModal('pcrModal')">
                         <span class="media-eyebrow" id="displayPcrSub">PCR Master Mix</span>
                         <div class="media-title-row">
@@ -980,7 +964,7 @@
         <!-- 2ページ目：培地ビュー -->
         <div class="view-panel" id="panel1">
             <div class="main-display" id="displayMedia">
-                <div class="display-header">
+                <div class="display-header" id="headerMedia">
                     <div class="media-title-wrapper" onclick="openModal('mediaModal')">
                         <span class="media-eyebrow">Medium Recipe</span>
                         <div class="media-title-row">
@@ -1008,7 +992,7 @@
         <!-- 3ページ目：Solutions（ストック溶液）ビュー -->
         <div class="view-panel" id="panel2">
             <div class="main-display" id="displaySolution">
-                <div class="display-header">
+                <div class="display-header" id="headerSolution">
                     <div class="media-title-wrapper" onclick="openModal('solutionModal')">
                         <span class="media-eyebrow">Stock Solutions</span>
                         <div class="media-title-row">
@@ -1031,8 +1015,8 @@
 
         <!-- 4ページ目：ガイドビュー -->
         <div class="view-panel" id="panel3">
-            <div class="main-display">
-                <div class="display-header">
+            <div class="main-display" id="displayGuide">
+                <div class="display-header" id="headerGuide">
                     <div class="media-title-wrapper" onclick="openModal('guideModal')">
                         <span class="media-eyebrow" id="displayGuideEyebrow">Selection Guide</span>
                         <div class="media-title-row">
@@ -1040,7 +1024,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="list-container-wrapper">
+                <div class="list-container-wrapper" id="guideScrollArea">
                     <div class="guide-container" id="guideContentContainer"></div>
                 </div>
             </div>
@@ -1157,7 +1141,6 @@
     <div class="modal-overlay" id="infoModal" onclick="outsideClose(event, 'infoModal')">
         <div class="modal-content info-modal-content">
             <div class="modal-header">💡 実験ノート・解説</div>
-            <div class="modal-header" id="orderModalHeader">リストのカスタマイズ</div>
             <div class="info-modal-title" id="infoModalTitle"></div>
             <div class="info-modal-body" id="infoModalBody">ここに詳細な解説が入ります。</div>
             <button class="info-close-btn" onclick="closeModal('infoModal')">閉じる</button>
@@ -1785,7 +1768,7 @@
         let currentPcrMode = "recipe";
         const pcrVolumes = [50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200];
 
-        let currentGuideKey = "pcr_enzyme_guide";
+        let currentGuideKey = localStorage.getItem('lab_guideKey') || "pcr_enzyme_guide";
 
         let checkFeatureEnabled = localStorage.getItem('lab_checkFeature') !== null ? localStorage.getItem('lab_checkFeature') === 'true' : true;
         let adviceFeatureEnabled = localStorage.getItem('lab_adviceFeature') !== null ? localStorage.getItem('lab_adviceFeature') === 'true' : true;
@@ -1875,130 +1858,131 @@
             }, 50);
 
             setupScrollListener();
-            setupVerticalSwipeAndWheelForPanels();
+            setupHeaderTouchDrag();
             updateView();
         }
 
         let isSwitchingCooldown = false;
 
-        function setupVerticalSwipeAndWheelForPanels() {
+        // 【新方式】ヘッダー（タイトル領域）を指でドラッグ＆スワイプしてカードを上下に動かし切り替える
+        function setupHeaderTouchDrag() {
             const panels = [
-                { panelId: 'panel0', scrollAreaId: 'pcrScrollArea', type: 'pcr' },
-                { panelId: 'panel1', scrollAreaId: 'mediaScrollArea', type: 'media' },
-                { panelId: 'panel2', scrollAreaId: 'solutionScrollArea', type: 'solution' }
+                { cardId: 'displayPCR', headerId: 'headerPCR', type: 'pcr' },
+                { cardId: 'displayMedia', headerId: 'headerMedia', type: 'media' },
+                { cardId: 'displaySolution', headerId: 'headerSolution', type: 'solution' },
+                { cardId: 'displayGuide', headerId: 'headerGuide', type: 'guide' }
             ];
 
             panels.forEach(p => {
-                const panelEl = document.getElementById(p.panelId);
-                const scrollAreaEl = document.getElementById(p.scrollAreaId);
-                let touchStartY = 0;
-                let touchStartX = 0;
+                const cardEl = document.getElementById(p.cardId);
+                const headerEl = document.getElementById(p.headerId);
+                if (!cardEl || !headerEl) return;
 
-                panelEl.addEventListener('touchstart', (e) => {
-                    touchStartY = e.touches[0].clientY;
-                    touchStartX = e.touches[0].clientX;
-                }, { passive: true });
+                let startY = 0;
+                let deltaY = 0;
+                let isDragging = false;
 
-                panelEl.addEventListener('touchend', (e) => {
+                headerEl.addEventListener('touchstart', (e) => {
                     if (isSwitchingCooldown) return;
-                    let touchEndY = e.changedTouches[0].clientY;
-                    let touchEndX = e.changedTouches[0].clientX;
-
-                    let diffY = touchEndY - touchStartY;
-                    let diffX = touchEndX - touchStartX;
-
-                    if (Math.abs(diffY) > Math.abs(diffX) && Math.abs(diffY) > 40) {
-                        triggerItemSwitch(p.type, diffY < 0 ? 'next' : 'prev', diffY < 0 ? 'up' : 'down');
-                    }
+                    isDragging = true;
+                    startY = e.touches[0].clientY;
+                    deltaY = 0;
+                    cardEl.style.transition = 'none';
                 }, { passive: true });
 
-                panelEl.addEventListener('wheel', (e) => {
-                    const isAtTop = scrollAreaEl.scrollTop <= 0;
-                    const isAtBottom = scrollAreaEl.scrollHeight - scrollAreaEl.clientHeight <= scrollAreaEl.scrollTop + 1;
+                headerEl.addEventListener('touchmove', (e) => {
+                    if (!isDragging) return;
+                    const currentY = e.touches[0].clientY;
+                    deltaY = currentY - startY;
 
-                    if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-                        if ((e.deltaY < 0 && isAtTop) || (e.deltaY > 0 && isAtBottom) || scrollAreaEl.scrollHeight <= scrollAreaEl.clientHeight) {
-                            e.preventDefault();
+                    // 指の動きに追従してカードが上下に移動し、わずかに縮小・フェードする物理演算のようなリッチな挙動
+                    const scaleVal = Math.max(0.92, 1 - Math.abs(deltaY) * 0.0004);
+                    const opacityVal = Math.max(0.4, 1 - Math.abs(deltaY) * 0.0018);
+                    cardEl.style.transform = `translateY(${deltaY}px) scale(${scaleVal})`;
+                    cardEl.style.opacity = opacityVal;
+                }, { passive: true });
 
-                            if (isSwitchingCooldown) return;
+                headerEl.addEventListener('touchend', (e) => {
+                    if (!isDragging) return;
+                    isDragging = false;
 
-                            if (Math.abs(e.deltaY) > 15) {
-                                triggerItemSwitch(p.type, e.deltaY > 0 ? 'next' : 'prev', e.deltaY > 0 ? 'up' : 'down');
-                            }
-                        }
+                    cardEl.style.transition = 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
+
+                    const threshold = 50; // 50px以上引っ張ったら切り替え確定
+                    if (Math.abs(deltaY) > threshold) {
+                        const direction = deltaY < 0 ? 'next' : 'prev';
+                        const exitOffset = deltaY < 0 ? -60 : 60;
+
+                        // 外側に弾みをつけて消える
+                        cardEl.style.transform = `translateY(${exitOffset}px) scale(0.92)`;
+                        cardEl.style.opacity = '0';
+
+                        setTimeout(() => {
+                            switchItemData(p.type, direction);
+                            updateView();
+
+                            // 反対側からスライドインする初期位置にセット
+                            cardEl.style.transition = 'none';
+                            cardEl.style.transform = `translateY(${-exitOffset}px) scale(0.92)`;
+                            cardEl.style.opacity = '0';
+
+                            requestAnimationFrame(() => {
+                                requestAnimationFrame(() => {
+                                    cardEl.style.transition = 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
+                                    cardEl.style.transform = 'translateY(0) scale(1)';
+                                    cardEl.style.opacity = '1';
+                                });
+                            });
+                        }, 200);
+                    } else {
+                        // 閾値未満なら元の位置に戻る（バネのような戻り）
+                        cardEl.style.transform = 'translateY(0) scale(1)';
+                        cardEl.style.opacity = '1';
                     }
-                }, { passive: false });
+                }, { passive: true });
             });
         }
 
-        function triggerItemSwitch(type, direction, slideDir) {
-            if (isSwitchingCooldown) return;
-            isSwitchingCooldown = true;
-
-            let displayCardId = '';
-            if (type === 'pcr') displayCardId = 'displayPCR';
-            else if (type === 'media') displayCardId = 'displayMedia';
-            else if (type === 'solution') displayCardId = 'displaySolution';
-
-            const cardEl = document.getElementById(displayCardId);
-            if (!cardEl) {
-                isSwitchingCooldown = false;
-                return;
-            }
-
-            // 1. スライドアウト（今のカードが上下に消える）
-            cardEl.classList.add(slideDir === 'up' ? 'slide-out-up' : 'slide-out-down');
-
-            setTimeout(() => {
-                // 2. データの切り替えと描画更新
-                if (type === 'pcr') {
-                    const visibleList = pcrOrderConfig.filter(item => item.visible).map(item => item.key);
-                    if (visibleList.length > 1) {
-                        let idx = visibleList.indexOf(currentPcrKey);
-                        if (idx === -1) idx = 0;
-                        idx = direction === 'next' ? (idx + 1) % visibleList.length : (idx - 1 + visibleList.length) % visibleList.length;
-                        currentPcrKey = visibleList[idx];
-                        localStorage.setItem('lab_pcrKey', currentPcrKey);
-                    }
-                } else if (type === 'media') {
-                    const visibleList = mediaOrderConfig.filter(item => item.visible).map(item => item.key);
-                    if (visibleList.length > 1) {
-                        let idx = visibleList.indexOf(currentMediaKey);
-                        if (idx === -1) idx = 0;
-                        idx = direction === 'next' ? (idx + 1) % visibleList.length : (idx - 1 + visibleList.length) % visibleList.length;
-                        currentMediaKey = visibleList[idx];
-                        localStorage.setItem('lab_mediaKey', currentMediaKey);
-                        const m = mediaDatabase[currentMediaKey];
-                        if (m && m.hasModes) currentMediaMode = Object.keys(m.modes)[0];
-                    }
-                } else if (type === 'solution') {
-                    const visibleList = solutionOrderConfig.filter(item => item.visible).map(item => item.key);
-                    if (visibleList.length > 1) {
-                        let idx = visibleList.indexOf(currentSolutionKey);
-                        if (idx === -1) idx = 0;
-                        idx = direction === 'next' ? (idx + 1) % visibleList.length : (idx - 1 + visibleList.length) % visibleList.length;
-                        currentSolutionKey = visibleList[idx];
-                        localStorage.setItem('lab_solutionKey', currentSolutionKey);
-                    }
+        function switchItemData(type, direction) {
+            if (type === 'pcr') {
+                const visibleList = pcrOrderConfig.filter(item => item.visible).map(item => item.key);
+                if (visibleList.length > 1) {
+                    let idx = visibleList.indexOf(currentPcrKey);
+                    if (idx === -1) idx = 0;
+                    idx = direction === 'next' ? (idx + 1) % visibleList.length : (idx - 1 + visibleList.length) % visibleList.length;
+                    currentPcrKey = visibleList[idx];
+                    localStorage.setItem('lab_pcrKey', currentPcrKey);
                 }
-
-                updateView();
-
-                // 3. 次のカードを反対側（スライドイン開始位置）に瞬間移動させる
-                cardEl.classList.remove('slide-out-up', 'slide-out-down');
-                cardEl.classList.add(slideDir === 'up' ? 'slide-in-up' : 'slide-in-down');
-
-                // 4. アニメーションフレームを挟んで中央へスライドイン
-                requestAnimationFrame(() => {
-                    requestAnimationFrame(() => {
-                        cardEl.classList.remove('slide-in-up', 'slide-in-down');
-                    });
-                });
-
-                setTimeout(() => {
-                    isSwitchingCooldown = false;
-                }, 250);
-            }, 200);
+            } else if (type === 'media') {
+                const visibleList = mediaOrderConfig.filter(item => item.visible).map(item => item.key);
+                if (visibleList.length > 1) {
+                    let idx = visibleList.indexOf(currentMediaKey);
+                    if (idx === -1) idx = 0;
+                    idx = direction === 'next' ? (idx + 1) % visibleList.length : (idx - 1 + visibleList.length) % visibleList.length;
+                    currentMediaKey = visibleList[idx];
+                    localStorage.setItem('lab_mediaKey', currentMediaKey);
+                    const m = mediaDatabase[currentMediaKey];
+                    if (m && m.hasModes) currentMediaMode = Object.keys(m.modes)[0];
+                }
+            } else if (type === 'solution') {
+                const visibleList = solutionOrderConfig.filter(item => item.visible).map(item => item.key);
+                if (visibleList.length > 1) {
+                    let idx = visibleList.indexOf(currentSolutionKey);
+                    if (idx === -1) idx = 0;
+                    idx = direction === 'next' ? (idx + 1) % visibleList.length : (idx - 1 + visibleList.length) % visibleList.length;
+                    currentSolutionKey = visibleList[idx];
+                    localStorage.setItem('lab_solutionKey', currentSolutionKey);
+                }
+            } else if (type === 'guide') {
+                const guideKeys = Object.keys(guideDatabase);
+                if (guideKeys.length > 1) {
+                    let idx = guideKeys.indexOf(currentGuideKey);
+                    if (idx === -1) idx = 0;
+                    idx = direction === 'next' ? (idx + 1) % guideKeys.length : (idx - 1 + guideKeys.length) % guideKeys.length;
+                    currentGuideKey = guideKeys[idx];
+                    localStorage.setItem('lab_guideKey', currentGuideKey);
+                }
+            }
         }
 
         function openOrderModal(type) {
@@ -2328,6 +2312,7 @@
                 btn.textContent = guide.name;
                 btn.onclick = () => {
                     currentGuideKey = key;
+                    localStorage.setItem('lab_guideKey', key);
                     closeModal('guideModal');
                     updateView();
                 };
