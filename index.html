@@ -40,7 +40,6 @@
             margin: 0 auto;
             justify-content: space-between;
             overflow: hidden;
-            perspective: 1200px; /* 3Dフリップ用のパースペクティブ */
         }
 
         /* 5画面分の横長コンテナ */
@@ -70,10 +69,9 @@
             display: flex;
             flex-direction: column;
             min-height: 0;
-            transform-style: preserve-3d;
         }
 
-        /* メインディスプレイカード（Flip Clock風3D立体フリップ対応） */
+        /* メインディスプレイカード（縦スワイプカード入れ替えアニメーション対応） */
         .main-display {
             background-color: var(--card-bg);
             border: 1px solid var(--card-border);
@@ -86,19 +84,28 @@
             min-height: 0;
             position: relative;
             overflow: hidden;
-            transform-style: preserve-3d;
-            backface-visibility: hidden;
-            transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.35s ease;
+            will-change: transform, opacity;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* フリップクロック風の上下回転・パタパタアニメーション用クラス */
-        .main-display.flip-up {
-            transform: rotateX(75deg) translateY(-20px);
+        /* カードが上下にスパッと気持ちよく入れ替わるアニメーション状態 */
+        .main-display.slide-out-up {
+            transform: translateY(-40px) scale(0.96);
             opacity: 0;
         }
-        .main-display.flip-down {
-            transform: rotateX(-75deg) translateY(20px);
+        .main-display.slide-in-up {
+            transform: translateY(40px) scale(0.96);
             opacity: 0;
+            transition: none !important;
+        }
+        .main-display.slide-out-down {
+            transform: translateY(40px) scale(0.96);
+            opacity: 0;
+        }
+        .main-display.slide-in-down {
+            transform: translateY(-40px) scale(0.96);
+            opacity: 0;
+            transition: none !important;
         }
 
         .display-header {
@@ -1150,6 +1157,7 @@
     <div class="modal-overlay" id="infoModal" onclick="outsideClose(event, 'infoModal')">
         <div class="modal-content info-modal-content">
             <div class="modal-header">💡 実験ノート・解説</div>
+            <div class="modal-header" id="orderModalHeader">リストのカスタマイズ</div>
             <div class="info-modal-title" id="infoModalTitle"></div>
             <div class="info-modal-body" id="infoModalBody">ここに詳細な解説が入ります。</div>
             <button class="info-close-btn" onclick="closeModal('infoModal')">閉じる</button>
@@ -1255,7 +1263,6 @@
                     <button class="keypad-btn" onclick="pressPcrKeypad('8')">8</button>
                     <button class="keypad-btn" onclick="pressPcrKeypad('9')">9</button>
                     <button class="keypad-btn action-btn" onclick="pressPcrKeypad('clear')">C</button>
-                    <button class="keypad-btn" onclick="pressPcrKeypad('0')">0</button>
                     <button class="keypad-btn" onclick="pressPcrKeypad('0')">0</button>
                     <button class="keypad-btn action-btn" onclick="pressPcrKeypad('backspace')">⌫</button>
                     <button class="keypad-btn set-btn" onclick="applyCustomPcrVolume()">SET</button>
@@ -1934,11 +1941,13 @@
             else if (type === 'solution') displayCardId = 'displaySolution';
 
             const cardEl = document.getElementById(displayCardId);
-
-            // 1. Flip Clock / 3Dパタパタ回転フリップアニメーションを適用
-            if (cardEl) {
-                cardEl.classList.add(slideDir === 'up' ? 'flip-up' : 'flip-down');
+            if (!cardEl) {
+                isSwitchingCooldown = false;
+                return;
             }
+
+            // 1. スライドアウト（今のカードが上下に消える）
+            cardEl.classList.add(slideDir === 'up' ? 'slide-out-up' : 'slide-out-down');
 
             setTimeout(() => {
                 // 2. データの切り替えと描画更新
@@ -1975,16 +1984,21 @@
 
                 updateView();
 
-                // 3. アニメーションクラスを外して元の状態へスムーズに戻す
-                const newCardEl = document.getElementById(displayCardId);
-                if (newCardEl) {
-                    newCardEl.classList.remove('flip-up', 'flip-down');
-                }
+                // 3. 次のカードを反対側（スライドイン開始位置）に瞬間移動させる
+                cardEl.classList.remove('slide-out-up', 'slide-out-down');
+                cardEl.classList.add(slideDir === 'up' ? 'slide-in-up' : 'slide-in-down');
+
+                // 4. アニメーションフレームを挟んで中央へスライドイン
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        cardEl.classList.remove('slide-in-up', 'slide-in-down');
+                    });
+                });
 
                 setTimeout(() => {
                     isSwitchingCooldown = false;
                 }, 250);
-            }, 250);
+            }, 200);
         }
 
         function openOrderModal(type) {
