@@ -1206,7 +1206,7 @@
                     body: "<b>CM（Complete Medium：完全培地）</b>は、多くの糸状菌などの培養に用いられる基本培地です。菌の種類や研究目的によって様々な処方のCMが存在しますが、本レシピは<b>トウモロコシごま葉枯病菌</b>の培養に適した配合になっています。<br><br>💡 <b>Solution AとBに関する注意:</b> Solution AとBをわざわざ分けて配合しているのは、高濃度で直接混ぜ合わせると<b>不溶性の塩（沈澱）を形成してしまうため</b>です。そのため、液を作る際に高濃度な状態でソリューションA・Bを直接混ぜ合わせるのは厳禁です。"
                 },
                 ingredients: [
-                    { name: "グルコース", amount: 1.0, unit: "g" }, { name: "Yeast extract", amount: 0.1, unit: "g" }, { name: "Tryptone", amount: 0.1, unit: "g" }, { name: "Solution A (CM用)", amount: 1.0, unit: "mL" }, { name: "Solution B (CM用)", amount: 1.0, unit: "mL" }, { name: "寒天", amount: 1.5, unit: "g" }, { name: "蒸留水", amount: 98.0, unit: "mL" }
+                    { name: "グルコース", amount: 1.0, unit: "g" }, { name: "Yeast extract", amount: 0.1, unit: "g" }, { name: "Tryptone", amount: 0.1, unit: "g" }, { name: "sol. A (CM)", amount: 1.0, unit: "mL" }, { name: "sol. B (CM)", amount: 1.0, unit: "mL" }, { name: "寒天", amount: 1.5, unit: "g" }, { name: "蒸留水", amount: 98.0, unit: "mL" }
                 ],
                 postIngredients: []
             },
@@ -1280,8 +1280,8 @@
                     body: "アグロバクテリウムを介した形質転換（Infection Medium / Induction Medium）に特化した培地です。アセトシリンゴンは熱に非常に弱いため、<b>必ずオートクレーブ滅菌・冷却後</b>に無菌的に添加してください。"
                 },
                 ingredients: [
-                    { name: "MM salt solution 1", amount: 10.0, unit: "mL" },
-                    { name: "MM salt solution 2", amount: 10.0, unit: "mL" },
+                    { name: "MM salt sol. 1", amount: 10.0, unit: "mL" },
+                    { name: "MM salt sol. 2", amount: 10.0, unit: "mL" },
                     { name: "400mM MES", amount: 10.0, unit: "mL" },
                     { name: "グルコース", amount: 0.1, unit: "g" },
                     { name: "グリセロール", amount: 1.0, unit: "mL" },
@@ -1395,7 +1395,7 @@
 
         const solutionDatabase = {
             "mm_sol_1": {
-                name: "MM salt solution 1",
+                name: "MM salt sol. 1",
                 baseVolume: 100,
                 getAdvice: (vol) => `💡 アグロバクテリウム法用 ストック液`,
                 calculateCost: (vol) => `💰 概算コスト: -`,
@@ -1410,7 +1410,7 @@
                 ]
             },
             "mm_sol_2": {
-                name: "MM salt solution 2",
+                name: "MM salt sol. 2",
                 baseVolume: 100,
                 getAdvice: (vol) => `💡 アグロバクテリウム法用 ストック液`,
                 calculateCost: (vol) => `💰 概算コスト: -`,
@@ -1427,7 +1427,7 @@
                 ]
             },
             "sol_a": {
-                name: "Solution A (CM用)",
+                name: "sol. A (CM)",
                 baseVolume: 500,
                 getAdvice: (vol) => `💡 CM培地用ストック溶液 A`,
                 calculateCost: (vol) => `💰 概算コスト: -`,
@@ -1441,7 +1441,7 @@
                 ]
             },
             "sol_b": {
-                name: "Solution B (CM用)",
+                name: "sol. B (CM)",
                 baseVolume: 500,
                 getAdvice: (vol) => `💡 CM培地用ストック溶液 B`,
                 calculateCost: (vol) => `💰 概算コスト: -`,
@@ -1469,7 +1469,6 @@
                 ingredients: [
                     { name: "KCl", amount: 26.1, unit: "g" },
                     { name: "CaCl<sub>2</sub>・2H<sub>2</sub>O", amount: 0.736, unit: "g" },
-                    { name: "Water", amount: "全量を", unit: "" },
                     { name: "Water (メスアップ)", amount: 500.0, unit: "mLまで" }
                 ]
             },
