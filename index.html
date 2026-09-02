@@ -114,6 +114,12 @@
             opacity: 0.9;
         }
 
+        .media-title-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
         .media-title {
             font-size: 18px;
             font-weight: 700;
@@ -123,6 +129,29 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+        }
+
+        /* 解説ポップアップトリガーボタン（ⓘ 解説） */
+        .info-trigger-btn {
+            background: var(--accent-soft);
+            color: var(--accent-color);
+            border: 1px solid rgba(41, 151, 255, 0.3);
+            border-radius: 12px;
+            padding: 4px 10px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            gap: 4px;
+            flex-shrink: 0;
+            transition: transform 0.15s;
+        }
+        .info-trigger-btn.visible {
+            display: inline-flex;
+        }
+        .info-trigger-btn:active {
+            transform: scale(0.95);
         }
 
         .volume-badge {
@@ -137,7 +166,7 @@
             flex-shrink: 0;
         }
 
-        /* アドバイス・コスト表示ボックス */
+        /* インフォメーションボックス（シャーレ換算など） */
         .advice-box {
             background-color: rgba(41, 151, 255, 0.08);
             border: 1px solid rgba(41, 151, 255, 0.2);
@@ -621,7 +650,7 @@
             font-weight: 500;
         }
 
-        /* モーダル */
+        /* モーダル共通スタイル */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -671,6 +700,46 @@
             text-align: center;
             letter-spacing: 1px;
             text-transform: uppercase;
+        }
+
+        /* 詳細アドバイス（インフォメーション）モーダル専用スタイル */
+        .info-modal-content {
+            background-color: #18181d;
+            border: 1px solid rgba(41, 151, 255, 0.3);
+            border-radius: 28px;
+            padding: 24px 20px;
+            max-width: 380px;
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.7);
+        }
+        .info-modal-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .info-modal-body {
+            font-size: 14px;
+            color: #d1d1d6;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .info-close-btn {
+            background-color: var(--accent-color);
+            color: #ffffff;
+            border: none;
+            border-radius: 14px;
+            padding: 12px;
+            width: 100%;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.15s;
+        }
+        .info-close-btn:active {
+            transform: scale(0.98);
         }
 
         .option-list {
@@ -830,7 +899,10 @@
                 <div class="display-header">
                     <div class="media-title-wrapper">
                         <span class="media-eyebrow">Medium Recipe</span>
-                        <h1 class="media-title" id="displayMediaName">培地名</h1>
+                        <div class="media-title-row">
+                            <h1 class="media-title" id="displayMediaName">培地名</h1>
+                            <button class="info-trigger-btn" id="mediaInfoBtn" onclick="openInfoModal()">ⓘ 解説</button>
+                        </div>
                     </div>
                     <span class="volume-badge" id="displayVolume">100 mL</span>
                 </div>
@@ -852,7 +924,10 @@
                 <div class="display-header">
                     <div class="media-title-wrapper">
                         <span class="media-eyebrow" id="displayPcrSub">PCR Master Mix</span>
-                        <h1 class="media-title" id="displayPcrName">PCR酵素</h1>
+                        <div class="media-title-row">
+                            <h1 class="media-title" id="displayPcrName">PCR酵素</h1>
+                            <button class="info-trigger-btn" id="pcrInfoBtn" onclick="openInfoModal()">ⓘ 解説</button>
+                        </div>
                     </div>
                     <span class="volume-badge" id="displayPcrVolume">50 µL</span>
                 </div>
@@ -879,7 +954,9 @@
                 <div class="display-header">
                     <div class="media-title-wrapper">
                         <span class="media-eyebrow" id="displayGuideEyebrow">Selection Guide</span>
-                        <h1 class="media-title" id="displayGuideName">PCR酵素の使い分け</h1>
+                        <div class="media-title-row">
+                            <h1 class="media-title" id="displayGuideName">PCR酵素の使い分け</h1>
+                        </div>
                     </div>
                 </div>
                 <div class="list-container-wrapper">
@@ -912,7 +989,7 @@
                     </div>
                     <div class="option-group">
                         <div class="option-label-wrapper">
-                            <span class="option-title">アドバイスコメント</span>
+                            <span class="option-title">インフォメーション</span>
                             <span class="option-desc">シャーレ換算や実験メモを表示</span>
                         </div>
                         <label class="switch">
@@ -965,6 +1042,15 @@
     </div>
 
     <div class="control-bar" id="controlBar"></div>
+
+    <!-- 詳細解説ポップアップ用モーダル -->
+    <div class="modal-overlay" id="infoModal" onclick="outsideClose(event, 'infoModal')">
+        <div class="modal-content info-modal-content">
+            <div class="info-modal-title" id="infoModalTitle">💡 実験ノート・解説</div>
+            <div class="info-modal-body" id="infoModalBody">ここに詳細な解説が入ります。</div>
+            <button class="info-close-btn" onclick="closeModal('infoModal')">閉じる</button>
+        </div>
+    </div>
 
     <!-- モーダル各種 -->
     <div class="modal-overlay" id="mediaModal" onclick="outsideClose(event, 'mediaModal')">
@@ -1070,6 +1156,10 @@
                     const cost = (1.0 * 4.4 + 0.1 * 16 + 0.1 * 26 + 1.5 * 42) * ratio;
                     return `💰 概算コスト: 約 ${Math.round(cost)} 円 (${vol} mLあたり)`;
                 },
+                info: {
+                    title: "CM培地についての解説",
+                    body: "<b>CM（Complete Medium：完全培地）</b>は、多くの糸状菌などの培養に用いられる基本培地です。菌の種類や研究目的によって様々な処方のCMが存在しますが、本レシピは<b>トウモロコシごま葉枯病菌</b>の培養に適した配合になっています。<br><br>💡 <b>Solution AとBに関する注意:</b> Solution AとBをわざわざ分けて配合しているのは、高濃度で直接混ぜ合わせると<b>不溶性の塩（沈澱）を形成してしまうため</b>です。そのため、液を作る際に高濃度な状態でソリューションA・Bを直接混ぜ合わせるのは厳禁です。"
+                },
                 ingredients: [
                     { name: "グルコース", amount: 1.0, unit: "g" }, { name: "Yeast extract", amount: 0.1, unit: "g" }, { name: "Tryptone", amount: 0.1, unit: "g" }, { name: "Solution A", amount: 1.0, unit: "mL" }, { name: "Solution B", amount: 1.0, unit: "mL" }, { name: "寒天", amount: 1.5, unit: "g" }, { name: "蒸留水", amount: 98.0, unit: "mL" }
                 ],
@@ -1083,6 +1173,10 @@
                     const ratio = vol / 100;
                     const cost = (16.0 * 0.3 + 0.2 * 5.9 + 1.5 * 42) * ratio;
                     return `💰 概算コスト: 約 ${Math.round(cost)} 円 (${vol} mLあたり)`;
+                },
+                info: {
+                    title: "V30培地についての解説",
+                    body: "V8野菜ジュースなどをベースにした植物病原菌の培養によく使われる培地です。CaCO3を加えることでpHの急激な変動を防ぐ役割があります。"
                 },
                 ingredients: [
                     { name: "V30ジュース", amount: 16.0, unit: "mL" }, { name: "CaCO3", amount: 0.2, unit: "g" }, { name: "寒天", amount: 1.5, unit: "g" }, { name: "水", amount: 84.0, unit: "mL" }
@@ -1098,6 +1192,10 @@
                     const cost = (3.9 * 27.17) * ratio;
                     return `💰 概算コスト: 約 ${Math.round(cost)} 円 (${vol} mLあたり)`;
                 },
+                info: {
+                    title: "PDA培地についての解説",
+                    body: "Potato Dextrose Agarの略で、カビや酵母の分離・培養に最も汎用される標準的な培地です。市販の粉末培地を水に溶かしてオートクレーブするだけで簡単に調製できます。"
+                },
                 ingredients: [
                     { name: "PDA (粉)", amount: 3.9, unit: "g" }, { name: "水", amount: 100.0, unit: "mL" }
                 ],
@@ -1110,7 +1208,11 @@
                 calculateCost: (vol) => {
                     const ratio = vol / 100;
                     const cost = (2.0 * 66 + 1.5 * 42) * ratio;
-                    return `💰 概算コスト: 約 ${Math.round(cost)} 円 (${vol} mLあたり)`;
+                    return `💰 概算Cost: 約 ${Math.round(cost)} 円 (${vol} mLあたり)`;
+                },
+                info: {
+                    title: "LB培地についての解説",
+                    body: "大腸菌の培養における定番培地（Luria-Bertani medium）。形質転換体のセレクションを行うため、<b>オートクレーブ後（培地が冷めてから50〜55℃程度になってから）</b>に適切な抗生物質（カナマイシンなど）を添加してください。"
                 },
                 ingredients: [
                     { name: "LB (粉)", amount: 2.0, unit: "g" }, { name: "寒天", amount: 1.5, unit: "g" }, { name: "水", amount: 100.0, unit: "mL" }
@@ -1127,6 +1229,10 @@
                     const ratio = vol / 100;
                     const cost = (400 + 0.4 + 4 + (1.5 * 42)) * ratio;
                     return `💰 概算コスト: 約 ${Math.round(cost)} 円 (${vol} mLあたり)`;
+                },
+                info: {
+                    title: "IM培地についての解説",
+                    body: "アグロバクテリウムを介した形質転換（Infection Medium / Induction Medium）に特化した培地です。アセトシリンゴンは熱に非常に弱いため、<b>必ずオートクレーブ滅菌・冷却後</b>に無菌的に添加してください。"
                 },
                 ingredients: [
                     { name: "MM salt solution 1", amount: 10.0, unit: "mL" },
@@ -1157,6 +1263,10 @@
                     const cost = (21.4 / 10) * vol;
                     return `💰 概算コスト: 約 ${Math.round(cost)} 円 (${vol} µLあたり)`;
                 },
+                info: {
+                    title: "ExPremierについての解説",
+                    body: "タカラバイオの高性能プレミックスPCR酵素。トラブルが少なく、通常のルーチンから遺伝子クローニングまで幅広く高い成功率を発揮します。"
+                },
                 cycles: [
                     { type: 'single', name: "初期変性", temp: "94 °C", time: "1 min" },
                     { type: 'loop_start', name: "30 Cycles" },
@@ -1180,6 +1290,10 @@
                 calculateCost: (vol) => {
                     const cost = (56.0 / 10) * vol;
                     return `💰 概算コスト: 約 ${Math.round(cost)} 円 (${vol} µLあたり)`;
+                },
+                info: {
+                    title: "PrimeSTAR MAXについての解説",
+                    body: "世界最高水準の正確性（高fidelity）を誇る高スピード・高増幅酵素。In-Fusionクローニング用のインサート作製にはこれ一択といって良いほどのベストマッチ酵素です。"
                 },
                 cycles: [
                     { type: 'loop_start', name: "30–35 Cycles (通常条件: >200ng)" },
@@ -1210,6 +1324,10 @@
                     const cost = (26.6 / 10) * vol;
                     return `💰 概算コスト: 約 ${Math.round(cost)} 円 (${vol} µLあたり)`;
                 },
+                info: {
+                    title: "PrimeSTAR GXLについての解説",
+                    body: "ロングレンジPCRやGCリッチな配列の増幅に非常に強い高正確性酵素。MAXで増えにくい難関テンプレートに対して威力を発揮します。"
+                },
                 cycles: [
                     { type: 'loop_start', name: "30 Cycles" },
                     { type: 'loop_step', name: "変性", temp: "98 °C", time: "10 sec" },
@@ -1232,6 +1350,10 @@
                 calculateCost: (vol) => {
                     const cost = (16.7 / 10) * vol;
                     return `💰 概算コスト: 約 ${Math.round(cost)} 円 (${vol} µLあたり)`;
+                },
+                info: {
+                    title: "EmeraldAmpについての解説",
+                    body: "最初からローディングダイ（色素）が混ざっており、PCR後にそのままアガロースゲルへアプライできるため、コロニーPCRなどの数が多いスクリーニングに最適です。"
                 },
                 cycles: [
                     { type: 'loop_start', name: "30 Cycles" },
@@ -1771,11 +1893,39 @@
             checkResetButtonState(type);
         }
 
+        function openInfoModal() {
+            let infoData = null;
+            if (currentViewIndex === 0) {
+                const media = mediaDatabase[currentMediaKey];
+                if (media && media.info) infoData = media.info;
+            } else if (currentViewIndex === 1) {
+                const pcr = pcrDatabase[currentPcrKey];
+                if (pcr && pcr.info) infoData = pcr.info;
+            }
+
+            if (infoData) {
+                document.getElementById("infoModalTitle").innerHTML = `💡 ${infoData.title}`;
+                document.getElementById("infoModalBody").innerHTML = infoData.body;
+                openModal('infoModal');
+            }
+        }
+
         function updateView() {
             const mediaAdviceBox = document.getElementById("mediaAdviceBox");
             const mediaCostBox = document.getElementById("mediaCostBox");
             const pcrAdviceBox = document.getElementById("pcrAdviceBox");
             const pcrCostBox = document.getElementById("pcrCostBox");
+            const mediaInfoBtn = document.getElementById("mediaInfoBtn");
+            const pcrInfoBtn = document.getElementById("pcrInfoBtn");
+
+            // インフォメーションボタンの表示切替（オプションのスイッチと連動）
+            if (adviceFeatureEnabled) {
+                mediaInfoBtn.classList.add("visible");
+                pcrInfoBtn.classList.add("visible");
+            } else {
+                mediaInfoBtn.classList.remove("visible");
+                pcrInfoBtn.classList.remove("visible");
+            }
 
             // 1. 培地ビュー更新
             const media = mediaDatabase[currentMediaKey];
@@ -1784,7 +1934,7 @@
                 document.getElementById("displayVolume").textContent = `${currentVolume} mL`;
 
                 if (adviceFeatureEnabled) {
-                    mediaAdviceBox.innerHTML = media.getAdvice(currentVolume);
+                    mediaAdviceBox.textContent = media.getAdvice(currentVolume);
                     mediaAdviceBox.classList.add("visible");
                 } else {
                     mediaAdviceBox.classList.remove("visible");
@@ -1826,7 +1976,7 @@
                     listContainer.appendChild(li);
                 });
 
-                // オートクレーブ後（Post-autoclave）の成分があれば追加表示
+                // オートクレーブ後（Post-autoclave）の成分
                 if (media.postIngredients && media.postIngredients.length > 0) {
                     const sectionHeader = document.createElement("div");
                     sectionHeader.className = "recipe-section-header";
@@ -1872,7 +2022,7 @@
                 document.getElementById("displayPcrVolume").textContent = `${currentPcrVolume} µL`;
 
                 if (adviceFeatureEnabled) {
-                    pcrAdviceBox.innerHTML = pcr.getAdvice(currentPcrVolume);
+                    pcrAdviceBox.textContent = pcr.getAdvice(currentPcrVolume);
                     pcrAdviceBox.classList.add("visible");
                 } else {
                     pcrAdviceBox.classList.remove("visible");
