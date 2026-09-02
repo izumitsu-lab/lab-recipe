@@ -185,7 +185,7 @@
             background: rgba(41, 151, 255, 0.25);
         }
 
-        /* インフォメーションボックス */
+        /* アドバイス・コスト表示ボックス */
         .advice-box {
             background-color: rgba(41, 151, 255, 0.08);
             border: 1px solid rgba(41, 151, 255, 0.2);
@@ -220,7 +220,7 @@
             display: block;
         }
 
-        /* PCR用の切り替えボタン */
+        /* 切り替えボタン */
         .mode-switch-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -916,7 +916,6 @@
         <div class="view-panel" id="panel0">
             <div class="main-display">
                 <div class="display-header">
-                    <!-- 左上のタイトルエリア（クリック可能：培地選択モーダルを開く） -->
                     <div class="media-title-wrapper" onclick="openModal('mediaModal')">
                         <span class="media-eyebrow">Medium Recipe</span>
                         <div class="media-title-row">
@@ -925,6 +924,11 @@
                         </div>
                     </div>
                     <span class="volume-badge" id="displayVolume" onclick="openModal('volumeModal')">100 mL</span>
+                </div>
+                <!-- 培地ごとの切り替えスイッチ（ガンボーグ専用） -->
+                <div class="mode-switch-container" id="mediaModeSwitch" style="display: none;">
+                    <button class="mode-btn active" id="btnMediaStock" onclick="setMediaMode('stock')">ストック液から</button>
+                    <button class="mode-btn" id="btnMediaPowder" onclick="setMediaMode('powder')">粉から作成</button>
                 </div>
                 <div class="advice-box" id="mediaAdviceBox"></div>
                 <div class="cost-box" id="mediaCostBox"></div>
@@ -942,7 +946,6 @@
         <div class="view-panel" id="panel1">
             <div class="main-display">
                 <div class="display-header">
-                    <!-- 左上のタイトルエリア（クリック可能：PCR酵素選択モーダルを開く） -->
                     <div class="media-title-wrapper" onclick="openModal('pcrModal')">
                         <span class="media-eyebrow" id="displayPcrSub">PCR Master Mix</span>
                         <div class="media-title-row">
@@ -973,7 +976,6 @@
         <div class="view-panel" id="panel2">
             <div class="main-display">
                 <div class="display-header">
-                    <!-- 左上のタイトルエリア（クリック可能：ガイド選択モーダルを開く） -->
                     <div class="media-title-wrapper" onclick="openModal('guideModal')">
                         <span class="media-eyebrow" id="displayGuideEyebrow">Selection Guide</span>
                         <div class="media-title-row">
@@ -1278,12 +1280,93 @@
                 postIngredients: [
                     { name: "アセトシリンゴン", amount: "適量", unit: "" }
                 ]
+            },
+            "gamborg": {
+                name: "ガンボーグ培地",
+                baseVolume: 100,
+                hasModes: true,
+                modeLabels: ["ストック液から", "粉から作成"],
+                getAdvice: (vol) => `💡 液体培養用（${vol} mL）`,
+                calculateCost: (vol) => {
+                    const ratio = vol / 100;
+                    const cost = (0.45 * 4) * ratio;
+                    return `💰 概算コスト: 約 ${Math.round(cost)} 円 (${vol} mLあたり)`;
+                },
+                info: {
+                    title: "ガンボーグ培地についての解説",
+                    body: "植物組織培養などで広く知られるGamborg's B5培地をベースにした液体培地です。うちの研究室では、主に<b>灰色かび病菌の胞子発芽や病原性試験</b>などのアッセイに液体培地として利用しています。"
+                },
+                modes: {
+                    "stock": {
+                        ingredients: [
+                            { name: "A液", amount: 10.0, unit: "mL" },
+                            { name: "B液", amount: 10.0, unit: "mL" },
+                            { name: "C液", amount: 1.0, unit: "mL" },
+                            { name: "蒸留水", amount: 86.5, unit: "mL" }
+                        ],
+                        postIngredients: []
+                    },
+                    "powder": {
+                        ingredients: [
+                            { name: "ガンボーグ粉末", amount: 0.33, unit: "g" },
+                            { name: "グルコース", amount: 0.45, unit: "g" },
+                            { name: "KH2PO4", amount: 0.136, unit: "g" },
+                            { name: "蒸留水", amount: 100.0, unit: "mL" }
+                        ],
+                        postIngredients: []
+                    }
+                }
+            },
+            "regeneration": {
+                name: "再生培地",
+                baseVolume: 100,
+                getAdvice: (vol) => `💡 10mLずつ分注して使用（計 ${(vol / 10).toFixed(0)} 本分）`,
+                calculateCost: (vol) => {
+                    const ratio = vol / 100;
+                    const cost = (0.1 * 16 + 0.1 * 26 + 102.7 * 1 + 4.5 * 42) * ratio;
+                    return `💰 概算コスト: 約 ${Math.round(cost)} 円 (${vol} mLあたり)`;
+                },
+                info: {
+                    title: "再生培地についての解説",
+                    body: "<b>プロトプラストの再生用培地</b>です。細胞壁を取り除いたデリケートなプロトプラストは真水に入れると急激な吸水により破裂してしまいますが、この培地には<b>高濃度のスクロース（102.7g/100mL）</b>が含まれており、高い浸透圧を維持することでプロトプラストの破裂を防ぎながら細胞壁の再生を促します。<br><br>💡 <b>使用法:</b> オートクレーブ後、無菌的に<b>10mLずつ分注して</b>使用します。"
+                },
+                ingredients: [
+                    { name: "Yeast extract", amount: 0.1, unit: "g" },
+                    { name: "Tryptone", amount: 0.1, unit: "g" },
+                    { name: "スクロース", amount: 102.7, unit: "g" },
+                    { name: "寒天", amount: 4.5, unit: "g" },
+                    { name: "蒸留水", amount: 100.0, unit: "mL" }
+                ],
+                postIngredients: []
+            },
+            "selection": {
+                name: "選択培地",
+                baseVolume: 100,
+                getAdvice: (vol) => `💡 10mLずつ分注・重層用（計 ${(vol / 10).toFixed(0)} 本分）`,
+                calculateCost: (vol) => {
+                    const ratio = vol / 100;
+                    const cost = (0.1 * 16 + 0.1 * 26 + 4.5 * 42) * ratio;
+                    return `💰 概算コスト: 約 ${Math.round(cost)} 円 (${vol} mLあたり)`;
+                },
+                info: {
+                    title: "選択培地についての解説",
+                    body: "プロトプラスト法を用いた形質転換後、<b>糸状菌の薬剤耐性株（ハイグロマイシン、ノーセオスリシン、ジェネティシン等）を選抜する</b>ための培地です。<br><br>💡 <b>豆知識:</b> CM培地のSolution AやSolution Bに含まれるような塩類は、<b>ハイグロマイシンの効き目を著しく悪くしてしまう</b>ため、この選択培地にはあえて配合していません。<br><br>💡 <b>使用法:</b> オートクレーブ滅菌・冷却後、10mLの再生培地（下層）の上に10mLの本培地（上層）を重ねて<b>重層（オーバーレイ）</b>して使用します。<br><br>💡 <b>抗生物質の添加量（100ppmにする場合）:</b><br>・<b>ハイグロマイシン:</b> 10mLの選択培地に対して、ストック溶液（100 mg/mL）を20 µL添加。<br>・<b>ノーセオスリシン:</b> 10mLの選択培地に対して、ストック溶液（100 mg/mL）を20 µL添加。<br>※再生培地10mL＋選択培地10mLの合計20mLに対して100ppmとなる計算です。"
+                },
+                ingredients: [
+                    { name: "Yeast extract", amount: 0.1, unit: "g" },
+                    { name: "Tryptone", amount: 0.1, unit: "g" },
+                    { name: "寒天", amount: 4.5, unit: "g" },
+                    { name: "蒸留水", amount: 100.0, unit: "mL" }
+                ],
+                postIngredients: []
             }
         };
 
         let mediaOrderConfig = JSON.parse(localStorage.getItem('lab_mediaOrderConfig')) || [
-            { key: "cm", visible: true }, { key: "v30", visible: true }, { key: "pda", visible: true }, { key: "lb", visible: true }, { key: "im", visible: true }
+            { key: "cm", visible: true }, { key: "v30", visible: true }, { key: "pda", visible: true }, { key: "lb", visible: true }, { key: "im", visible: true }, { key: "gamborg", visible: true }, { key: "regeneration", visible: true }, { key: "selection", visible: true }
         ];
+
+        let currentMediaMode = "stock"; // 培地用モードキー（ガンボーグ専用）
 
         const pcrDatabase = {
             "ex_premier": {
@@ -1643,6 +1726,11 @@
                 btn.onclick = () => {
                     currentMediaKey = key;
                     localStorage.setItem('lab_mediaKey', key);
+                    // 培地変更時にデフォルトモードを初期化
+                    const m = mediaDatabase[key];
+                    if (m && m.hasModes) {
+                        currentMediaMode = Object.keys(m.modes)[0];
+                    }
                     closeModal('mediaModal');
                     updateView();
                 };
@@ -1810,6 +1898,25 @@
             }
         }
 
+        function setMediaMode(modeKey) {
+            currentMediaMode = modeKey;
+            const media = mediaDatabase[currentMediaKey];
+            if (media && media.modes) {
+                const keys = Object.keys(media.modes);
+                const btnStock = document.getElementById("btnMediaStock");
+                const btnPowder = document.getElementById("btnMediaPowder");
+
+                if (modeKey === keys[0]) {
+                    btnStock.classList.add("active");
+                    btnPowder.classList.remove("active");
+                } else {
+                    btnPowder.classList.add("active");
+                    btnStock.classList.remove("active");
+                }
+            }
+            updateView();
+        }
+
         function toggleCheckFeature() {
             checkFeatureEnabled = document.getElementById("checkFeatureToggle").checked;
             localStorage.setItem('lab_checkFeature', checkFeatureEnabled);
@@ -1959,8 +2066,9 @@
             const pcrCostBox = document.getElementById("pcrCostBox");
             const mediaInfoBtn = document.getElementById("mediaInfoBtn");
             const pcrInfoBtn = document.getElementById("pcrInfoBtn");
+            const mediaModeSwitch = document.getElementById("mediaModeSwitch");
 
-            // 解説ボタン（i アイコン）の表示切替（オプションのスイッチと連動）
+            // 解説ボタン（i アイコン）の表示切替
             if (infoButtonFeatureEnabled) {
                 mediaInfoBtn.classList.add("visible");
                 pcrInfoBtn.classList.add("visible");
@@ -1974,6 +2082,29 @@
             if (media) {
                 document.getElementById("displayMediaName").textContent = media.name;
                 document.getElementById("displayVolume").textContent = `${currentVolume} mL`;
+
+                // モード（切り替えスイッチ）を持つ培地の場合の処理
+                if (media.hasModes) {
+                    mediaModeSwitch.style.display = "grid";
+                    const modeKeys = Object.keys(media.modes);
+                    if (!media.modes[currentMediaMode]) {
+                        currentMediaMode = modeKeys[0];
+                    }
+                    const btnStock = document.getElementById("btnMediaStock");
+                    const btnPowder = document.getElementById("btnMediaPowder");
+                    btnStock.textContent = media.modeLabels[0];
+                    btnPowder.textContent = media.modeLabels[1];
+                    
+                    if (currentMediaMode === modeKeys[0]) {
+                        btnStock.classList.add("active");
+                        btnPowder.classList.remove("active");
+                    } else {
+                        btnPowder.classList.add("active");
+                        btnStock.classList.remove("active");
+                    }
+                } else {
+                    mediaModeSwitch.style.display = "none";
+                }
 
                 if (adviceFeatureEnabled) {
                     mediaAdviceBox.textContent = media.getAdvice(currentVolume);
@@ -1993,12 +2124,17 @@
                 listContainer.innerHTML = "";
                 const ratio = currentVolume / media.baseVolume;
 
-                // 通常の材料
-                media.ingredients.forEach(ing => {
+                // 対象の成分リストを取得（モードごとに ingredients が別定義されている場合はそちらを優先）
+                let currentIngredients = media.ingredients;
+                if (media.hasModes && media.modes[currentMediaMode] && media.modes[currentMediaMode].ingredients) {
+                    currentIngredients = media.modes[currentMediaMode].ingredients;
+                }
+
+                currentIngredients.forEach(ing => {
                     const calcAmount = ing.amount * ratio;
-                    const formatted = calcAmount >= 10 
-                        ? calcAmount.toFixed(1) 
-                        : calcAmount.toFixed(2).replace(/\.?0+$/, "");
+                    const formatted = typeof ing.amount === 'number' 
+                        ? (calcAmount >= 10 ? calcAmount.toFixed(1) : calcAmount.toFixed(2).replace(/\.?0+$/, ""))
+                        : ing.amount;
 
                     const li = document.createElement("li");
                     li.className = "ingredient-item";
@@ -2019,13 +2155,18 @@
                 });
 
                 // オートクレーブ後（Post-autoclave）の成分
-                if (media.postIngredients && media.postIngredients.length > 0) {
+                let currentPostIngredients = media.postIngredients || [];
+                if (media.hasModes && media.modes[currentMediaMode] && media.modes[currentMediaMode].postIngredients) {
+                    currentPostIngredients = media.modes[currentMediaMode].postIngredients;
+                }
+
+                if (currentPostIngredients.length > 0) {
                     const sectionHeader = document.createElement("div");
                     sectionHeader.className = "recipe-section-header";
                     sectionHeader.innerHTML = `⚡ オートクレーブ後に追加`;
                     listContainer.appendChild(sectionHeader);
 
-                    media.postIngredients.forEach(ing => {
+                    currentPostIngredients.forEach(ing => {
                         let formatted = ing.amount;
                         if (typeof ing.amount === 'number') {
                             const calcAmount = ing.amount * ratio;
