@@ -1058,7 +1058,8 @@
     <!-- 詳細解説ポップアップ用モーダル -->
     <div class="modal-overlay" id="infoModal" onclick="outsideClose(event, 'infoModal')">
         <div class="modal-content info-modal-content">
-            <div class="info-modal-title" id="infoModalTitle">💡 実験ノート・解説</div>
+            <div class="modal-header">💡 実験ノート・解説</div>
+            <div class="info-modal-title" id="infoModalTitle"></div>
             <div class="info-modal-body" id="infoModalBody">ここに詳細な解説が入ります。</div>
             <button class="info-close-btn" onclick="closeModal('infoModal')">閉じる</button>
         </div>
@@ -1180,11 +1181,21 @@
     </div>
 
     <script>
+        // 55mmシャーレ換算関数（6〜7mLに1枚）
+        function getDishAdvice(vol) {
+            const minDishes = Math.round(vol / 7);
+            const maxDishes = Math.round(vol / 6);
+            if (minDishes === maxDishes) {
+                return `💡 55mmシャーレ換算: 約 ${minDishes} 枚分`;
+            }
+            return `💡 55mmシャーレ換算: 約 ${minDishes}〜${maxDishes} 枚分`;
+        }
+
         const mediaDatabase = {
             "cm": { 
                 name: "CM培地", 
                 baseVolume: 100, 
-                getAdvice: (vol) => `💡 55mmシャーレ換算: 約 ${(vol / 6).toFixed(1)} 枚分`, 
+                getAdvice: (vol) => getDishAdvice(vol), 
                 calculateCost: (vol) => {
                     const ratio = vol / 100;
                     const cost = (1.0 * 4.4 + 0.1 * 16 + 0.1 * 26 + 1.5 * 42) * ratio;
@@ -1202,7 +1213,7 @@
             "v30": { 
                 name: "V30培地", 
                 baseVolume: 100, 
-                getAdvice: (vol) => `💡 55mmシャーレ換算: 約 ${(vol / 6).toFixed(1)} 枚分`, 
+                getAdvice: (vol) => getDishAdvice(vol), 
                 calculateCost: (vol) => {
                     const ratio = vol / 100;
                     const cost = (16.0 * 0.3 + 0.2 * 5.9 + 1.5 * 42) * ratio;
@@ -1220,7 +1231,7 @@
             "pda": { 
                 name: "PDA培地", 
                 baseVolume: 100, 
-                getAdvice: (vol) => `💡 55mmシャーレ換算: 約 ${(vol / 6).toFixed(1)} 枚分`, 
+                getAdvice: (vol) => getDishAdvice(vol), 
                 calculateCost: (vol) => {
                     const ratio = vol / 100;
                     const cost = (3.9 * 27.17) * ratio;
@@ -1238,7 +1249,7 @@
             "lb": { 
                 name: "LB培地", 
                 baseVolume: 100, 
-                getAdvice: (vol) => `💡 55mmシャーレ換算: 約 ${(vol / 6).toFixed(1)} 枚分`, 
+                getAdvice: (vol) => getDishAdvice(vol), 
                 calculateCost: (vol) => {
                     const ratio = vol / 100;
                     const cost = (2.0 * 66 + 1.5 * 42) * ratio;
@@ -1258,7 +1269,7 @@
             "im": {
                 name: "IM培地",
                 baseVolume: 100,
-                getAdvice: (vol) => `💡 55mmシャーレ換算: 約 ${(vol / 6).toFixed(1)} 枚分`,
+                getAdvice: (vol) => getDishAdvice(vol),
                 calculateCost: (vol) => {
                     const ratio = vol / 100;
                     const cost = (400 + 0.4 + 4 + (1.5 * 42)) * ratio;
@@ -1363,7 +1374,7 @@
             "sachs": { 
                 name: "Sachs培地", 
                 baseVolume: 100, 
-                getAdvice: (vol) => `💡 55mmシャーレ換算: 約 ${(vol / 6).toFixed(1)} 枚分`, 
+                getAdvice: (vol) => getDishAdvice(vol), 
                 calculateCost: (vol) => `💰 概算コスト: -`,
                 info: {
                     title: "Sachs培地についての解説",
@@ -1445,6 +1456,56 @@
                     { name: "K<sub>2</sub>HPO<sub>4</sub>", amount: 1.5, unit: "g" },
                     { name: "蒸留水", amount: 500.0, unit: "mL" }
                 ]
+            },
+            "isotonic": {
+                name: "等張液",
+                baseVolume: 500,
+                getAdvice: (vol) => `💡 プロトプラスト作製・懸濁用`,
+                calculateCost: (vol) => `💰 概算コスト: -`,
+                info: {
+                    title: "等張液についての解説",
+                    body: "プロトプラストの作製や洗浄・懸濁に用いる等張液です。"
+                },
+                ingredients: [
+                    { name: "KCl", amount: 26.1, unit: "g" },
+                    { name: "CaCl<sub>2</sub>・2H<sub>2</sub>O", amount: 0.736, unit: "g" },
+                    { name: "Water", amount: "全量を", unit: "" },
+                    { name: "Water (メスアップ)", amount: 500.0, unit: "mLまで" }
+                ]
+            },
+            "peg_40": {
+                name: "40%PEG",
+                baseVolume: 100,
+                getAdvice: (vol) => `💡 プロトプラストの形質転換用`,
+                calculateCost: (vol) => `💰 概算コスト: -`,
+                info: {
+                    title: "40%PEGについての解説",
+                    body: "プロトプラスト法を用いた形質転換（PEG法）に用いる溶液です。<br><br>💡 <b>調製法:</b> 少しずつ水を加え、熱湯で温めながら、瓶ごと激しく振とうして溶かしてゆく。オートクレーブにて滅菌。（冬場は室温で固まるのでオーブンなどで溶かす）"
+                },
+                ingredients: [
+                    { name: "PEG", amount: 40.0, unit: "g" },
+                    { name: "ソルビトール", amount: 21.8, unit: "g" },
+                    { name: "CaCl<sub>2</sub>・2H<sub>2</sub>O", amount: 0.736, unit: "g" },
+                    { name: "1M Tris-HCl (pH7.5)", amount: 1000.0, unit: "µL" },
+                    { name: "2N NaOH", amount: 300.0, unit: "µL" },
+                    { name: "Water (メスアップ)", amount: 100.0, unit: "mLまで" }
+                ]
+            },
+            "stc": {
+                name: "STCバッファ",
+                baseVolume: 100,
+                getAdvice: (vol) => `💡 プロトプラスト調製・洗浄用`,
+                calculateCost: (vol) => `💰 概算コスト: -`,
+                info: {
+                    title: "STCバッファについての解説",
+                    body: "ソルビトール、Tris-HCl、塩化カルシウムを含み、プロトプラストの調製や懸濁・洗浄に広く用いられるバッファです。"
+                },
+                ingredients: [
+                    { name: "ソルビトール", amount: 21.8, unit: "g" },
+                    { name: "CaCl<sub>2</sub>・2H<sub>2</sub>O", amount: 0.147, unit: "g" },
+                    { name: "1M Tris-HCl (pH7.5)", amount: 1000.0, unit: "µL" },
+                    { name: "Water (メスアップ)", amount: 100.0, unit: "mLまで" }
+                ]
             }
         };
 
@@ -1453,7 +1514,7 @@
         ];
 
         let solutionOrderConfig = JSON.parse(localStorage.getItem('lab_solutionOrderConfig')) || [
-            { key: "mm_sol_1", visible: true }, { key: "mm_sol_2", visible: true }, { key: "sol_a", visible: true }, { key: "sol_b", visible: true }
+            { key: "mm_sol_1", visible: true }, { key: "mm_sol_2", visible: true }, { key: "sol_a", visible: true }, { key: "sol_b", visible: true }, { key: "isotonic", visible: true }, { key: "peg_40", visible: true }, { key: "stc", visible: true }
         ];
 
         let currentMediaMode = "stock"; 
@@ -1887,7 +1948,13 @@
         function buildSolutionModals() {
             const solListEl = document.getElementById("solutionOptionsList");
             solListEl.innerHTML = "";
-            solutionOrderConfig.forEach(sObj => {
+            let visibleSolList = solutionOrderConfig.filter(s => s.visible);
+
+            if (!visibleSolList.map(s => s.key).includes(currentSolutionKey) && visibleSolList.length > 0) {
+                currentSolutionKey = visibleSolList[0].key;
+            }
+
+            visibleSolList.forEach(sObj => {
                 const key = sObj.key;
                 const sol = solutionDatabase[key];
                 if (!sol) return;
@@ -2141,7 +2208,7 @@
             }
 
             if (infoData) {
-                document.getElementById("infoModalTitle").innerHTML = `💡 ${infoData.title}`;
+                document.getElementById("infoModalTitle").innerHTML = `${infoData.title}`;
                 document.getElementById("infoModalBody").innerHTML = infoData.body;
                 openModal('infoModal');
             }
@@ -2333,10 +2400,10 @@
                 }
 
                 currentIngredients.forEach(ing => {
-                    const calcAmount = ing.amount * ratio;
-                    const formatted = typeof ing.amount === 'number' 
+                    const calcAmount = typeof ing.amount === 'number' ? ing.amount * ratio : ing.amount;
+                    const formatted = typeof calcAmount === 'number' 
                         ? (calcAmount >= 10 ? calcAmount.toFixed(1) : calcAmount.toFixed(3).replace(/\.?0+$/, ""))
-                        : ing.amount;
+                        : calcAmount;
 
                     const li = document.createElement("li");
                     li.className = "ingredient-item";
@@ -2422,10 +2489,11 @@
                 const solRatio = currentSolutionVolume / sol.baseVolume;
 
                 sol.ingredients.forEach(ing => {
-                    const calcAmount = ing.amount * solRatio;
-                    const formatted = typeof ing.amount === 'number'
-                        ? (calcAmount >= 10 ? calcAmount.toFixed(1) : calcAmount.toFixed(3).replace(/\.?0+$/, ""))
-                        : ing.amount;
+                    let formatted = ing.amount;
+                    if (typeof ing.amount === 'number') {
+                        const calcAmount = ing.amount * solRatio;
+                        formatted = calcAmount >= 10 ? calcAmount.toFixed(1) : calcAmount.toFixed(3).replace(/\.?0+$/, "");
+                    }
 
                     const li = document.createElement("li");
                     li.className = "ingredient-item";
@@ -2472,7 +2540,6 @@
         }
 
         function openModal(modalId) {
-            // モーダルを開く時にリストを表示し、キーパッドを非表示にリセット
             if (modalId === 'volumeModal') {
                 const volListEl = document.getElementById("volumeOptionsList");
                 if (volListEl) volListEl.style.removeProperty('display');
