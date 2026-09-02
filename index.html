@@ -42,33 +42,30 @@
             overflow: hidden;
         }
 
-        /* 5画面分の横長コンテナ */
+        /* 1画面ごとの横長・縦長コンテナ */
         .views-container {
             display: flex;
             width: 100%;
             flex: 1;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            scroll-behavior: smooth;
-            -webkit-overflow-scrolling: touch;
+            overflow: hidden;
+            position: relative;
             margin-bottom: 8px;
-            scrollbar-width: none;
             min-height: 0;
-        }
-
-        .views-container::-webkit-scrollbar {
-            display: none;
         }
 
         .view-panel {
-            min-width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            flex-shrink: 0;
-            scroll-snap-align: start;
-            scroll-snap-stop: always;
-            display: flex;
+            height: 100%;
+            display: none;
             flex-direction: column;
             min-height: 0;
+        }
+
+        .view-panel.active {
+            display: flex;
         }
 
         /* メインディスプレイカード */
@@ -88,7 +85,7 @@
             transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* タイトル領域 */
+        /* タイトル領域（横スワイプ対応） */
         .display-header {
             display: flex;
             justify-content: space-between;
@@ -100,7 +97,7 @@
             gap: 12px;
             flex-shrink: 0;
             cursor: grab;
-            touch-action: none;
+            touch-action: pan-y;
         }
         .display-header:active {
             cursor: grabbing;
@@ -639,7 +636,7 @@
             transform: translateX(20px);
         }
 
-        /* 画面下部のスマートなランチャーバー（1つだけボタンを配置） */
+        /* 画面下部のスマートなランチャーバー */
         .bottom-launcher-bar {
             display: flex;
             justify-content: space-between;
@@ -684,7 +681,7 @@
             border-radius: 12px;
         }
 
-        /* 全画面グリッドメニューモーダル（10ページ以上でも拡張可能） */
+        /* 全画面グリッドメニューモーダル */
         .launcher-modal-overlay {
             position: fixed;
             top: 0;
@@ -1016,8 +1013,7 @@
 
     <div class="views-container" id="viewsContainer">
         
-        <!-- 1ページ目：PCRビュー -->
-        <div class="view-panel" id="panel0">
+        <div class="view-panel active" id="panel0">
             <div class="main-display" id="displayPCR">
                 <div class="display-header" id="headerPCR">
                     <div class="media-title-wrapper" onclick="openModal('pcrModal')">
@@ -1045,7 +1041,6 @@
             </div>
         </div>
 
-        <!-- 2ページ目：培地ビュー -->
         <div class="view-panel" id="panel1">
             <div class="main-display" id="displayMedia">
                 <div class="display-header" id="headerMedia">
@@ -1073,7 +1068,6 @@
             </div>
         </div>
 
-        <!-- 3ページ目：Solutions（ストック溶液）ビュー -->
         <div class="view-panel" id="panel2">
             <div class="main-display" id="displaySolution">
                 <div class="display-header" id="headerSolution">
@@ -1097,7 +1091,6 @@
             </div>
         </div>
 
-        <!-- 4ページ目：ガイドビュー -->
         <div class="view-panel" id="panel3">
             <div class="main-display" id="displayGuide">
                 <div class="display-header" id="headerGuide">
@@ -1114,7 +1107,6 @@
             </div>
         </div>
 
-        <!-- 5ページ目：オプションビュー -->
         <div class="view-panel" id="panel4">
             <div class="main-display">
                 <div class="display-header" style="cursor: default;">
@@ -1167,7 +1159,6 @@
                         </label>
                     </div>
                     
-                    <!-- リスト編集用ボタン群 -->
                     <div class="option-group">
                         <div class="option-label-wrapper">
                             <span class="option-title">PCR酵素リストの編集</span>
@@ -1203,7 +1194,6 @@
 
     </div>
 
-    <!-- 下部スマートランチャーバー（ここを押すとオシャレな一覧メニューが開く） -->
     <div class="bottom-launcher-bar" onclick="openLauncherModal()">
         <div class="launcher-left">
             <span class="launcher-icon">❖</span>
@@ -1212,18 +1202,14 @@
         <div class="launcher-right" id="currentLauncherIndex">1 / 5</div>
     </div>
 
-    <!-- 全画面ページ一覧ランチャーモーダル -->
     <div class="launcher-modal-overlay" id="launcherModal" onclick="outsideCloseLauncher(event)">
         <div class="launcher-modal-content">
             <div class="modal-header">ページ一覧・メニュー</div>
-            <div class="launcher-grid" id="launcherGridContainer">
-                <!-- 動的生成 -->
-            </div>
+            <div class="launcher-grid" id="launcherGridContainer"></div>
             <button class="info-close-btn" onclick="closeLauncherModal()">閉じる</button>
         </div>
     </div>
 
-    <!-- リスト順序・表示設定用モーダル -->
     <div class="modal-overlay" id="orderModal" onclick="outsideClose(event, 'orderModal')">
         <div class="modal-content" style="max-width: 420px;">
             <div class="modal-header" id="orderModalHeader">リストのカスタマイズ</div>
@@ -1232,7 +1218,6 @@
         </div>
     </div>
 
-    <!-- 大型詳細解説ポップアップ用モーダル -->
     <div class="modal-overlay" id="infoModal" onclick="outsideClose(event, 'infoModal')">
         <div class="modal-content info-modal-content">
             <div class="modal-header">💡 実験ノート・解説</div>
@@ -1242,7 +1227,6 @@
         </div>
     </div>
 
-    <!-- モーダル各種 -->
     <div class="modal-overlay" id="mediaModal" onclick="outsideClose(event, 'mediaModal')">
         <div class="modal-content" style="max-width: 440px;">
             <div class="modal-header">培地を選択</div>
@@ -1278,7 +1262,6 @@
         </div>
     </div>
 
-    <!-- ソリューション選択用モーダル -->
     <div class="modal-overlay" id="solutionModal" onclick="outsideClose(event, 'solutionModal')">
         <div class="modal-content" style="max-width: 440px;">
             <div class="modal-header">ストック溶液を選択</div>
@@ -1349,7 +1332,6 @@
         </div>
     </div>
 
-    <!-- ガイド選択用モーダル -->
     <div class="modal-overlay" id="guideModal" onclick="outsideClose(event, 'guideModal')">
         <div class="modal-content">
             <div class="modal-header">ガイドを選択</div>
@@ -1872,7 +1854,6 @@
 
         let currentOrderType = "";
 
-        // 定義された全ページの一覧データ（ここを増やしていくだけで何ページでも対応可能！）
         const appPages = [
             { id: 0, eyebrow: "PCR Recipe", name: "PCR Master Mix" },
             { id: 1, eyebrow: "Medium Recipe", name: "培地レシピ" },
@@ -1956,18 +1937,9 @@
             pcrCustomBtn.onclick = () => { openPcrKeypadModal(); };
             pcrVolListEl.appendChild(pcrCustomBtn);
 
-            const container = document.getElementById("viewsContainer");
-            setTimeout(() => {
-                container.scrollLeft = currentViewIndex * container.clientWidth;
-                updateLauncherBar();
-            }, 50);
-
-            setupScrollListener();
             setupHeaderTouchDrag();
-            updateView();
+            jumpToPage(currentViewIndex, false);
         }
-
-        let isSwitchingCooldown = false;
 
         function openLauncherModal() {
             buildLauncherGrid();
@@ -1991,7 +1963,7 @@
                 const card = document.createElement("div");
                 card.className = `launcher-card ${page.id === currentViewIndex ? 'active' : ''}`;
                 card.onclick = () => {
-                    jumpToPage(page.id);
+                    jumpToPage(page.id, true);
                     closeLauncherModal();
                 };
                 card.innerHTML = `
@@ -2002,38 +1974,37 @@
             });
         }
 
-        function jumpToPage(index) {
-            const container = document.getElementById("viewsContainer");
-            container.scrollTo({
-                left: index * container.clientWidth,
-                behavior: 'smooth'
-            });
+        function jumpToPage(index, animate = true) {
             currentViewIndex = index;
             localStorage.setItem('lab_viewIndex', index);
+
+            const panels = document.querySelectorAll('.view-panel');
+            panels.forEach((panel, idx) => {
+                if (idx === index) {
+                    panel.classList.add('active');
+                    if (animate) {
+                        panel.style.opacity = 0;
+                        panel.style.transform = 'scale(0.96)';
+                        requestAnimationFrame(() => {
+                            panel.style.transition = 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
+                            panel.style.opacity = 1;
+                            panel.style.transform = 'scale(1)';
+                        });
+                    }
+                } else {
+                    panel.classList.remove('active');
+                    panel.style.transition = 'none';
+                }
+            });
+
             updateLauncherBar();
+            updateView();
         }
 
         function updateLauncherBar() {
             const current = appPages[currentViewIndex] || appPages[0];
             document.getElementById("currentLauncherLabel").textContent = current.name;
             document.getElementById("currentLauncherIndex").textContent = `${currentViewIndex + 1} / ${appPages.length}`;
-        }
-
-        function setupScrollListener() {
-            const container = document.getElementById("viewsContainer");
-            let isScrolling;
-
-            container.addEventListener('scroll', () => {
-                window.clearTimeout(isScrolling);
-                isScrolling = setTimeout(() => {
-                    const index = Math.round(container.scrollLeft / container.clientWidth);
-                    if (index !== currentViewIndex) {
-                        currentViewIndex = index;
-                        localStorage.setItem('lab_viewIndex', index);
-                        updateLauncherBar();
-                    }
-                }, 50);
-            }, { passive: true });
         }
 
         function setupHeaderTouchDrag() {
@@ -2049,26 +2020,25 @@
                 const headerEl = document.getElementById(p.headerId);
                 if (!cardEl || !headerEl) return;
 
-                let startY = 0;
-                let deltaY = 0;
+                let startX = 0;
+                let deltaX = 0;
                 let isDragging = false;
 
                 headerEl.addEventListener('touchstart', (e) => {
-                    if (isSwitchingCooldown) return;
                     isDragging = true;
-                    startY = e.touches[0].clientY;
-                    deltaY = 0;
+                    startX = e.touches[0].clientX;
+                    deltaX = 0;
                     cardEl.style.transition = 'none';
                 }, { passive: true });
 
                 headerEl.addEventListener('touchmove', (e) => {
                     if (!isDragging) return;
-                    const currentY = e.touches[0].clientY;
-                    deltaY = currentY - startY;
+                    const currentX = e.touches[0].clientX;
+                    deltaX = currentX - startX;
 
-                    const scaleVal = Math.max(0.92, 1 - Math.abs(deltaY) * 0.0004);
-                    const opacityVal = Math.max(0.4, 1 - Math.abs(deltaY) * 0.0018);
-                    cardEl.style.transform = `translateY(${deltaY}px) scale(${scaleVal})`;
+                    const scaleVal = Math.max(0.95, 1 - Math.abs(deltaX) * 0.0002);
+                    const opacityVal = Math.max(0.6, 1 - Math.abs(deltaX) * 0.001);
+                    cardEl.style.transform = `translateX(${deltaX}px) scale(${scaleVal})`;
                     cardEl.style.opacity = opacityVal;
                 }, { passive: true });
 
@@ -2079,11 +2049,11 @@
                     cardEl.style.transition = 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
 
                     const threshold = 50;
-                    if (Math.abs(deltaY) > threshold) {
-                        const direction = deltaY < 0 ? 'next' : 'prev';
-                        const exitOffset = deltaY < 0 ? -60 : 60;
+                    if (Math.abs(deltaX) > threshold) {
+                        const direction = deltaX < 0 ? 'next' : 'prev';
+                        const exitOffset = deltaX < 0 ? -80 : 80;
 
-                        cardEl.style.transform = `translateY(${exitOffset}px) scale(0.92)`;
+                        cardEl.style.transform = `translateX(${exitOffset}px) scale(0.95)`;
                         cardEl.style.opacity = '0';
 
                         setTimeout(() => {
@@ -2091,19 +2061,19 @@
                             updateView();
 
                             cardEl.style.transition = 'none';
-                            cardEl.style.transform = `translateY(${-exitOffset}px) scale(0.92)`;
+                            cardEl.style.transform = `translateX(${-exitOffset}px) scale(0.95)`;
                             cardEl.style.opacity = '0';
 
                             requestAnimationFrame(() => {
                                 requestAnimationFrame(() => {
                                     cardEl.style.transition = 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
-                                    cardEl.style.transform = 'translateY(0) scale(1)';
+                                    cardEl.style.transform = 'translateX(0) scale(1)';
                                     cardEl.style.opacity = '1';
                                 });
                             });
                         }, 200);
                     } else {
-                        cardEl.style.transform = 'translateY(0) scale(1)';
+                        cardEl.style.transform = 'translateX(0) scale(1)';
                         cardEl.style.opacity = '1';
                     }
                 }, { passive: true });
@@ -2556,23 +2526,6 @@
             costFeatureEnabled = document.getElementById("costFeatureToggle").checked;
             localStorage.setItem('lab_costFeature', costFeatureEnabled);
             updateView();
-        }
-
-        function setupScrollListener() {
-            const container = document.getElementById("viewsContainer");
-            let isScrolling;
-
-            container.addEventListener('scroll', () => {
-                window.clearTimeout(isScrolling);
-                isScrolling = setTimeout(() => {
-                    const index = Math.round(container.scrollLeft / container.clientWidth);
-                    if (index !== currentViewIndex) {
-                        currentViewIndex = index;
-                        localStorage.setItem('lab_viewIndex', index);
-                        updateLauncherBar();
-                    }
-                }, 50);
-            }, { passive: true });
         }
 
         function checkResetButtonState(type) {
