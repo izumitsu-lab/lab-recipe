@@ -152,21 +152,6 @@
             text-overflow: ellipsis;
         }
 
-        /* プルダウンであることを示すアイコン */
-        .dropdown-indicator {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--accent-color);
-            background: var(--accent-soft);
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
         /* 解説トリガーボタン */
         .card-info-footer-btn {
             background: transparent;
@@ -926,7 +911,6 @@
                         <span class="media-eyebrow" id="displayPcrSub">PCR Master Mix</span>
                         <div class="media-title-row">
                             <h1 class="media-title" id="displayPcrName">PCR酵素</h1>
-                            <div class="dropdown-indicator">▾</div>
                         </div>
                     </div>
                     <span class="volume-badge" id="displayPcrVolume" onclick="openModal('pcrVolumeModal')">50 µL</span>
@@ -956,7 +940,6 @@
                         <span class="media-eyebrow">Medium Recipe</span>
                         <div class="media-title-row">
                             <h1 class="media-title" id="displayMediaName">培地名</h1>
-                            <div class="dropdown-indicator">▾</div>
                         </div>
                     </div>
                     <span class="volume-badge" id="displayVolume" onclick="openModal('volumeModal')">100 mL</span>
@@ -985,7 +968,6 @@
                         <span class="media-eyebrow">Stock Solutions</span>
                         <div class="media-title-row">
                             <h1 class="media-title" id="displaySolutionName">溶液名</h1>
-                            <div class="dropdown-indicator">▾</div>
                         </div>
                     </div>
                     <span class="volume-badge" id="displaySolutionVolume" onclick="openModal('solutionVolumeModal')">100 mL</span>
@@ -1010,7 +992,6 @@
                         <span class="media-eyebrow" id="displayGuideEyebrow">Selection Guide</span>
                         <div class="media-title-row">
                             <h1 class="media-title" id="displayGuideName">PCR酵素の使い分け</h1>
-                            <div class="dropdown-indicator">▾</div>
                         </div>
                     </div>
                 </div>
