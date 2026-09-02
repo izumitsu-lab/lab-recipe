@@ -35,7 +35,7 @@
             height: 100dvh;
             display: flex;
             flex-direction: column;
-            padding: 10px 16px env(safe-area-inset-bottom, 16px) 16px;
+            padding: 12px 16px env(safe-area-inset-bottom, 16px) 16px;
             max-width: 460px;
             margin: 0 auto;
             justify-content: space-between;
@@ -51,7 +51,7 @@
             scroll-snap-type: x mandatory;
             scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             scrollbar-width: none;
             min-height: 0;
         }
@@ -71,7 +71,7 @@
             min-height: 0;
         }
 
-        /* メインディスプレイカード（タイトルエリアのタッチ追従・アニメーション対応） */
+        /* メインディスプレイカード */
         .main-display {
             background-color: var(--card-bg);
             border: 1px solid var(--card-border);
@@ -88,36 +88,41 @@
             transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
+        /* タイトル領域を縦に広く、押しやすくスワイプしやすく改善 */
         .display-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 12px;
             border-bottom: 1px solid var(--card-border);
-            padding-bottom: 10px;
+            padding-bottom: 14px;
+            padding-top: 4px;
             gap: 12px;
             flex-shrink: 0;
             cursor: grab;
-            touch-action: none; /* ヘルパー領域でのスクロールバグを防ぎ縦ドラッグを優先 */
+            touch-action: none;
         }
         .display-header:active {
             cursor: grabbing;
         }
 
-        /* 左上のタイトルエリア（クリック可能） */
         .media-title-wrapper {
             display: flex;
             flex-direction: column;
-            gap: 3px;
+            gap: 4px;
             flex: 1;
             min-width: 0;
-            padding: 4px 6px;
-            margin: -4px -6px;
-            border-radius: 12px;
-            transition: background-color 0.2s;
+            cursor: pointer;
+            padding: 8px 10px;
+            margin: -8px -10px;
+            border-radius: 14px;
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            transition: background-color 0.2s, border-color 0.2s;
         }
         .media-title-wrapper:active {
-            background-color: rgba(255, 255, 255, 0.04);
+            background-color: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.1);
         }
 
         .media-eyebrow {
@@ -132,6 +137,7 @@
         .media-title-row {
             display: flex;
             align-items: center;
+            justify-content: space-between;
             gap: 8px;
         }
 
@@ -146,7 +152,22 @@
             text-overflow: ellipsis;
         }
 
-        /* ひっそりと馴染む解説トリガーボタン（組成の下） */
+        /* プルダウンであることを示すアイコン */
+        .dropdown-indicator {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent-color);
+            background: var(--accent-soft);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        /* 解説トリガーボタン */
         .card-info-footer-btn {
             background: transparent;
             color: var(--text-secondary);
@@ -177,13 +198,13 @@
             border-color: var(--text-primary);
         }
 
-        /* 右上の容量バッジ（クリック可能） - 拡大版 */
+        /* 右上の容量バッジ */
         .volume-badge {
             font-size: 16px;
             font-weight: 700;
             color: var(--accent-color);
             background: var(--accent-soft);
-            padding: 8px 16px;
+            padding: 10px 16px;
             border-radius: 20px;
             letter-spacing: -0.3px;
             white-space: nowrap;
@@ -446,7 +467,7 @@
             letter-spacing: 1px;
         }
 
-        /* 選び方ガイド専用の美しいレイアウトカード（文字大きめ） */
+        /* 選び方ガイド専用の美しいレイアウトカード */
         .guide-container {
             display: flex;
             flex-direction: column;
@@ -638,7 +659,7 @@
             display: flex;
             justify-content: center;
             gap: 6px;
-            margin-bottom: 6px;
+            margin-bottom: 2px;
             flex-shrink: 0;
         }
 
@@ -653,40 +674,6 @@
         .dot.active {
             background-color: var(--accent-color);
             transform: scale(1.25);
-        }
-
-        /* 下部コントロールバー */
-        .control-bar {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            flex-shrink: 0;
-        }
-
-        .trigger-btn {
-            background-color: var(--card-bg);
-            border: 1px solid var(--card-border);
-            color: var(--text-primary);
-            border-radius: 16px;
-            padding: 12px 16px;
-            font-size: 15px;
-            font-weight: 700;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .trigger-btn:active {
-            transform: scale(0.97);
-            background-color: #1c1c20;
-        }
-
-        .trigger-btn .arrow-icon {
-            color: var(--text-secondary);
-            font-size: 12px;
-            font-weight: 500;
         }
 
         /* モーダル共通スタイル */
@@ -741,14 +728,13 @@
             text-transform: uppercase;
         }
 
-        /* 選択モーダル用の2列グリッド（強制2列） */
         .grid-modal {
             display: grid !important;
             grid-template-columns: repeat(2, 1fr) !important;
             gap: 8px !important;
         }
 
-        /* 大型・リッチ化された詳細解説ポップアップ用モーダル */
+        /* 大型詳細解説ポップアップ用モーダル */
         .info-modal-content {
             background: linear-gradient(145deg, #18181d, #121216);
             border: 1px solid rgba(41, 151, 255, 0.4);
@@ -940,6 +926,7 @@
                         <span class="media-eyebrow" id="displayPcrSub">PCR Master Mix</span>
                         <div class="media-title-row">
                             <h1 class="media-title" id="displayPcrName">PCR酵素</h1>
+                            <div class="dropdown-indicator">▾</div>
                         </div>
                     </div>
                     <span class="volume-badge" id="displayPcrVolume" onclick="openModal('pcrVolumeModal')">50 µL</span>
@@ -969,6 +956,7 @@
                         <span class="media-eyebrow">Medium Recipe</span>
                         <div class="media-title-row">
                             <h1 class="media-title" id="displayMediaName">培地名</h1>
+                            <div class="dropdown-indicator">▾</div>
                         </div>
                     </div>
                     <span class="volume-badge" id="displayVolume" onclick="openModal('volumeModal')">100 mL</span>
@@ -997,6 +985,7 @@
                         <span class="media-eyebrow">Stock Solutions</span>
                         <div class="media-title-row">
                             <h1 class="media-title" id="displaySolutionName">溶液名</h1>
+                            <div class="dropdown-indicator">▾</div>
                         </div>
                     </div>
                     <span class="volume-badge" id="displaySolutionVolume" onclick="openModal('solutionVolumeModal')">100 mL</span>
@@ -1021,6 +1010,7 @@
                         <span class="media-eyebrow" id="displayGuideEyebrow">Selection Guide</span>
                         <div class="media-title-row">
                             <h1 class="media-title" id="displayGuideName">PCR酵素の使い分け</h1>
+                            <div class="dropdown-indicator">▾</div>
                         </div>
                     </div>
                 </div>
@@ -1033,10 +1023,12 @@
         <!-- 5ページ目：オプションビュー -->
         <div class="view-panel" id="panel4">
             <div class="main-display">
-                <div class="display-header">
-                    <div class="media-title-wrapper">
+                <div class="display-header" style="cursor: default;">
+                    <div class="media-title-wrapper" style="cursor: default; background: none; border: none;">
                         <span class="media-eyebrow">Preferences</span>
-                        <h1 class="media-title">オプション設定</h1>
+                        <div class="media-title-row">
+                            <h1 class="media-title">オプション設定</h1>
+                        </div>
                     </div>
                 </div>
                 <div class="list-container-wrapper" style="display: flex; flex-direction: column; gap: 12px; padding-bottom: 20px;">
@@ -1126,8 +1118,6 @@
         <div class="dot" id="dot4"></div>
     </div>
 
-    <div class="control-bar" id="controlBar"></div>
-
     <!-- リスト順序・表示設定用モーダル -->
     <div class="modal-overlay" id="orderModal" onclick="outsideClose(event, 'orderModal')">
         <div class="modal-content" style="max-width: 420px;">
@@ -1137,7 +1127,7 @@
         </div>
     </div>
 
-    <!-- 大型・リッチ化された詳細解説ポップアップ用モーダル -->
+    <!-- 大型詳細解説ポップアップ用モーダル -->
     <div class="modal-overlay" id="infoModal" onclick="outsideClose(event, 'infoModal')">
         <div class="modal-content info-modal-content">
             <div class="modal-header">💡 実験ノート・解説</div>
@@ -1864,7 +1854,6 @@
 
         let isSwitchingCooldown = false;
 
-        // 【新方式】ヘッダー（タイトル領域）を指でドラッグ＆スワイプしてカードを上下に動かし切り替える
         function setupHeaderTouchDrag() {
             const panels = [
                 { cardId: 'displayPCR', headerId: 'headerPCR', type: 'pcr' },
@@ -1895,7 +1884,6 @@
                     const currentY = e.touches[0].clientY;
                     deltaY = currentY - startY;
 
-                    // 指の動きに追従してカードが上下に移動し、わずかに縮小・フェードする物理演算のようなリッチな挙動
                     const scaleVal = Math.max(0.92, 1 - Math.abs(deltaY) * 0.0004);
                     const opacityVal = Math.max(0.4, 1 - Math.abs(deltaY) * 0.0018);
                     cardEl.style.transform = `translateY(${deltaY}px) scale(${scaleVal})`;
@@ -1908,12 +1896,11 @@
 
                     cardEl.style.transition = 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
 
-                    const threshold = 50; // 50px以上引っ張ったら切り替え確定
+                    const threshold = 50;
                     if (Math.abs(deltaY) > threshold) {
                         const direction = deltaY < 0 ? 'next' : 'prev';
                         const exitOffset = deltaY < 0 ? -60 : 60;
 
-                        // 外側に弾みをつけて消える
                         cardEl.style.transform = `translateY(${exitOffset}px) scale(0.92)`;
                         cardEl.style.opacity = '0';
 
@@ -1921,7 +1908,6 @@
                             switchItemData(p.type, direction);
                             updateView();
 
-                            // 反対側からスライドインする初期位置にセット
                             cardEl.style.transition = 'none';
                             cardEl.style.transform = `translateY(${-exitOffset}px) scale(0.92)`;
                             cardEl.style.opacity = '0';
@@ -1935,7 +1921,6 @@
                             });
                         }, 200);
                     } else {
-                        // 閾値未満なら元の位置に戻る（バネのような戻り）
                         cardEl.style.transform = 'translateY(0) scale(1)';
                         cardEl.style.opacity = '1';
                     }
@@ -2402,75 +2387,22 @@
                     if (index !== currentViewIndex) {
                         currentViewIndex = index;
                         localStorage.setItem('lab_viewIndex', index);
-                        updateDotsAndBar();
+                        updateDotsOnly();
                     }
                 }, 50);
             }, { passive: true });
         }
 
-        function updateDotsAndBar() {
+        function updateDotsOnly() {
             document.getElementById("dot0").classList.toggle('active', currentViewIndex === 0);
             document.getElementById("dot1").classList.toggle('active', currentViewIndex === 1);
             document.getElementById("dot2").classList.toggle('active', currentViewIndex === 2);
             document.getElementById("dot3").classList.toggle('active', currentViewIndex === 3);
             document.getElementById("dot4").classList.toggle('active', currentViewIndex === 4);
-            updateControlBar();
         }
 
-        function updateControlBar() {
-            const bar = document.getElementById("controlBar");
-            bar.innerHTML = "";
-
-            if (currentViewIndex === 0) {
-                const pcr = pcrDatabase[currentPcrKey];
-                bar.innerHTML = `
-                    <button class="trigger-btn" onclick="openModal('pcrModal')">
-                        <span style="font-weight: 700; font-size: 14px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${pcr ? pcr.shortName : '選択'}</span>
-                        <span class="arrow-icon">▾</span>
-                    </button>
-                    <button class="trigger-btn" onclick="openModal('pcrVolumeModal')">
-                        <span style="font-weight: 700;">${currentPcrVolume} µL</span>
-                        <span class="arrow-icon">▾</span>
-                    </button>
-                `;
-            } else if (currentViewIndex === 1) {
-                bar.innerHTML = `
-                    <button class="trigger-btn" onclick="openModal('mediaModal')">
-                        <span style="font-weight: 700;">${mediaDatabase[currentMediaKey] ? mediaDatabase[currentMediaKey].name : '選択'}</span>
-                        <span class="arrow-icon">▾</span>
-                    </button>
-                    <button class="trigger-btn" onclick="openModal('volumeModal')">
-                        <span style="font-weight: 700;">${currentVolume} mL</span>
-                        <span class="arrow-icon">▾</span>
-                    </button>
-                `;
-            } else if (currentViewIndex === 2) {
-                const sol = solutionDatabase[currentSolutionKey];
-                bar.innerHTML = `
-                    <button class="trigger-btn" onclick="openModal('solutionModal')">
-                        <span style="font-weight: 700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${sol ? sol.name : '選択'}</span>
-                        <span class="arrow-icon">▾</span>
-                    </button>
-                    <button class="trigger-btn" onclick="openModal('solutionVolumeModal')">
-                        <span style="font-weight: 700;">${currentSolutionVolume} mL</span>
-                        <span class="arrow-icon">▾</span>
-                    </button>
-                `;
-            } else if (currentViewIndex === 3) {
-                const guide = guideDatabase[currentGuideKey];
-                bar.innerHTML = `
-                    <button class="trigger-btn" onclick="openModal('guideModal')" style="grid-column: span 2; width: 100%;">
-                        <span style="font-weight: 700; font-size: 14px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${guide ? guide.name : '選択'}</span>
-                        <span class="arrow-icon">▾</span>
-                    </button>
-                `;
-            } else {
-                bar.innerHTML = `
-                    <div style="grid-column: span 2; text-align: center; color: var(--text-secondary); font-size: 13px; padding: 8px 0;">
-                        Lab Recipe Settings
-                    </div>
-                `;
-            }
+        function updateDotsAndBar() {
+            updateDotsOnly();
         }
 
         function checkResetButtonState(type) {
@@ -2855,7 +2787,6 @@
             buildSolutionModals();
             buildPcrModals();
             buildGuideModals();
-            updateControlBar();
         }
 
         function openModal(modalId) {
