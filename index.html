@@ -42,7 +42,6 @@
             overflow: hidden;
         }
 
-        /* アプリ自体の画面切り替えコンテナ（オプションや各カテゴリページを切り替え） */
         .views-container {
             display: flex;
             width: 100%;
@@ -70,7 +69,6 @@
             display: flex;
         }
 
-        /* ★ここがポイント：カード全体（タイトル含む）が横に連なってスワイプするコンテナ */
         .card-carousel-container {
             display: flex;
             width: 100%;
@@ -95,10 +93,9 @@
             display: flex;
             flex-direction: column;
             min-height: 0;
-            padding: 2px; /* 影やボーダーが切れないための余白 */
+            padding: 2px;
         }
 
-        /* メインディスプレイカード（タイトルから中身まで一体型） */
         .main-display {
             background-color: var(--card-bg);
             border: 1px solid var(--card-border);
@@ -113,7 +110,6 @@
             overflow: hidden;
         }
 
-        /* タイトル領域 */
         .display-header {
             display: flex;
             justify-content: space-between;
@@ -172,7 +168,6 @@
             text-overflow: ellipsis;
         }
 
-        /* 解説トリガーボタン */
         .card-info-footer-btn {
             background: transparent;
             color: var(--text-secondary);
@@ -203,7 +198,6 @@
             border-color: var(--text-primary);
         }
 
-        /* 右上の容量バッジ */
         .volume-badge {
             font-size: 16px;
             font-weight: 700;
@@ -223,7 +217,6 @@
             background: rgba(41, 151, 255, 0.25);
         }
 
-        /* アドバイス・コスト表示ボックス */
         .advice-box {
             background-color: rgba(41, 151, 255, 0.08);
             border: 1px solid rgba(41, 151, 255, 0.2);
@@ -258,7 +251,6 @@
             display: block;
         }
 
-        /* 切り替えボタン */
         .mode-switch-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -286,7 +278,6 @@
             border-color: rgba(41, 151, 255, 0.4);
         }
 
-        /* スクロールエリア */
         .list-container-wrapper {
             flex: 1;
             overflow-y: auto;
@@ -313,7 +304,6 @@
             padding-bottom: 8px;
         }
 
-        /* レシピのセクション見出し */
         .recipe-section-header {
             font-size: 11px;
             font-weight: 700;
@@ -378,7 +368,6 @@
             transition: color 0.2s;
         }
 
-        /* サイクル条件ビューのデザイン */
         .cycle-container {
             display: flex;
             flex-direction: column;
@@ -472,7 +461,6 @@
             letter-spacing: 1px;
         }
 
-        /* 選び方ガイド専用の美しいレイアウトカード */
         .guide-container {
             display: flex;
             flex-direction: column;
@@ -509,7 +497,6 @@
             color: #ffffff;
         }
 
-        /* 一括リセットバナー */
         .reset-banner {
             position: absolute;
             bottom: 12px;
@@ -560,7 +547,6 @@
             transform: scale(0.95);
         }
 
-        /* オプション画面のスタイル */
         .option-group {
             display: flex;
             justify-content: space-between;
@@ -614,7 +600,6 @@
             cursor: pointer;
         }
 
-        /* iOS風トグルスイッチ */
         .switch {
             position: relative;
             display: inline-block;
@@ -659,7 +644,6 @@
             transform: translateX(20px);
         }
 
-        /* 画面下部のスマートなランチャーバー */
         .bottom-launcher-bar {
             display: flex;
             justify-content: space-between;
@@ -704,7 +688,6 @@
             border-radius: 12px;
         }
 
-        /* 全画面グリッドメニューモーダル */
         .launcher-modal-overlay {
             position: fixed;
             top: 0;
@@ -794,7 +777,6 @@
             color: var(--text-primary);
         }
 
-        /* モーダル共通スタイル */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -852,7 +834,6 @@
             gap: 8px !important;
         }
 
-        /* 大型詳細解説ポップアップ用モーダル */
         .info-modal-content {
             background: linear-gradient(145deg, #18181d, #121216);
             border: 1px solid rgba(41, 151, 255, 0.4);
@@ -957,7 +938,6 @@
             box-shadow: 0 6px 16px rgba(41, 151, 255, 0.3);
         }
 
-        /* テンキー専用スタイル */
         .keypad-container {
             display: flex;
             flex-direction: column;
@@ -1038,30 +1018,22 @@
         
         <!-- 1ページ目：PCRビュー -->
         <div class="view-panel active" id="panel0">
-            <div class="card-carousel-container" id="pcrCarouselContainer">
-                <!-- 動的にPCRカード群が横に連なって生成されます -->
-            </div>
+            <div class="card-carousel-container" id="pcrCarouselContainer"></div>
         </div>
 
         <!-- 2ページ目：培地ビュー -->
         <div class="view-panel" id="panel1">
-            <div class="card-carousel-container" id="mediaCarouselContainer">
-                <!-- 動的に培地カード群が横に連なって生成されます -->
-            </div>
+            <div class="card-carousel-container" id="mediaCarouselContainer"></div>
         </div>
 
         <!-- 3ページ目：Solutions（ストック溶液）ビュー -->
         <div class="view-panel" id="panel2">
-            <div class="card-carousel-container" id="solutionCarouselContainer">
-                <!-- 動的にストック溶液カード群が横に連なって生成されます -->
-            </div>
+            <div class="card-carousel-container" id="solutionCarouselContainer"></div>
         </div>
 
         <!-- 4ページ目：ガイドビュー -->
         <div class="view-panel" id="panel3">
-            <div class="card-carousel-container" id="guideCarouselContainer">
-                <!-- 動的にガイドカード群が横に連なって生成されます -->
-            </div>
+            <div class="card-carousel-container" id="guideCarouselContainer"></div>
         </div>
 
         <!-- 5ページ目：オプションビュー -->
@@ -1156,7 +1128,6 @@
 
     </div>
 
-    <!-- 下部スマートランチャーバー -->
     <div class="bottom-launcher-bar" onclick="openLauncherModal()">
         <div class="launcher-left">
             <span class="launcher-icon">❖</span>
@@ -1165,7 +1136,6 @@
         <div class="launcher-right" id="currentLauncherIndex">1 / 5</div>
     </div>
 
-    <!-- 全画面ページ一覧ランチャーモーダル -->
     <div class="launcher-modal-overlay" id="launcherModal" onclick="outsideCloseLauncher(event)">
         <div class="launcher-modal-content">
             <div class="modal-header">ページ一覧・メニュー</div>
@@ -1174,7 +1144,6 @@
         </div>
     </div>
 
-    <!-- リスト順序・表示設定用モーダル -->
     <div class="modal-overlay" id="orderModal" onclick="outsideClose(event, 'orderModal')">
         <div class="modal-content" style="max-width: 420px;">
             <div class="modal-header" id="orderModalHeader">リストのカスタマイズ</div>
@@ -1183,7 +1152,6 @@
         </div>
     </div>
 
-    <!-- 大型詳細解説ポップアップ用モーダル -->
     <div class="modal-overlay" id="infoModal" onclick="outsideClose(event, 'infoModal')">
         <div class="modal-content info-modal-content">
             <div class="modal-header">💡 実験ノート・解説</div>
@@ -1193,7 +1161,6 @@
         </div>
     </div>
 
-    <!-- モーダル各種 -->
     <div class="modal-overlay" id="mediaModal" onclick="outsideClose(event, 'mediaModal')">
         <div class="modal-content" style="max-width: 440px;">
             <div class="modal-header">培地を選択</div>
@@ -2389,7 +2356,7 @@
         }
 
         function updateView() {
-            // --- 1. PCR カードカルーセルの更新 ---
+            // --- 1. PCR カードカルーセルの更新（無限ループ対応） ---
             const pcr = pcrDatabase[currentPcrKey];
             if (pcr) {
                 const pcrCarouselContainer = document.getElementById("pcrCarouselContainer");
@@ -2400,136 +2367,140 @@
                     currentPcrKey = visiblePcrList[0].key;
                 }
 
-                visiblePcrList.forEach(pObj => {
-                    const pKey = pObj.key;
-                    const pData = pcrDatabase[pKey];
-                    if (!pData) return;
+                if (visiblePcrList.length > 0) {
+                    // 番兵（先頭に最後のクローン、末尾に最初のクローンを配置）
+                    const loopItems = [visiblePcrList[visiblePcrList.length - 1], ...visiblePcrList, visiblePcrList[0]];
 
-                    const panel = document.createElement("div");
-                    panel.className = "card-carousel-panel";
-                    panel.innerHTML = `
-                        <div class="main-display">
-                            <div class="display-header">
-                                <div class="media-title-wrapper" onclick="openModal('pcrModal')">
-                                    <span class="media-eyebrow">PCR Master Mix</span>
-                                    <div class="media-title-row">
-                                        <h1 class="media-title">${pData.fullName}</h1>
+                    loopItems.forEach((pObj, loopIdx) => {
+                        const pKey = pObj.key;
+                        const pData = pcrDatabase[pKey];
+                        if (!pData) return;
+
+                        const panel = document.createElement("div");
+                        panel.className = "card-carousel-panel";
+                        panel.innerHTML = `
+                            <div class="main-display">
+                                <div class="display-header">
+                                    <div class="media-title-wrapper" onclick="openModal('pcrModal')">
+                                        <span class="media-eyebrow">PCR Master Mix</span>
+                                        <div class="media-title-row">
+                                            <h1 class="media-title">${pData.fullName}</h1>
+                                        </div>
                                     </div>
+                                    <span class="volume-badge" onclick="openModal('pcrVolumeModal')">${currentPcrVolume} µL</span>
                                 </div>
-                                <span class="volume-badge" onclick="openModal('pcrVolumeModal')">${currentPcrVolume} µL</span>
-                            </div>
-                            <div class="mode-switch-container">
-                                <button class="mode-btn ${currentPcrMode === 'recipe' ? 'active' : ''}" onclick="setPcrMode('recipe')">反応液組成</button>
-                                <button class="mode-btn ${currentPcrMode === 'cycle' ? 'active' : ''}" onclick="setPcrMode('cycle')">サイクル条件</button>
-                            </div>
-                            <div class="advice-box ${adviceFeatureEnabled ? 'visible' : ''}">${pData.getAdvice(currentPcrVolume)}</div>
-                            <div class="cost-box ${costFeatureEnabled ? 'visible' : ''}">${pData.calculateCost(currentPcrVolume)}</div>
-                            
-                            <div class="list-container-wrapper">
-                                <ul class="ingredient-list" id="pcrList_${pKey}" style="${currentPcrMode === 'recipe' ? 'display:flex;' : 'display:none;'}"></ul>
-                                <div class="cycle-container" id="pcrCycle_${pKey}" style="${currentPcrMode === 'cycle' ? 'display:flex;' : 'display:none;'}"></div>
-                            </div>
+                                <div class="mode-switch-container">
+                                    <button class="mode-btn ${currentPcrMode === 'recipe' ? 'active' : ''}" onclick="setPcrMode('recipe')">反応液組成</button>
+                                    <button class="mode-btn ${currentPcrMode === 'cycle' ? 'active' : ''}" onclick="setPcrMode('cycle')">サイクル条件</button>
+                                </div>
+                                <div class="advice-box ${adviceFeatureEnabled ? 'visible' : ''}">${pData.getAdvice(currentPcrVolume)}</div>
+                                <div class="cost-box ${costFeatureEnabled ? 'visible' : ''}">${pData.calculateCost(currentPcrVolume)}</div>
+                                
+                                <div class="list-container-wrapper">
+                                    <ul class="ingredient-list" id="pcrList_${pKey}_${loopIdx}" style="${currentPcrMode === 'recipe' ? 'display:flex;' : 'display:none;'}"></ul>
+                                    <div class="cycle-container" id="pcrCycle_${pKey}_${loopIdx}" style="${currentPcrMode === 'cycle' ? 'display:flex;' : 'display:none;'}"></div>
+                                </div>
 
-                            <div class="reset-banner" id="pcrResetBanner_${pKey}">
-                                <span class="reset-text">チェックが入っています</span>
-                                <button class="reset-btn" onclick="resetChecks('pcr')">すべて外す</button>
-                            </div>
-                        </div>
-                    `;
-                    pcrCarouselContainer.appendChild(panel);
-
-                    // レシピ組成の生成
-                    const recipeList = panel.querySelector(`#pcrList_${pKey}`);
-                    const pcrRatio = currentPcrVolume / pData.baseVolume;
-
-                    pData.ingredients.forEach(ing => {
-                        const calcAmount = ing.amount * pcrRatio;
-                        const formatted = calcAmount >= 10 ? calcAmount.toFixed(1) : calcAmount.toFixed(2).replace(/\.?0+$/, "");
-                        const li = document.createElement("li");
-                        li.className = "ingredient-item";
-                        li.onclick = () => {
-                            if (checkFeatureEnabled) {
-                                li.classList.toggle('checked');
-                                checkResetButtonState('pcr');
-                            }
-                        };
-                        li.innerHTML = `
-                            <span class="ing-name">${ing.name}</span>
-                            <div class="ing-amount-wrapper">
-                                <span class="ing-amount">${formatted}</span>
-                                <span class="ing-unit">${ing.unit}</span>
+                                <div class="reset-banner" id="pcrResetBanner_${pKey}_${loopIdx}">
+                                    <span class="reset-text">チェックが入っています</span>
+                                    <button class="reset-btn" onclick="resetChecks('pcr')">すべて外す</button>
+                                </div>
                             </div>
                         `;
-                        recipeList.appendChild(li);
-                    });
+                        pcrCarouselContainer.appendChild(panel);
 
-                    if (infoButtonFeatureEnabled) {
-                        const pcrInfoBtn = document.createElement("button");
-                        pcrInfoBtn.className = "card-info-footer-btn";
-                        pcrInfoBtn.onclick = openInfoModal;
-                        pcrInfoBtn.innerHTML = "<span>このレシピの解説を見る</span>";
-                        recipeList.appendChild(pcrInfoBtn);
-                    }
+                        const recipeList = panel.querySelector(`#pcrList_${pKey}_${loopIdx}`);
+                        const pcrRatio = currentPcrVolume / pData.baseVolume;
 
-                    // サイクル条件の生成
-                    const cycleContainer = panel.querySelector(`#pcrCycle_${pKey}`);
-                    let currentGroup = null;
-
-                    pData.cycles.forEach(cyc => {
-                        if (cyc.type === 'single') {
-                            const div = document.createElement("div");
-                            div.className = "cycle-single-step";
-                            div.innerHTML = `
-                                <div class="cycle-step-left"><span class="cycle-step-name">${cyc.name}</span></div>
-                                <div class="cycle-main-val"><span>${cyc.temp}</span><span class="cycle-time">${cyc.time}</span></div>
+                        pData.ingredients.forEach(ing => {
+                            const calcAmount = ing.amount * pcrRatio;
+                            const formatted = calcAmount >= 10 ? calcAmount.toFixed(1) : calcAmount.toFixed(2).replace(/\.?0+$/, "");
+                            const li = document.createElement("li");
+                            li.className = "ingredient-item";
+                            li.onclick = () => {
+                                if (checkFeatureEnabled) {
+                                    li.classList.toggle('checked');
+                                    checkResetButtonState('pcr');
+                                }
+                            };
+                            li.innerHTML = `
+                                <span class="ing-name">${ing.name}</span>
+                                <div class="ing-amount-wrapper">
+                                    <span class="ing-amount">${formatted}</span>
+                                    <span class="ing-unit">${ing.unit}</span>
+                                </div>
                             `;
-                            cycleContainer.appendChild(div);
-                        } else if (cyc.type === 'divider') {
-                            const div = document.createElement("div");
-                            div.className = "cycle-divider";
-                            div.textContent = cyc.text;
-                            cycleContainer.appendChild(div);
-                        } else if (cyc.type === 'loop_start') {
-                            currentGroup = document.createElement("div");
-                            currentGroup.className = "cycle-loop-group";
-                            const badge = document.createElement("div");
-                            badge.className = "cycle-loop-badge";
-                            badge.textContent = cyc.name;
-                            currentGroup.appendChild(badge);
-                            cycleContainer.appendChild(currentGroup);
-                        } else if (cyc.type === 'loop_step') {
-                            if (currentGroup) {
-                                const stepDiv = document.createElement("div");
-                                stepDiv.className = "cycle-step";
-                                stepDiv.innerHTML = `
+                            recipeList.appendChild(li);
+                        });
+
+                        if (infoButtonFeatureEnabled) {
+                            const pcrInfoBtn = document.createElement("button");
+                            pcrInfoBtn.className = "card-info-footer-btn";
+                            pcrInfoBtn.onclick = openInfoModal;
+                            pcrInfoBtn.innerHTML = "<span>このレシピの解説を見る</span>";
+                            recipeList.appendChild(pcrInfoBtn);
+                        }
+
+                        const cycleContainer = panel.querySelector(`#pcrCycle_${pKey}_${loopIdx}`);
+                        let currentGroup = null;
+
+                        pData.cycles.forEach(cyc => {
+                            if (cyc.type === 'single') {
+                                const div = document.createElement("div");
+                                div.className = "cycle-single-step";
+                                div.innerHTML = `
                                     <div class="cycle-step-left"><span class="cycle-step-name">${cyc.name}</span></div>
                                     <div class="cycle-main-val"><span>${cyc.temp}</span><span class="cycle-time">${cyc.time}</span></div>
                                 `;
-                                currentGroup.appendChild(stepDiv);
+                                cycleContainer.appendChild(div);
+                            } else if (cyc.type === 'divider') {
+                                const div = document.createElement("div");
+                                div.className = "cycle-divider";
+                                div.textContent = cyc.text;
+                                cycleContainer.appendChild(div);
+                            } else if (cyc.type === 'loop_start') {
+                                currentGroup = document.createElement("div");
+                                currentGroup.className = "cycle-loop-group";
+                                const badge = document.createElement("div");
+                                badge.className = "cycle-loop-badge";
+                                badge.textContent = cyc.name;
+                                currentGroup.appendChild(badge);
+                                cycleContainer.appendChild(currentGroup);
+                            } else if (cyc.type === 'loop_step') {
+                                if (currentGroup) {
+                                    const stepDiv = document.createElement("div");
+                                    stepDiv.className = "cycle-step";
+                                    stepDiv.innerHTML = `
+                                        <div class="cycle-step-left"><span class="cycle-step-name">${cyc.name}</span></div>
+                                        <div class="cycle-main-val"><span>${cyc.temp}</span><span class="cycle-time">${cyc.time}</span></div>
+                                    `;
+                                    currentGroup.appendChild(stepDiv);
+                                }
+                            } else if (cyc.type === 'loop_end') {
+                                currentGroup = null;
                             }
-                        } else if (cyc.type === 'loop_end') {
-                            currentGroup = null;
-                        }
+                        });
                     });
-                });
 
-                const activeIndex = visiblePcrList.findIndex(p => p.key === currentPcrKey);
-                if (activeIndex !== -1) {
-                    setTimeout(() => {
-                        pcrCarouselContainer.scrollLeft = activeIndex * pcrCarouselContainer.clientWidth;
-                    }, 10);
+                    const activeRealIndex = visiblePcrList.findIndex(p => p.key === currentPcrKey);
+                    if (activeRealIndex !== -1) {
+                        setTimeout(() => {
+                            // クローン分（+1）オフセットした位置にスクロール
+                            pcrCarouselContainer.scrollLeft = (activeRealIndex + 1) * pcrCarouselContainer.clientWidth;
+                        }, 10);
+                    }
+
+                    setupInfiniteCarouselSwipe(pcrCarouselContainer, visiblePcrList, (newKey) => {
+                        currentPcrKey = newKey;
+                        localStorage.setItem('lab_pcrKey', newKey);
+                        updateView();
+                    });
+
+                    checkResetButtonState('pcr');
                 }
-
-                setupCardCarouselSwipe(pcrCarouselContainer, visiblePcrList, (newKey) => {
-                    currentPcrKey = newKey;
-                    localStorage.setItem('lab_pcrKey', newKey);
-                    updateView();
-                });
-
-                checkResetButtonState('pcr');
             }
 
-            // --- 2. 培地 カードカルーセルの更新 ---
+            // --- 2. 培地 カードカルーセルの更新（無限ループ対応） ---
             const media = mediaDatabase[currentMediaKey];
             if (media) {
                 const mediaCarouselContainer = document.getElementById("mediaCarouselContainer");
@@ -2540,97 +2511,64 @@
                     currentMediaKey = visibleMediaList[0].key;
                 }
 
-                visibleMediaList.forEach(mObj => {
-                    const mKey = mObj.key;
-                    const mData = mediaDatabase[mKey];
-                    if (!mData) return;
+                if (visibleMediaList.length > 0) {
+                    const loopMediaList = [visibleMediaList[visibleMediaList.length - 1], ...visibleMediaList, visibleMediaList[0]];
 
-                    const panel = document.createElement("div");
-                    panel.className = "card-carousel-panel";
-                    
-                    let modeSwitchHtml = "";
-                    if (mData.hasModes) {
-                        const modeKeys = Object.keys(mData.modes);
-                        if (!mData.modes[currentMediaMode]) currentMediaMode = modeKeys[0];
-                        modeSwitchHtml = `
-                            <div class="mode-switch-container">
-                                <button class="mode-btn ${currentMediaMode === modeKeys[0] ? 'active' : ''}" onclick="setMediaMode('${modeKeys[0]}')">${mData.modeLabels[0]}</button>
-                                <button class="mode-btn ${currentMediaMode === modeKeys[1] ? 'active' : ''}" onclick="setMediaMode('${modeKeys[1]}')">${mData.modeLabels[1]}</button>
-                            </div>
-                        `;
-                    }
+                    loopMediaList.forEach((mObj, loopIdx) => {
+                        const mKey = mObj.key;
+                        const mData = mediaDatabase[mKey];
+                        if (!mData) return;
 
-                    panel.innerHTML = `
-                        <div class="main-display">
-                            <div class="display-header">
-                                <div class="media-title-wrapper" onclick="openModal('mediaModal')">
-                                    <span class="media-eyebrow">Medium Recipe</span>
-                                    <div class="media-title-row">
-                                        <h1 class="media-title">${mData.name}</h1>
-                                    </div>
+                        const panel = document.createElement("div");
+                        panel.className = "card-carousel-panel";
+                        
+                        let modeSwitchHtml = "";
+                        if (mData.hasModes) {
+                            const modeKeys = Object.keys(mData.modes);
+                            if (!mData.modes[currentMediaMode]) currentMediaMode = modeKeys[0];
+                            modeSwitchHtml = `
+                                <div class="mode-switch-container">
+                                    <button class="mode-btn ${currentMediaMode === modeKeys[0] ? 'active' : ''}" onclick="setMediaMode('${modeKeys[0]}')">${mData.modeLabels[0]}</button>
+                                    <button class="mode-btn ${currentMediaMode === modeKeys[1] ? 'active' : ''}" onclick="setMediaMode('${modeKeys[1]}')">${mData.modeLabels[1]}</button>
                                 </div>
-                                <span class="volume-badge" onclick="openModal('volumeModal')">${currentVolume} mL</span>
-                            </div>
-                            ${modeSwitchHtml}
-                            <div class="advice-box ${adviceFeatureEnabled ? 'visible' : ''}">${mData.getAdvice(currentVolume)}</div>
-                            <div class="cost-box ${costFeatureEnabled ? 'visible' : ''}">${mData.calculateCost(currentVolume)}</div>
-                            
-                            <div class="list-container-wrapper">
-                                <ul class="ingredient-list" id="mediaList_${mKey}"></ul>
-                            </div>
-                        </div>
-                    `;
-                    mediaCarouselContainer.appendChild(panel);
+                            `;
+                        }
 
-                    const listContainer = panel.querySelector(`#mediaList_${mKey}`);
-                    const ratio = currentVolume / mData.baseVolume;
-
-                    let currentIngredients = mData.ingredients;
-                    if (mData.hasModes && mData.modes[currentMediaMode] && mData.modes[currentMediaMode].ingredients) {
-                        currentIngredients = mData.modes[currentMediaMode].ingredients;
-                    }
-
-                    currentIngredients.forEach(ing => {
-                        const calcAmount = typeof ing.amount === 'number' ? ing.amount * ratio : ing.amount;
-                        const formatted = typeof calcAmount === 'number' 
-                            ? (calcAmount >= 10 ? calcAmount.toFixed(1) : calcAmount.toFixed(3).replace(/\.?0+$/, ""))
-                            : ing.amount;
-
-                        const li = document.createElement("li");
-                        li.className = "ingredient-item";
-                        li.onclick = () => {
-                            if (checkFeatureEnabled) {
-                                li.classList.toggle('checked');
-                                checkResetButtonState('media');
-                            }
-                        };
-                        li.innerHTML = `
-                            <span class="ing-name">${ing.name}</span>
-                            <div class="ing-amount-wrapper">
-                                <span class="ing-amount">${formatted}</span>
-                                <span class="ing-unit">${ing.unit}</span>
+                        panel.innerHTML = `
+                            <div class="main-display">
+                                <div class="display-header">
+                                    <div class="media-title-wrapper" onclick="openModal('mediaModal')">
+                                        <span class="media-eyebrow">Medium Recipe</span>
+                                        <div class="media-title-row">
+                                            <h1 class="media-title">${mData.name}</h1>
+                                        </div>
+                                    </div>
+                                    <span class="volume-badge" onclick="openModal('volumeModal')">${currentVolume} mL</span>
+                                </div>
+                                ${modeSwitchHtml}
+                                <div class="advice-box ${adviceFeatureEnabled ? 'visible' : ''}">${mData.getAdvice(currentVolume)}</div>
+                                <div class="cost-box ${costFeatureEnabled ? 'visible' : ''}">${mData.calculateCost(currentVolume)}</div>
+                                
+                                <div class="list-container-wrapper">
+                                    <ul class="ingredient-list" id="mediaList_${mKey}_${loopIdx}"></ul>
+                                </div>
                             </div>
                         `;
-                        listContainer.appendChild(li);
-                    });
+                        mediaCarouselContainer.appendChild(panel);
 
-                    let currentPostIngredients = mData.postIngredients || [];
-                    if (mData.hasModes && mData.modes[currentMediaMode] && mData.modes[currentMediaMode].postIngredients) {
-                        currentPostIngredients = mData.modes[currentMediaMode].postIngredients;
-                    }
+                        const listContainer = panel.querySelector(`#mediaList_${mKey}_${loopIdx}`);
+                        const ratio = currentVolume / mData.baseVolume;
 
-                    if (currentPostIngredients.length > 0) {
-                        const sectionHeader = document.createElement("div");
-                        sectionHeader.className = "recipe-section-header";
-                        sectionHeader.innerHTML = `⚡ オートクレーブ後に追加`;
-                        listContainer.appendChild(sectionHeader);
+                        let currentIngredients = mData.ingredients;
+                        if (mData.hasModes && mData.modes[currentMediaMode] && mData.modes[currentMediaMode].ingredients) {
+                            currentIngredients = mData.modes[currentMediaMode].ingredients;
+                        }
 
-                        currentPostIngredients.forEach(ing => {
-                            let formatted = ing.amount;
-                            if (typeof ing.amount === 'number') {
-                                const calcAmount = ing.amount * ratio;
-                                formatted = calcAmount >= 10 ? calcAmount.toFixed(1) : calcAmount.toFixed(3).replace(/\.?0+$/, "");
-                            }
+                        currentIngredients.forEach(ing => {
+                            const calcAmount = typeof ing.amount === 'number' ? ing.amount * ratio : ing.amount;
+                            const formatted = typeof calcAmount === 'number' 
+                                ? (calcAmount >= 10 ? calcAmount.toFixed(1) : calcAmount.toFixed(3).replace(/\.?0+$/, ""))
+                                : ing.amount;
 
                             const li = document.createElement("li");
                             li.className = "ingredient-item";
@@ -2649,36 +2587,73 @@
                             `;
                             listContainer.appendChild(li);
                         });
+
+                        let currentPostIngredients = mData.postIngredients || [];
+                        if (mData.hasModes && mData.modes[currentMediaMode] && mData.modes[currentMediaMode].postIngredients) {
+                            currentPostIngredients = mData.modes[currentMediaMode].postIngredients;
+                        }
+
+                        if (currentPostIngredients.length > 0) {
+                            const sectionHeader = document.createElement("div");
+                            sectionHeader.className = "recipe-section-header";
+                            sectionHeader.innerHTML = `⚡ オートクレーブ後に追加`;
+                            listContainer.appendChild(sectionHeader);
+
+                            currentPostIngredients.forEach(ing => {
+                                let formatted = ing.amount;
+                                if (typeof ing.amount === 'number') {
+                                    const calcAmount = ing.amount * ratio;
+                                    formatted = calcAmount >= 10 ? calcAmount.toFixed(1) : calcAmount.toFixed(3).replace(/\.?0+$/, "");
+                                }
+
+                                const li = document.createElement("li");
+                                li.className = "ingredient-item";
+                                li.onclick = () => {
+                                    if (checkFeatureEnabled) {
+                                        li.classList.toggle('checked');
+                                        checkResetButtonState('media');
+                                    }
+                                };
+                                li.innerHTML = `
+                                    <span class="ing-name">${ing.name}</span>
+                                    <div class="ing-amount-wrapper">
+                                        <span class="ing-amount">${formatted}</span>
+                                        <span class="ing-unit">${ing.unit}</span>
+                                    </div>
+                                `;
+                                listContainer.appendChild(li);
+                            });
+                        }
+
+                        if (infoButtonFeatureEnabled) {
+                            const mediaInfoBtn = document.createElement("button");
+                            mediaInfoBtn.className = "card-info-footer-btn";
+                            mediaInfoBtn.onclick = openInfoModal;
+                            mediaInfoBtn.innerHTML = "<span>このレシピの解説を見る</span>";
+                            listContainer.appendChild(mediaInfoBtn);
+                        }
+                    });
+
+                    const activeMediaIndex = visibleMediaList.findIndex(m => m.key === currentMediaKey);
+                    if (activeMediaIndex !== -1) {
+                        setTimeout(() => {
+                            mediaCarouselContainer.scrollLeft = (activeMediaIndex + 1) * mediaCarouselContainer.clientWidth;
+                        }, 10);
                     }
 
-                    if (infoButtonFeatureEnabled) {
-                        const mediaInfoBtn = document.createElement("button");
-                        mediaInfoBtn.className = "card-info-footer-btn";
-                        mediaInfoBtn.onclick = openInfoModal;
-                        mediaInfoBtn.innerHTML = "<span>このレシピの解説を見る</span>";
-                        listContainer.appendChild(mediaInfoBtn);
-                    }
-                });
+                    setupInfiniteCarouselSwipe(mediaCarouselContainer, visibleMediaList, (newKey) => {
+                        currentMediaKey = newKey;
+                        localStorage.setItem('lab_mediaKey', newKey);
+                        const m = mediaDatabase[newKey];
+                        if (m && m.hasModes) currentMediaMode = Object.keys(m.modes)[0];
+                        updateView();
+                    });
 
-                const activeMediaIndex = visibleMediaList.findIndex(m => m.key === currentMediaKey);
-                if (activeMediaIndex !== -1) {
-                    setTimeout(() => {
-                        mediaCarouselContainer.scrollLeft = activeMediaIndex * mediaCarouselContainer.clientWidth;
-                    }, 10);
+                    checkResetButtonState('media');
                 }
-
-                setupCardCarouselSwipe(mediaCarouselContainer, visibleMediaList, (newKey) => {
-                    currentMediaKey = newKey;
-                    localStorage.setItem('lab_mediaKey', newKey);
-                    const m = mediaDatabase[newKey];
-                    if (m && m.hasModes) currentMediaMode = Object.keys(m.modes)[0];
-                    updateView();
-                });
-
-                checkResetButtonState('media');
             }
 
-            // --- 3. ストック溶液 カードカルーセルの更新 ---
+            // --- 3. ストック溶液 カードカルーセルの更新（無限ループ対応） ---
             const sol = solutionDatabase[currentSolutionKey];
             if (sol) {
                 const solutionCarouselContainer = document.getElementById("solutionCarouselContainer");
@@ -2689,88 +2664,92 @@
                     currentSolutionKey = visibleSolList[0].key;
                 }
 
-                visibleSolList.forEach(sObj => {
-                    const sKey = sObj.key;
-                    const sData = solutionDatabase[sKey];
-                    if (!sData) return;
+                if (visibleSolList.length > 0) {
+                    const loopSolList = [visibleSolList[visibleSolList.length - 1], ...visibleSolList, visibleSolList[0]];
 
-                    const panel = document.createElement("div");
-                    panel.className = "card-carousel-panel";
-                    panel.innerHTML = `
-                        <div class="main-display">
-                            <div class="display-header">
-                                <div class="media-title-wrapper" onclick="openModal('solutionModal')">
-                                    <span class="media-eyebrow">Stock Solutions</span>
-                                    <div class="media-title-row">
-                                        <h1 class="media-title">${sData.fullName || sData.name}</h1>
+                    loopSolList.forEach((sObj, loopIdx) => {
+                        const sKey = sObj.key;
+                        const sData = solutionDatabase[sKey];
+                        if (!sData) return;
+
+                        const panel = document.createElement("div");
+                        panel.className = "card-carousel-panel";
+                        panel.innerHTML = `
+                            <div class="main-display">
+                                <div class="display-header">
+                                    <div class="media-title-wrapper" onclick="openModal('solutionModal')">
+                                        <span class="media-eyebrow">Stock Solutions</span>
+                                        <div class="media-title-row">
+                                            <h1 class="media-title">${sData.fullName || sData.name}</h1>
+                                        </div>
                                     </div>
+                                    <span class="volume-badge" onclick="openModal('solutionVolumeModal')">${currentSolutionVolume} mL</span>
                                 </div>
-                                <span class="volume-badge" onclick="openModal('solutionVolumeModal')">${currentSolutionVolume} mL</span>
-                            </div>
-                            <div class="advice-box ${adviceFeatureEnabled ? 'visible' : ''}">${sData.getAdvice(currentSolutionVolume)}</div>
-                            <div class="cost-box ${costFeatureEnabled ? 'visible' : ''}">${sData.calculateCost(currentSolutionVolume)}</div>
-                            
-                            <div class="list-container-wrapper">
-                                <ul class="ingredient-list" id="solutionList_${sKey}"></ul>
-                            </div>
-                        </div>
-                    `;
-                    solutionCarouselContainer.appendChild(panel);
-
-                    const solListContainer = panel.querySelector(`#solutionList_${sKey}`);
-                    const solRatio = currentSolutionVolume / sData.baseVolume;
-
-                    sData.ingredients.forEach(ing => {
-                        let formatted = ing.amount;
-                        if (typeof ing.amount === 'number') {
-                            const calcAmount = ing.amount * solRatio;
-                            formatted = calcAmount >= 10 ? calcAmount.toFixed(1) : calcAmount.toFixed(3).replace(/\.?0+$/, "");
-                        }
-
-                        const li = document.createElement("li");
-                        li.className = "ingredient-item";
-                        li.onclick = () => {
-                            if (checkFeatureEnabled) {
-                                li.classList.toggle('checked');
-                                checkResetButtonState('solution');
-                            }
-                        };
-                        li.innerHTML = `
-                            <span class="ing-name">${ing.name}</span>
-                            <div class="ing-amount-wrapper">
-                                <span class="ing-amount">${formatted}</span>
-                                <span class="ing-unit">${ing.unit}</span>
+                                <div class="advice-box ${adviceFeatureEnabled ? 'visible' : ''}">${sData.getAdvice(currentSolutionVolume)}</div>
+                                <div class="cost-box ${costFeatureEnabled ? 'visible' : ''}">${sData.calculateCost(currentSolutionVolume)}</div>
+                                
+                                <div class="list-container-wrapper">
+                                    <ul class="ingredient-list" id="solutionList_${sKey}_${loopIdx}"></ul>
+                                </div>
                             </div>
                         `;
-                        solListContainer.appendChild(li);
+                        solutionCarouselContainer.appendChild(panel);
+
+                        const solListContainer = panel.querySelector(`#solutionList_${sKey}_${loopIdx}`);
+                        const solRatio = currentSolutionVolume / sData.baseVolume;
+
+                        sData.ingredients.forEach(ing => {
+                            let formatted = ing.amount;
+                            if (typeof ing.amount === 'number') {
+                                const calcAmount = ing.amount * solRatio;
+                                formatted = calcAmount >= 10 ? calcAmount.toFixed(1) : calcAmount.toFixed(3).replace(/\.?0+$/, "");
+                            }
+
+                            const li = document.createElement("li");
+                            li.className = "ingredient-item";
+                            li.onclick = () => {
+                                if (checkFeatureEnabled) {
+                                    li.classList.toggle('checked');
+                                    checkResetButtonState('solution');
+                                }
+                            };
+                            li.innerHTML = `
+                                <span class="ing-name">${ing.name}</span>
+                                <div class="ing-amount-wrapper">
+                                    <span class="ing-amount">${formatted}</span>
+                                    <span class="ing-unit">${ing.unit}</span>
+                                </div>
+                            `;
+                            solListContainer.appendChild(li);
+                        });
+
+                        if (infoButtonFeatureEnabled) {
+                            const solInfoBtn = document.createElement("button");
+                            solInfoBtn.className = "card-info-footer-btn";
+                            solInfoBtn.onclick = openInfoModal;
+                            solInfoBtn.innerHTML = "<span>このレシピの解説を見る</span>";
+                            solListContainer.appendChild(solInfoBtn);
+                        }
                     });
 
-                    if (infoButtonFeatureEnabled) {
-                        const solInfoBtn = document.createElement("button");
-                        solInfoBtn.className = "card-info-footer-btn";
-                        solInfoBtn.onclick = openInfoModal;
-                        solInfoBtn.innerHTML = "<span>このレシピの解説を見る</span>";
-                        solListContainer.appendChild(solInfoBtn);
+                    const activeSolIndex = visibleSolList.findIndex(s => s.key === currentSolutionKey);
+                    if (activeSolIndex !== -1) {
+                        setTimeout(() => {
+                            solutionCarouselContainer.scrollLeft = (activeSolIndex + 1) * solutionCarouselContainer.clientWidth;
+                        }, 10);
                     }
-                });
 
-                const activeSolIndex = visibleSolList.findIndex(s => s.key === currentSolutionKey);
-                if (activeSolIndex !== -1) {
-                    setTimeout(() => {
-                        solutionCarouselContainer.scrollLeft = activeSolIndex * solutionCarouselContainer.clientWidth;
-                    }, 10);
+                    setupInfiniteCarouselSwipe(solutionCarouselContainer, visibleSolList, (newKey) => {
+                        currentSolutionKey = newKey;
+                        localStorage.setItem('lab_solutionKey', newKey);
+                        updateView();
+                    });
+
+                    checkResetButtonState('solution');
                 }
-
-                setupCardCarouselSwipe(solutionCarouselContainer, visibleSolList, (newKey) => {
-                    currentSolutionKey = newKey;
-                    localStorage.setItem('lab_solutionKey', newKey);
-                    updateView();
-                });
-
-                checkResetButtonState('solution');
             }
 
-            // --- 4. ガイド カードカルーセルの更新 ---
+            // --- 4. ガイド カードカルーセルの更新（無限ループ対応） ---
             const guide = guideDatabase[currentGuideKey];
             if (guide) {
                 const guideCarouselContainer = document.getElementById("guideCarouselContainer");
@@ -2781,54 +2760,58 @@
                     currentGuideKey = guideKeys[0];
                 }
 
-                guideKeys.forEach(gKey => {
-                    const gData = guideDatabase[gKey];
-                    if (!gData) return;
+                if (guideKeys.length > 0) {
+                    const loopGuideList = [guideKeys[guideKeys.length - 1], ...guideKeys, guideKeys[0]];
 
-                    const panel = document.createElement("div");
-                    panel.className = "card-carousel-panel";
-                    panel.innerHTML = `
-                        <div class="main-display">
-                            <div class="display-header">
-                                <div class="media-title-wrapper" onclick="openModal('guideModal')">
-                                    <span class="media-eyebrow">${gData.eyebrow}</span>
-                                    <div class="media-title-row">
-                                        <h1 class="media-title">${gData.name}</h1>
+                    loopGuideList.forEach((gKey, loopIdx) => {
+                        const gData = guideDatabase[gKey];
+                        if (!gData) return;
+
+                        const panel = document.createElement("div");
+                        panel.className = "card-carousel-panel";
+                        panel.innerHTML = `
+                            <div class="main-display">
+                                <div class="display-header">
+                                    <div class="media-title-wrapper" onclick="openModal('guideModal')">
+                                        <span class="media-eyebrow">${gData.eyebrow}</span>
+                                        <div class="media-title-row">
+                                            <h1 class="media-title">${gData.name}</h1>
+                                        </div>
                                     </div>
                                 </div>
+                                <div class="list-container-wrapper">
+                                    <div class="guide-container" id="guideContent_${gKey}_${loopIdx}"></div>
+                                </div>
                             </div>
-                            <div class="list-container-wrapper">
-                                <div class="guide-container" id="guideContent_${gKey}"></div>
-                            </div>
-                        </div>
-                    `;
-                    guideCarouselContainer.appendChild(panel);
-
-                    const container = panel.querySelector(`#guideContent_${gKey}`);
-                    gData.cards.forEach(card => {
-                        const cardEl = document.createElement("div");
-                        cardEl.className = "guide-card";
-                        cardEl.innerHTML = `
-                            <span class="guide-title">${card.title}</span>
-                            <span class="guide-desc">${card.desc}</span>
                         `;
-                        container.appendChild(cardEl);
+                        guideCarouselContainer.appendChild(panel);
+
+                        const container = panel.querySelector(`#guideContent_${gKey}_${loopIdx}`);
+                        gData.cards.forEach(card => {
+                            const cardEl = document.createElement("div");
+                            cardEl.className = "guide-card";
+                            cardEl.innerHTML = `
+                                <span class="guide-title">${card.title}</span>
+                                <span class="guide-desc">${card.desc}</span>
+                            `;
+                            container.appendChild(cardEl);
+                        });
                     });
-                });
 
-                const activeGuideIndex = guideKeys.indexOf(currentGuideKey);
-                if (activeGuideIndex !== -1) {
-                    setTimeout(() => {
-                        guideCarouselContainer.scrollLeft = activeGuideIndex * guideCarouselContainer.clientWidth;
-                    }, 10);
+                    const activeGuideIndex = guideKeys.indexOf(currentGuideKey);
+                    if (activeGuideIndex !== -1) {
+                        setTimeout(() => {
+                            guideCarouselContainer.scrollLeft = (activeGuideIndex + 1) * guideCarouselContainer.clientWidth;
+                        }, 10);
+                    }
+
+                    const guideObjList = guideKeys.map(k => ({ key: k }));
+                    setupInfiniteCarouselSwipe(guideCarouselContainer, guideObjList, (newKey) => {
+                        currentGuideKey = newKey;
+                        localStorage.setItem('lab_guideKey', newKey);
+                        updateView();
+                    });
                 }
-
-                const guideObjList = guideKeys.map(k => ({ key: k }));
-                setupCardCarouselSwipe(guideCarouselContainer, guideObjList, (newKey) => {
-                    currentGuideKey = newKey;
-                    localStorage.setItem('lab_guideKey', newKey);
-                    updateView();
-                });
             }
 
             buildMediaModals();
@@ -2838,18 +2821,43 @@
             updateLauncherBar();
         }
 
-        // カードカルーセル全体の横スワイプ検知ヘルパー
-        function setupCardCarouselSwipe(containerEl, listItems, callback) {
+        // ★ 完全なシームレス無限ループ（番兵クローンリセット方式）
+        function setupInfiniteCarouselSwipe(containerEl, listItems, callback) {
             if (containerEl._hasScrollListener) return;
             containerEl._hasScrollListener = true;
 
             let isScrolling;
+
             containerEl.addEventListener('scroll', () => {
                 window.clearTimeout(isScrolling);
                 isScrolling = setTimeout(() => {
-                    const index = Math.round(containerEl.scrollLeft / containerEl.clientWidth);
-                    if (index >= 0 && index < listItems.length) {
-                        const selectedKey = listItems[index].key;
+                    const scrollLeft = containerEl.scrollLeft;
+                    const panelWidth = containerEl.clientWidth;
+                    const totalItems = listItems.length;
+                    const currentIndex = Math.round(scrollLeft / panelWidth);
+
+                    // 1. 右端のクローン（インデックス：totalItems + 1）に到達した場合 -> 本物の最初のカードへ瞬間移動
+                    if (currentIndex === totalItems + 1) {
+                        containerEl.style.scrollBehavior = 'auto'; // アニメーションを無効化
+                        containerEl.scrollLeft = panelWidth;       // 本物の1枚目の位置へ瞬間ジャンプ
+                        containerEl.style.scrollBehavior = 'smooth'; // アニメーションを復元
+                        callback(listItems[0].key);
+                        return;
+                    }
+
+                    // 2. 左端のクローン（インデックス：0）に到達した場合 -> 本物の最後のカードへ瞬間移動
+                    if (currentIndex === 0) {
+                        containerEl.style.scrollBehavior = 'auto';
+                        containerEl.scrollLeft = totalItems * panelWidth; // 本物の最後の位置へ瞬間ジャンプ
+                        containerEl.style.scrollBehavior = 'smooth';
+                        callback(listItems[totalItems - 1].key);
+                        return;
+                    }
+
+                    // 通常のカード位置の場合
+                    const realIndex = currentIndex - 1;
+                    if (realIndex >= 0 && realIndex < totalItems) {
+                        const selectedKey = listItems[realIndex].key;
                         let currentKey = "";
                         if (containerEl.id === 'pcrCarouselContainer') currentKey = currentPcrKey;
                         else if (containerEl.id === 'mediaCarouselContainer') currentKey = currentMediaKey;
@@ -2860,7 +2868,7 @@
                             callback(selectedKey);
                         }
                     }
-                }, 60);
+                }, 50);
             }, { passive: true });
         }
 
