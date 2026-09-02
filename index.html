@@ -88,7 +88,7 @@
             transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* タイトル領域を縦に広く、押しやすくスワイプしやすく改善 */
+        /* タイトル領域 */
         .display-header {
             display: flex;
             justify-content: space-between;
@@ -639,37 +639,139 @@
             transform: translateX(20px);
         }
 
-        /* 下部ナビゲーションタブバー（5つのボタン） */
-        .bottom-nav-bar {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 6px;
-            flex-shrink: 0;
-        }
-
-        .nav-tab-btn {
+        /* 画面下部のスマートなランチャーバー（1つだけボタンを配置） */
+        .bottom-launcher-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             background-color: var(--card-bg);
             border: 1px solid var(--card-border);
-            color: var(--text-secondary);
-            border-radius: 14px;
-            padding: 10px 2px;
-            font-size: 12px;
-            font-weight: 600;
+            border-radius: 20px;
+            padding: 10px 18px;
+            flex-shrink: 0;
             cursor: pointer;
-            text-align: center;
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-            white-space: nowrap;
+            transition: background-color 0.2s, transform 0.15s;
         }
-
-        .nav-tab-btn:active {
-            transform: scale(0.95);
+        .bottom-launcher-bar:active {
+            transform: scale(0.98);
             background-color: #1c1c20;
         }
 
-        .nav-tab-btn.active {
-            background-color: var(--accent-soft);
+        .launcher-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .launcher-icon {
+            font-size: 16px;
             color: var(--accent-color);
+        }
+
+        .launcher-label {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.3px;
+        }
+
+        .launcher-right {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent-color);
+            background: var(--accent-soft);
+            padding: 4px 10px;
+            border-radius: 12px;
+        }
+
+        /* 全画面グリッドメニューモーダル（10ページ以上でも拡張可能） */
+        .launcher-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 2000;
+            padding: 16px;
+        }
+
+        .launcher-modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .launcher-modal-content {
+            width: 100%;
+            max-width: 420px;
+            background-color: #16161a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 32px;
+            padding: 24px 20px 28px;
+            transform: translateY(30px);
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .launcher-modal-overlay.active .launcher-modal-content {
+            transform: translateY(0);
+        }
+
+        .launcher-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            overflow-y: auto;
+            max-height: 55vh;
+            padding-right: 2px;
+        }
+
+        .launcher-card {
+            background-color: #222228;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 18px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .launcher-card:active {
+            transform: scale(0.96);
+            background-color: #2c2c34;
+        }
+        .launcher-card.active {
+            background-color: var(--accent-soft);
             border-color: rgba(41, 151, 255, 0.4);
+        }
+
+        .launcher-card-eyebrow {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+        .launcher-card.active .launcher-card-eyebrow {
+            color: var(--accent-color);
+        }
+
+        .launcher-card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
         }
 
         /* モーダル共通スタイル */
@@ -1101,13 +1203,24 @@
 
     </div>
 
-    <!-- 下部ナビゲーションタブバー（5つのボタン） -->
-    <div class="bottom-nav-bar">
-        <button class="nav-tab-btn active" id="navBtn0" onclick="scrollToView(0)">PCR</button>
-        <button class="nav-tab-btn" id="navBtn1" onclick="scrollToView(1)">培地</button>
-        <button class="nav-tab-btn" id="navBtn2" onclick="scrollToView(2)">溶液</button>
-        <button class="nav-tab-btn" id="navBtn3" onclick="scrollToView(3)">ガイド</button>
-        <button class="nav-tab-btn" id="navBtn4" onclick="scrollToView(4)">設定</button>
+    <!-- 下部スマートランチャーバー（ここを押すとオシャレな一覧メニューが開く） -->
+    <div class="bottom-launcher-bar" onclick="openLauncherModal()">
+        <div class="launcher-left">
+            <span class="launcher-icon">❖</span>
+            <span class="launcher-label" id="currentLauncherLabel">PCR Master Mix</span>
+        </div>
+        <div class="launcher-right" id="currentLauncherIndex">1 / 5</div>
+    </div>
+
+    <!-- 全画面ページ一覧ランチャーモーダル -->
+    <div class="launcher-modal-overlay" id="launcherModal" onclick="outsideCloseLauncher(event)">
+        <div class="launcher-modal-content">
+            <div class="modal-header">ページ一覧・メニュー</div>
+            <div class="launcher-grid" id="launcherGridContainer">
+                <!-- 動的生成 -->
+            </div>
+            <button class="info-close-btn" onclick="closeLauncherModal()">閉じる</button>
+        </div>
     </div>
 
     <!-- リスト順序・表示設定用モーダル -->
@@ -1759,6 +1872,15 @@
 
         let currentOrderType = "";
 
+        // 定義された全ページの一覧データ（ここを増やしていくだけで何ページでも対応可能！）
+        const appPages = [
+            { id: 0, eyebrow: "PCR Recipe", name: "PCR Master Mix" },
+            { id: 1, eyebrow: "Medium Recipe", name: "培地レシピ" },
+            { id: 2, eyebrow: "Stock Solutions", name: "ストック溶液" },
+            { id: 3, eyebrow: "Selection Guide", name: "実験・選択ガイド" },
+            { id: 4, eyebrow: "Preferences", name: "オプション設定" }
+        ];
+
         function initApp() {
             document.getElementById("checkFeatureToggle").checked = checkFeatureEnabled;
             document.getElementById("adviceFeatureToggle").checked = adviceFeatureEnabled;
@@ -1769,6 +1891,7 @@
             buildSolutionModals();
             buildPcrModals();
             buildGuideModals();
+            buildLauncherGrid();
 
             const volListEl = document.getElementById("volumeOptionsList");
             volListEl.innerHTML = "";
@@ -1836,7 +1959,7 @@
             const container = document.getElementById("viewsContainer");
             setTimeout(() => {
                 container.scrollLeft = currentViewIndex * container.clientWidth;
-                updateActiveNavButton();
+                updateLauncherBar();
             }, 50);
 
             setupScrollListener();
@@ -1846,7 +1969,40 @@
 
         let isSwitchingCooldown = false;
 
-        function scrollToView(index) {
+        function openLauncherModal() {
+            buildLauncherGrid();
+            document.getElementById("launcherModal").classList.add("active");
+        }
+
+        function closeLauncherModal() {
+            document.getElementById("launcherModal").classList.remove("active");
+        }
+
+        function outsideCloseLauncher(event) {
+            if (event.target.id === 'launcherModal') {
+                closeLauncherModal();
+            }
+        }
+
+        function buildLauncherGrid() {
+            const grid = document.getElementById("launcherGridContainer");
+            grid.innerHTML = "";
+            appPages.forEach(page => {
+                const card = document.createElement("div");
+                card.className = `launcher-card ${page.id === currentViewIndex ? 'active' : ''}`;
+                card.onclick = () => {
+                    jumpToPage(page.id);
+                    closeLauncherModal();
+                };
+                card.innerHTML = `
+                    <span class="launcher-card-eyebrow">${page.eyebrow}</span>
+                    <span class="launcher-card-title">${page.name}</span>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function jumpToPage(index) {
             const container = document.getElementById("viewsContainer");
             container.scrollTo({
                 left: index * container.clientWidth,
@@ -1854,16 +2010,30 @@
             });
             currentViewIndex = index;
             localStorage.setItem('lab_viewIndex', index);
-            updateActiveNavButton();
+            updateLauncherBar();
         }
 
-        function updateActiveNavButton() {
-            for (let i = 0; i < 5; i++) {
-                const btn = document.getElementById(`navBtn${i}`);
-                if (btn) {
-                    btn.classList.toggle('active', i === currentViewIndex);
-                }
-            }
+        function updateLauncherBar() {
+            const current = appPages[currentViewIndex] || appPages[0];
+            document.getElementById("currentLauncherLabel").textContent = current.name;
+            document.getElementById("currentLauncherIndex").textContent = `${currentViewIndex + 1} / ${appPages.length}`;
+        }
+
+        function setupScrollListener() {
+            const container = document.getElementById("viewsContainer");
+            let isScrolling;
+
+            container.addEventListener('scroll', () => {
+                window.clearTimeout(isScrolling);
+                isScrolling = setTimeout(() => {
+                    const index = Math.round(container.scrollLeft / container.clientWidth);
+                    if (index !== currentViewIndex) {
+                        currentViewIndex = index;
+                        localStorage.setItem('lab_viewIndex', index);
+                        updateLauncherBar();
+                    }
+                }, 50);
+            }, { passive: true });
         }
 
         function setupHeaderTouchDrag() {
@@ -2399,7 +2569,7 @@
                     if (index !== currentViewIndex) {
                         currentViewIndex = index;
                         localStorage.setItem('lab_viewIndex', index);
-                        updateActiveNavButton();
+                        updateLauncherBar();
                     }
                 }, 50);
             }, { passive: true });
@@ -2787,6 +2957,7 @@
             buildSolutionModals();
             buildPcrModals();
             buildGuideModals();
+            updateLauncherBar();
         }
 
         function openModal(modalId) {
