@@ -1230,7 +1230,7 @@
                     body: "<b>CM（Complete Medium：完全培地）</b>は、多くの糸状菌などの培養に用いられる基本培地です。菌の種類や研究目的によって様々な処方のCMが存在しますが、本レシピは<b>トウモロコシごま葉枯病菌</b>の培養に適した配合になっています。<br><br>💡 <b>Solution AとBに関する注意:</b> Solution AとBをわざわざ分けて配合しているのは、高濃度で直接混ぜ合わせると<b>不溶性の塩（沈澱）を形成してしまうため</b>です。そのため、液を作る際に高濃度な状態でソリューションA・Bを直接混ぜ合わせるのは厳禁です。"
                 },
                 ingredients: [
-                    { name: "グルコース", amount: 1.0, unit: "g" }, { name: "Yeast extract", amount: 0.1, unit: "g" }, { name: "Tryptone", amount: 0.1, unit: "g" }, { name: "Solution A", amount: 1.0, unit: "mL" }, { name: "Solution B", amount: 1.0, unit: "mL" }, { name: "寒天", amount: 1.5, unit: "g" }, { name: "蒸留水", amount: 98.0, unit: "mL" }
+                    { name: "グルコース", amount: 1.0, unit: "g" }, { name: "Yeast extract", amount: 0.1, unit: "g" }, { name: "Tryptone", amount: 0.1, unit: "g" }, { name: "Solution A (CM用)", amount: 1.0, unit: "mL" }, { name: "Solution B (CM用)", amount: 1.0, unit: "mL" }, { name: "寒天", amount: 1.5, unit: "g" }, { name: "蒸留水", amount: 98.0, unit: "mL" }
                 ],
                 postIngredients: []
             },
@@ -1245,10 +1245,10 @@
                 },
                 info: {
                     title: "V30培地についての解説",
-                    body: "V8野菜ジュースなどをベースにした植物病原菌の培養によく使われる培地です。CaCO3を加えることでpHの急激な変動を防ぐ役割があります。"
+                    body: "V8野菜ジュースなどをベースにした植物病原菌の培養によく使われる培地です。CaCO<sub>3</sub>を加えることでpHの急激な変動を防ぐ役割があります。"
                 },
                 ingredients: [
-                    { name: "V30ジュース", amount: 16.0, unit: "mL" }, { name: "CaCO3", amount: 0.2, unit: "g" }, { name: "寒天", amount: 1.5, unit: "g" }, { name: "水", amount: 84.0, unit: "mL" }
+                    { name: "V30ジュース", amount: 16.0, unit: "mL" }, { name: "CaCO<sub>3</sub>", amount: 0.2, unit: "g" }, { name: "寒天", amount: 1.5, unit: "g" }, { name: "水", amount: 84.0, unit: "mL" }
                 ],
                 postIngredients: []
             },
@@ -1345,7 +1345,7 @@
                         ingredients: [
                             { name: "ガンボーグ粉末", amount: 0.33, unit: "g" },
                             { name: "グルコース", amount: 0.45, unit: "g" },
-                            { name: "KH2PO4", amount: 0.136, unit: "g" },
+                            { name: "KH<sub>2</sub>PO<sub>4</sub>", amount: 0.136, unit: "g" },
                             { name: "蒸留水", amount: 100.0, unit: "mL" }
                         ],
                         postIngredients: []
@@ -1394,38 +1394,30 @@
                     { name: "蒸留水", amount: 100.0, unit: "mL" }
                 ],
                 postIngredients: []
+            },
+            "sachs": { 
+                name: "Sachs培地", 
+                baseVolume: 100, 
+                getAdvice: (vol) => `💡 55mmシャーレ換算: 約 ${(vol / 6).toFixed(1)} 枚分`, 
+                calculateCost: (vol) => `💰 概算コスト: -`,
+                info: {
+                    title: "Sachs培地についての解説",
+                    body: "<b>Sachs（ザックス）培地</b>は、トウモロコシごま葉枯病菌などの糸状菌における<b>交配実験（子のう殻形成など）</b>に用いられる専用の培地です。イネわらなどを置いて培養に利用されます。"
+                },
+                ingredients: [
+                    { name: "KNO<sub>3</sub>", amount: 0.10, unit: "g" },
+                    { name: "NaCl", amount: 0.05, unit: "g" },
+                    { name: "MgSO<sub>4</sub>・7H<sub>2</sub>O", amount: 0.05, unit: "g" },
+                    { name: "Ca(NO<sub>3</sub>)<sub>2</sub>", amount: 0.05, unit: "g" },
+                    { name: "Ca<sub>3</sub>(PO<sub>4</sub>)<sub>2</sub>", amount: 0.05, unit: "g" },
+                    { name: "寒天", amount: 1.50, unit: "g" },
+                    { name: "蒸留水", amount: 100.0, unit: "mL" }
+                ],
+                postIngredients: []
             }
         };
 
         const solutionDatabase = {
-            "sol_a": {
-                name: "Solution A",
-                baseVolume: 100,
-                getAdvice: (vol) => `💡 CM培地用 ストック溶液`,
-                calculateCost: (vol) => `💰 概算コスト: -`,
-                info: {
-                    title: "Solution A についての解説",
-                    body: "CM培地などで用いられるストック溶液です。Solution Bと高濃度で直接混ぜると不溶性の塩（沈澱）を形成するため、必ず別々に調製・保管してください。"
-                },
-                ingredients: [
-                    { name: "塩類・成分 (要調整)", amount: 10.0, unit: "g" },
-                    { name: "蒸留水", amount: 100.0, unit: "mL" }
-                ]
-            },
-            "sol_b": {
-                name: "Solution B",
-                baseVolume: 100,
-                getAdvice: (vol) => `💡 CM培地用 ストック溶液`,
-                calculateCost: (vol) => `💰 概算コスト: -`,
-                info: {
-                    title: "Solution B についての解説",
-                    body: "CM培地などで用いられるストック溶液です。Solution Aと同様に単体でストックし、培地調製時にそれぞれ希釈して加えます。"
-                },
-                ingredients: [
-                    { name: "塩類・成分 (要調整)", amount: 10.0, unit: "g" },
-                    { name: "蒸留水", amount: 100.0, unit: "mL" }
-                ]
-            },
             "mm_sol_1": {
                 name: "MM salt solution 1",
                 baseVolume: 100,
@@ -1436,7 +1428,8 @@
                     body: "アグロバクテリウム用の最小培地（Minimal Medium）に用いる塩類ストック溶液1です。"
                 },
                 ingredients: [
-                    { name: "成分1 (要調整)", amount: 10.0, unit: "g" },
+                    { name: "KH<sub>2</sub>PO<sub>4</sub>", amount: 1.45, unit: "g" },
+                    { name: "K<sub>2</sub>HPO<sub>4</sub>", amount: 2.05, unit: "g" },
                     { name: "蒸留水", amount: 100.0, unit: "mL" }
                 ]
             },
@@ -1450,18 +1443,52 @@
                     body: "アグロバクテリウム用の最小培地（Minimal Medium）に用いる塩類ストック溶液2です。"
                 },
                 ingredients: [
-                    { name: "成分2 (要調整)", amount: 10.0, unit: "g" },
+                    { name: "NaCl", amount: 0.15, unit: "g" },
+                    { name: "MgSO<sub>4</sub>・7H<sub>2</sub>O", amount: 0.5, unit: "g" },
+                    { name: "CaCl<sub>2</sub>・2H<sub>2</sub>O", amount: 0.053, unit: "g" },
+                    { name: "(NH<sub>4</sub>)<sub>2</sub>SO<sub>4</sub>", amount: 0.5, unit: "g" },
                     { name: "蒸留水", amount: 100.0, unit: "mL" }
+                ]
+            },
+            "sol_a": {
+                name: "Solution A (CM用)",
+                baseVolume: 500,
+                getAdvice: (vol) => `💡 CM培地用ストック溶液 A`,
+                calculateCost: (vol) => `💰 概算コスト: -`,
+                info: {
+                    title: "Solution A (CM用) についての解説",
+                    body: "CM培地などで用いられるストック溶液Aです。Ca(NO<sub>3</sub>)<sub>2</sub>・4H<sub>2</sub>O 75g を 500mL に溶かして作製します。Solution Bと高濃度で直接混ぜると不溶性の塩（沈澱）を形成するため、必ず別々に調製・保管してください。"
+                },
+                ingredients: [
+                    { name: "Ca(NO<sub>3</sub>)<sub>2</sub>・4H<sub>2</sub>O", amount: 75.0, unit: "g" },
+                    { name: "蒸留水", amount: 500.0, unit: "mL" }
+                ]
+            },
+            "sol_b": {
+                name: "Solution B (CM用)",
+                baseVolume: 500,
+                getAdvice: (vol) => `💡 CM培地用ストック溶液 B`,
+                calculateCost: (vol) => `💰 概算コスト: -`,
+                info: {
+                    title: "Solution B (CM用) についての解説",
+                    body: "CM培地などで用いられるストック溶液Bです。MgSO<sub>4</sub>・7H<sub>2</sub>O 25g、KCl 25g、KH<sub>2</sub>PO<sub>4</sub> 20g、K<sub>2</sub>HPO<sub>4</sub> 1.5g を 500mL に溶かして作製します。Solution Aと同様に単体でストックし、培地調製時にそれぞれ希釈して加えます。"
+                },
+                ingredients: [
+                    { name: "MgSO<sub>4</sub>・7H<sub>2</sub>O", amount: 25.0, unit: "g" },
+                    { name: "KCl", amount: 25.0, unit: "g" },
+                    { name: "KH<sub>2</sub>PO<sub>4</sub>", amount: 20.0, unit: "g" },
+                    { name: "K<sub>2</sub>HPO<sub>4</sub>", amount: 1.5, unit: "g" },
+                    { name: "蒸留水", amount: 500.0, unit: "mL" }
                 ]
             }
         };
 
         let mediaOrderConfig = JSON.parse(localStorage.getItem('lab_mediaOrderConfig')) || [
-            { key: "cm", visible: true }, { key: "v30", visible: true }, { key: "pda", visible: true }, { key: "lb", visible: true }, { key: "im", visible: true }, { key: "gamborg", visible: true }, { key: "regeneration", visible: true }, { key: "selection", visible: true }
+            { key: "cm", visible: true }, { key: "v30", visible: true }, { key: "pda", visible: true }, { key: "lb", visible: true }, { key: "im", visible: true }, { key: "gamborg", visible: true }, { key: "regeneration", visible: true }, { key: "selection", visible: true }, { key: "sachs", visible: true }
         ];
 
         let solutionOrderConfig = JSON.parse(localStorage.getItem('lab_solutionOrderConfig')) || [
-            { key: "sol_a", visible: true }, { key: "sol_b", visible: true }, { key: "mm_sol_1", visible: true }, { key: "mm_sol_2", visible: true }
+            { key: "mm_sol_1", visible: true }, { key: "mm_sol_2", visible: true }, { key: "sol_a", visible: true }, { key: "sol_b", visible: true }
         ];
 
         let currentMediaMode = "stock"; 
@@ -1492,7 +1519,7 @@
                     { name: "Ex Premier DNA Polymerase (2x)", amount: 25.0, unit: "µL" },
                     { name: "Forward Primer (10 µM)", amount: 1.0, unit: "µL" },
                     { name: "Reverse Primer (10 µM)", amount: 1.0, unit: "µL" },
-                    { name: "滅菌水 (dH2O)", amount: 23.0, unit: "µL" }
+                    { name: "滅菌水 (dH<sub>2</sub>O)", amount: 23.0, unit: "µL" }
                 ]
             },
             "prime_star_max": {
@@ -1525,7 +1552,7 @@
                     { name: "PrimeSTAR Max Premix (2x)", amount: 25.0, unit: "µL" },
                     { name: "Forward Primer (10 µM)", amount: 1.0, unit: "µL" },
                     { name: "Reverse Primer (10 µM)", amount: 1.0, unit: "µL" },
-                    { name: "滅菌水 (dH2O)", amount: 23.0, unit: "µL" }
+                    { name: "滅菌水 (dH<sub>2</sub>O)", amount: 23.0, unit: "µL" }
                 ]
             },
             "prime_star_gxl": {
@@ -1552,7 +1579,7 @@
                     { name: "PrimeSTAR GXL Premix (2x)", amount: 25.0, unit: "µL" },
                     { name: "Forward Primer (10 µM)", amount: 1.0, unit: "µL" },
                     { name: "Reverse Primer (10 µM)", amount: 1.0, unit: "µL" },
-                    { name: "滅菌水 (dH2O)", amount: 23.0, unit: "µL" }
+                    { name: "滅菌水 (dH<sub>2</sub>O)", amount: 23.0, unit: "µL" }
                 ]
             },
             "emerald_amp": {
@@ -1579,7 +1606,7 @@
                     { name: "EmeraldAmp PCR Master Mix (2x)", amount: 25.0, unit: "µL" },
                     { name: "Forward Primer (10 µM)", amount: 1.0, unit: "µL" },
                     { name: "Reverse Primer (10 µM)", amount: 1.0, unit: "µL" },
-                    { name: "滅菌水 (dH2O)", amount: 23.0, unit: "µL" }
+                    { name: "滅菌水 (dH<sub>2</sub>O)", amount: 23.0, unit: "µL" }
                 ]
             }
         };
@@ -1605,7 +1632,7 @@
         let currentVolume = parseInt(localStorage.getItem('lab_mediaVolume')) || 100;
         const mediaVolumes = [50, 100, 150, 200, 250, 300, 350, 400, 450, 500];
 
-        let currentSolutionKey = localStorage.getItem('lab_solutionKey') || "sol_a";
+        let currentSolutionKey = localStorage.getItem('lab_solutionKey') || "mm_sol_1";
         let currentSolutionVolume = parseInt(localStorage.getItem('lab_solutionVolume')) || 100;
 
         let keypadInputStr = "0";
@@ -2357,7 +2384,7 @@
                 currentIngredients.forEach(ing => {
                     const calcAmount = ing.amount * ratio;
                     const formatted = typeof ing.amount === 'number' 
-                        ? (calcAmount >= 10 ? calcAmount.toFixed(1) : calcAmount.toFixed(2).replace(/\.?0+$/, ""))
+                        ? (calcAmount >= 10 ? calcAmount.toFixed(1) : calcAmount.toFixed(3).replace(/\.?0+$/, ""))
                         : ing.amount;
 
                     const li = document.createElement("li");
@@ -2395,7 +2422,7 @@
                             const calcAmount = ing.amount * ratio;
                             formatted = calcAmount >= 10 
                                 ? calcAmount.toFixed(1) 
-                                : calcAmount.toFixed(2).replace(/\.?0+$/, "");
+                                : calcAmount.toFixed(3).replace(/\.?0+$/, "");
                         }
 
                         const li = document.createElement("li");
@@ -2446,7 +2473,10 @@
 
                 sol.ingredients.forEach(ing => {
                     const calcAmount = ing.amount * solRatio;
-                    const formatted = calcAmount >= 10 ? calcAmount.toFixed(1) : calcAmount.toFixed(2).replace(/\.?0+$/, "");
+                    const formatted = typeof ing.amount === 'number'
+                        ? (calcAmount >= 10 ? calcAmount.toFixed(1) : calcAmount.toFixed(3).replace(/\.?0+$/, ""))
+                        : ing.amount;
+
                     const li = document.createElement("li");
                     li.className = "ingredient-item";
                     li.onclick = () => {
