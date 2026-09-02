@@ -40,6 +40,7 @@
             margin: 0 auto;
             justify-content: space-between;
             overflow: hidden;
+            perspective: 1200px; /* 3Dフリップ用のパースペクティブ */
         }
 
         /* 5画面分の横長コンテナ */
@@ -69,9 +70,10 @@
             display: flex;
             flex-direction: column;
             min-height: 0;
+            transform-style: preserve-3d;
         }
 
-        /* メインディスプレイカード */
+        /* メインディスプレイカード（Flip Clock風3D立体フリップ対応） */
         .main-display {
             background-color: var(--card-bg);
             border: 1px solid var(--card-border);
@@ -84,17 +86,19 @@
             min-height: 0;
             position: relative;
             overflow: hidden;
-            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transform-style: preserve-3d;
+            backface-visibility: hidden;
+            transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.35s ease;
         }
 
-        /* 縦スワイプ時のスライド・フェードアニメーション用クラス */
-        .main-display.slide-up {
-            transform: translateY(-25px);
-            opacity: 0.1;
+        /* フリップクロック風の上下回転・パタパタアニメーション用クラス */
+        .main-display.flip-up {
+            transform: rotateX(75deg) translateY(-20px);
+            opacity: 0;
         }
-        .main-display.slide-down {
-            transform: translateY(25px);
-            opacity: 0.1;
+        .main-display.flip-down {
+            transform: rotateX(-75deg) translateY(20px);
+            opacity: 0;
         }
 
         .display-header {
@@ -1252,6 +1256,7 @@
                     <button class="keypad-btn" onclick="pressPcrKeypad('9')">9</button>
                     <button class="keypad-btn action-btn" onclick="pressPcrKeypad('clear')">C</button>
                     <button class="keypad-btn" onclick="pressPcrKeypad('0')">0</button>
+                    <button class="keypad-btn" onclick="pressPcrKeypad('0')">0</button>
                     <button class="keypad-btn action-btn" onclick="pressPcrKeypad('backspace')">⌫</button>
                     <button class="keypad-btn set-btn" onclick="applyCustomPcrVolume()">SET</button>
                 </div>
@@ -1867,7 +1872,6 @@
             updateView();
         }
 
-        // PCR(0), 培地(1), ソリューション(2) すべての画面で縦スワイプ＆ホイール切り替えを有効化
         let isSwitchingCooldown = false;
 
         function setupVerticalSwipeAndWheelForPanels() {
@@ -1883,7 +1887,6 @@
                 let touchStartY = 0;
                 let touchStartX = 0;
 
-                // タッチ操作
                 panelEl.addEventListener('touchstart', (e) => {
                     touchStartY = e.touches[0].clientY;
                     touchStartX = e.touches[0].clientX;
@@ -1902,7 +1905,6 @@
                     }
                 }, { passive: true });
 
-                // トラックパッド / マウスホイール操作
                 panelEl.addEventListener('wheel', (e) => {
                     const isAtTop = scrollAreaEl.scrollTop <= 0;
                     const isAtBottom = scrollAreaEl.scrollHeight - scrollAreaEl.clientHeight <= scrollAreaEl.scrollTop + 1;
@@ -1933,9 +1935,9 @@
 
             const cardEl = document.getElementById(displayCardId);
 
-            // 1. 視覚的なスワイプアニメーション効果をカード全体に適用
+            // 1. Flip Clock / 3Dパタパタ回転フリップアニメーションを適用
             if (cardEl) {
-                cardEl.classList.add(slideDir === 'up' ? 'slide-up' : 'slide-down');
+                cardEl.classList.add(slideDir === 'up' ? 'flip-up' : 'flip-down');
             }
 
             setTimeout(() => {
@@ -1973,17 +1975,16 @@
 
                 updateView();
 
-                // 3. アニメーションを元に戻す
+                // 3. アニメーションクラスを外して元の状態へスムーズに戻す
                 const newCardEl = document.getElementById(displayCardId);
                 if (newCardEl) {
-                    newCardEl.classList.remove('slide-up', 'slide-down');
+                    newCardEl.classList.remove('flip-up', 'flip-down');
                 }
 
-                // クールダウン解除（連続暴走防止）
                 setTimeout(() => {
                     isSwitchingCooldown = false;
-                }, 200);
-            }, 200);
+                }, 250);
+            }, 250);
         }
 
         function openOrderModal(type) {
