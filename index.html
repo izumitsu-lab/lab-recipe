@@ -138,6 +138,7 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            transition: color 0.3s ease;
         }
 
         /* ひっそりと馴染む解説トリガーボタン（組成の下） */
@@ -1852,7 +1853,60 @@
             }, 50);
 
             setupScrollListener();
+            setupPcrVerticalSwipe();
             updateView();
+        }
+
+        // PCR画面での上下スワイプによる酵素切り替え機能のセットアップ
+        function setupPcrVerticalSwipe() {
+            const pcrPanel = document.getElementById("panel0");
+            let touchStartY = 0;
+            let touchStartX = 0;
+
+            pcrPanel.addEventListener('touchstart', (e) => {
+                touchStartY = e.touches[0].clientY;
+                touchStartX = e.touches[0].clientX;
+            }, { passive: true });
+
+            pcrPanel.addEventListener('touchend', (e) => {
+                let touchEndY = e.changedTouches[0].clientY;
+                let touchEndX = e.changedTouches[0].clientX;
+
+                let diffY = touchEndY - touchStartY;
+                let diffX = touchEndX - touchStartX;
+
+                // 横方向のブレよりも縦方向の移動量が明らかに大きく、かつ50px以上のスワイプのときのみ反応
+                if (Math.abs(diffY) > Math.abs(diffX) && Math.abs(diffY) > 50) {
+                    const visibleList = pcrOrderConfig.filter(p => p.visible).map(p => p.key);
+                    if (visibleList.length <= 1) return;
+
+                    let currentIndex = visibleList.indexOf(currentPcrKey);
+                    if (currentIndex === -1) currentIndex = 0;
+
+                    if (diffY < 0) {
+                        // 上へスワイプ（指を上に動かす） -> 次の酵素へ
+                        currentIndex = (currentIndex + 1) % visibleList.length;
+                    } else {
+                        // 下へスワイプ（指を下に動かす） -> 前の酵素へ
+                        currentIndex = (currentIndex - 1 + visibleList.length) % visibleList.length;
+                    }
+
+                    currentPcrKey = visibleList[currentIndex];
+                    localStorage.setItem('lab_pcrKey', currentPcrKey);
+                    updateView();
+
+                    // 切り替え時にタイトル名に軽くエフェクトをかける演出
+                    const titleEl = document.getElementById("displayPcrName");
+                    if (titleEl) {
+                        titleEl.style.transform = diffY < 0 ? 'translateY(-4px)' : 'translateY(4px)';
+                        titleEl.style.opacity = '0.4';
+                        setTimeout(() => {
+                            titleEl.style.transform = 'translateY(0)';
+                            titleEl.style.opacity = '1';
+                        }, 200);
+                    }
+                }
+            }, { passive: true });
         }
 
         function openOrderModal(type) {
@@ -2766,6 +2820,7 @@
         }
 
         function closeModal(modalId) {
+            document.exitFullscreen ? document.exitFullscreen().catch(()=>{}) : null;
             document.getElementById(modalId).classList.remove("active");
         }
 
