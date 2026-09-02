@@ -1681,9 +1681,10 @@
 
         let currentGuideKey = "pcr_enzyme_guide";
 
+        // ご要望のデフォルト設定を反映
         let checkFeatureEnabled = localStorage.getItem('lab_checkFeature') !== null ? localStorage.getItem('lab_checkFeature') === 'true' : true;
         let adviceFeatureEnabled = localStorage.getItem('lab_adviceFeature') !== null ? localStorage.getItem('lab_adviceFeature') === 'true' : true;
-        let infoButtonFeatureEnabled = localStorage.getItem('lab_infoButtonFeature') !== null ? localStorage.getItem('lab_infoButtonFeature') === 'true' : true;
+        let infoButtonFeatureEnabled = localStorage.getItem('lab_infoButtonFeature') !== null ? localStorage.getItem('lab_infoButtonFeature') === 'true' : false;
         let costFeatureEnabled = localStorage.getItem('lab_costFeature') !== null ? localStorage.getItem('lab_costFeature') === 'true' : false;
 
         function initApp() {
