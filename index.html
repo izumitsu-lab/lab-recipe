@@ -51,7 +51,7 @@
             scroll-snap-type: x mandatory;
             scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             scrollbar-width: none;
             min-height: 0;
         }
@@ -639,26 +639,37 @@
             transform: translateX(20px);
         }
 
-        /* ページインジケータードット */
-        .pagination-dots {
-            display: flex;
-            justify-content: center;
+        /* 下部ナビゲーションタブバー（5つのボタン） */
+        .bottom-nav-bar {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
             gap: 6px;
-            margin-bottom: 2px;
             flex-shrink: 0;
         }
 
-        .dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background-color: rgba(255, 255, 255, 0.2);
-            transition: background-color 0.3s, transform 0.3s;
+        .nav-tab-btn {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-secondary);
+            border-radius: 14px;
+            padding: 10px 2px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            white-space: nowrap;
         }
 
-        .dot.active {
-            background-color: var(--accent-color);
-            transform: scale(1.25);
+        .nav-tab-btn:active {
+            transform: scale(0.95);
+            background-color: #1c1c20;
+        }
+
+        .nav-tab-btn.active {
+            background-color: var(--accent-soft);
+            color: var(--accent-color);
+            border-color: rgba(41, 151, 255, 0.4);
         }
 
         /* モーダル共通スタイル */
@@ -1090,13 +1101,13 @@
 
     </div>
 
-    <!-- 5つのドットインジケーター -->
-    <div class="pagination-dots">
-        <div class="dot active" id="dot0"></div>
-        <div class="dot" id="dot1"></div>
-        <div class="dot" id="dot2"></div>
-        <div class="dot" id="dot3"></div>
-        <div class="dot" id="dot4"></div>
+    <!-- 下部ナビゲーションタブバー（5つのボタン） -->
+    <div class="bottom-nav-bar">
+        <button class="nav-tab-btn active" id="navBtn0" onclick="scrollToView(0)">PCR</button>
+        <button class="nav-tab-btn" id="navBtn1" onclick="scrollToView(1)">培地</button>
+        <button class="nav-tab-btn" id="navBtn2" onclick="scrollToView(2)">溶液</button>
+        <button class="nav-tab-btn" id="navBtn3" onclick="scrollToView(3)">ガイド</button>
+        <button class="nav-tab-btn" id="navBtn4" onclick="scrollToView(4)">設定</button>
     </div>
 
     <!-- リスト順序・表示設定用モーダル -->
@@ -1825,7 +1836,7 @@
             const container = document.getElementById("viewsContainer");
             setTimeout(() => {
                 container.scrollLeft = currentViewIndex * container.clientWidth;
-                updateDotsAndBar();
+                updateActiveNavButton();
             }, 50);
 
             setupScrollListener();
@@ -1834,6 +1845,26 @@
         }
 
         let isSwitchingCooldown = false;
+
+        function scrollToView(index) {
+            const container = document.getElementById("viewsContainer");
+            container.scrollTo({
+                left: index * container.clientWidth,
+                behavior: 'smooth'
+            });
+            currentViewIndex = index;
+            localStorage.setItem('lab_viewIndex', index);
+            updateActiveNavButton();
+        }
+
+        function updateActiveNavButton() {
+            for (let i = 0; i < 5; i++) {
+                const btn = document.getElementById(`navBtn${i}`);
+                if (btn) {
+                    btn.classList.toggle('active', i === currentViewIndex);
+                }
+            }
+        }
 
         function setupHeaderTouchDrag() {
             const panels = [
@@ -2368,22 +2399,10 @@
                     if (index !== currentViewIndex) {
                         currentViewIndex = index;
                         localStorage.setItem('lab_viewIndex', index);
-                        updateDotsOnly();
+                        updateActiveNavButton();
                     }
                 }, 50);
             }, { passive: true });
-        }
-
-        function updateDotsOnly() {
-            document.getElementById("dot0").classList.toggle('active', currentViewIndex === 0);
-            document.getElementById("dot1").classList.toggle('active', currentViewIndex === 1);
-            document.getElementById("dot2").classList.toggle('active', currentViewIndex === 2);
-            document.getElementById("dot3").classList.toggle('active', currentViewIndex === 3);
-            document.getElementById("dot4").classList.toggle('active', currentViewIndex === 4);
-        }
-
-        function updateDotsAndBar() {
-            updateDotsOnly();
         }
 
         function checkResetButtonState(type) {
