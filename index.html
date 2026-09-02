@@ -131,19 +131,21 @@
             text-overflow: ellipsis;
         }
 
-        /* 解説ポップアップトリガーボタン（ⓘ 解説） */
+        /* アイコンのみのミニマルなⓘボタン */
         .info-trigger-btn {
             background: var(--accent-soft);
             color: var(--accent-color);
             border: 1px solid rgba(41, 151, 255, 0.3);
-            border-radius: 12px;
-            padding: 4px 10px;
-            font-size: 12px;
-            font-weight: 600;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            font-size: 13px;
+            font-weight: 700;
+            font-style: italic;
             cursor: pointer;
             display: none;
             align-items: center;
-            gap: 4px;
+            justify-content: center;
             flex-shrink: 0;
             transition: transform 0.15s;
         }
@@ -151,7 +153,7 @@
             display: inline-flex;
         }
         .info-trigger-btn:active {
-            transform: scale(0.95);
+            transform: scale(0.92);
         }
 
         .volume-badge {
@@ -702,7 +704,7 @@
             text-transform: uppercase;
         }
 
-        /* 詳細アドバイス（インフォメーション）モーダル専用スタイル */
+        /* 詳細解説ポップアップ用モーダル */
         .info-modal-content {
             background-color: #18181d;
             border: 1px solid rgba(41, 151, 255, 0.3);
@@ -901,7 +903,7 @@
                         <span class="media-eyebrow">Medium Recipe</span>
                         <div class="media-title-row">
                             <h1 class="media-title" id="displayMediaName">培地名</h1>
-                            <button class="info-trigger-btn" id="mediaInfoBtn" onclick="openInfoModal()">ⓘ 解説</button>
+                            <button class="info-trigger-btn" id="mediaInfoBtn" onclick="openInfoModal()">i</button>
                         </div>
                     </div>
                     <span class="volume-badge" id="displayVolume">100 mL</span>
@@ -926,7 +928,7 @@
                         <span class="media-eyebrow" id="displayPcrSub">PCR Master Mix</span>
                         <div class="media-title-row">
                             <h1 class="media-title" id="displayPcrName">PCR酵素</h1>
-                            <button class="info-trigger-btn" id="pcrInfoBtn" onclick="openInfoModal()">ⓘ 解説</button>
+                            <button class="info-trigger-btn" id="pcrInfoBtn" onclick="openInfoModal()">i</button>
                         </div>
                     </div>
                     <span class="volume-badge" id="displayPcrVolume">50 µL</span>
@@ -994,6 +996,16 @@
                         </div>
                         <label class="switch">
                             <input type="checkbox" id="adviceFeatureToggle" onchange="toggleAdviceFeature()">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="option-group">
+                        <div class="option-label-wrapper">
+                            <span class="option-title">解説ボタン（i アイコン）</span>
+                            <span class="option-desc">各ページの詳細解説ボタンの表示・非表示</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="infoButtonToggle" onchange="toggleInfoButtonFeature()">
                             <span class="slider"></span>
                         </label>
                     </div>
@@ -1208,7 +1220,7 @@
                 calculateCost: (vol) => {
                     const ratio = vol / 100;
                     const cost = (2.0 * 66 + 1.5 * 42) * ratio;
-                    return `💰 概算Cost: 約 ${Math.round(cost)} 円 (${vol} mLあたり)`;
+                    return `💰 概算コスト: 約 ${Math.round(cost)} 円 (${vol} mLあたり)`;
                 },
                 info: {
                     title: "LB培地についての解説",
@@ -1407,11 +1419,13 @@
 
         let checkFeatureEnabled = localStorage.getItem('lab_checkFeature') !== null ? localStorage.getItem('lab_checkFeature') === 'true' : true;
         let adviceFeatureEnabled = localStorage.getItem('lab_adviceFeature') !== null ? localStorage.getItem('lab_adviceFeature') === 'true' : true;
+        let infoButtonFeatureEnabled = localStorage.getItem('lab_infoButtonFeature') !== null ? localStorage.getItem('lab_infoButtonFeature') === 'true' : true;
         let costFeatureEnabled = localStorage.getItem('lab_costFeature') !== null ? localStorage.getItem('lab_costFeature') === 'true' : false;
 
         function initApp() {
             document.getElementById("checkFeatureToggle").checked = checkFeatureEnabled;
             document.getElementById("adviceFeatureToggle").checked = adviceFeatureEnabled;
+            document.getElementById("infoButtonToggle").checked = infoButtonFeatureEnabled;
             document.getElementById("costFeatureToggle").checked = costFeatureEnabled;
 
             buildMediaModals();
@@ -1790,6 +1804,12 @@
             updateView();
         }
 
+        function toggleInfoButtonFeature() {
+            infoButtonFeatureEnabled = document.getElementById("infoButtonToggle").checked;
+            localStorage.setItem('lab_infoButtonFeature', infoButtonFeatureEnabled);
+            updateView();
+        }
+
         function toggleCostFeature() {
             costFeatureEnabled = document.getElementById("costFeatureToggle").checked;
             localStorage.setItem('lab_costFeature', costFeatureEnabled);
@@ -1918,8 +1938,8 @@
             const mediaInfoBtn = document.getElementById("mediaInfoBtn");
             const pcrInfoBtn = document.getElementById("pcrInfoBtn");
 
-            // インフォメーションボタンの表示切替（オプションのスイッチと連動）
-            if (adviceFeatureEnabled) {
+            // 解説ボタン（i アイコン）の表示切替（オプションのスイッチと連動）
+            if (infoButtonFeatureEnabled) {
                 mediaInfoBtn.classList.add("visible");
                 pcrInfoBtn.classList.add("visible");
             } else {
