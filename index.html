@@ -874,39 +874,6 @@
         .keypad-btn.set-btn:active {
             transform: scale(0.98);
         }
-
-        .custom-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #222228;
-            border-radius: 14px;
-            padding: 12px 16px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-        }
-        .custom-row-left {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .order-btn-group {
-            display: flex;
-            gap: 4px;
-        }
-        .order-btn {
-            background: #2c2c34;
-            color: var(--text-primary);
-            border: none;
-            width: 28px;
-            height: 28px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-        .order-btn:active {
-            background: var(--accent-color);
-        }
     </style>
 </head>
 <body>
@@ -1009,9 +976,7 @@
                     </div>
                 </div>
                 <div class="list-container-wrapper">
-                    <div class="guide-container" id="guideContentContainer">
-                        <!-- 動的にガイド内容を描画 -->
-                    </div>
+                    <div class="guide-container" id="guideContentContainer"></div>
                 </div>
             </div>
         </div>
@@ -1742,17 +1707,12 @@
         }
 
         function openKeypadModal() {
-            document.getElementById("volumeOptionsList").style.display = "none";
+            const listEl = document.getElementById("volumeOptionsList");
+            if(listEl) listEl.style.setProperty('display', 'none', 'important');
             document.getElementById("keypadContainer").style.display = "flex";
             document.getElementById("volumeModalHeader").textContent = "カスタム容量を入力";
             keypadInputStr = "0";
             updateKeypadPreview();
-        }
-
-        function closeKeypadModal() {
-            document.getElementById("volumeOptionsList").style.display = "grid";
-            document.getElementById("keypadContainer").style.display = "none";
-            document.getElementById("volumeModalHeader").textContent = "作製容量を選択";
         }
 
         function pressKeypad(val) {
@@ -1786,7 +1746,6 @@
                 currentVolume = num;
                 localStorage.setItem('lab_mediaVolume', num);
                 closeModal('volumeModal');
-                closeKeypadModal();
                 initApp();
                 updateView();
             } else {
@@ -1795,7 +1754,8 @@
         }
 
         function openSolutionKeypadModal() {
-            document.getElementById("solutionVolumeOptionsList").style.display = "none";
+            const listEl = document.getElementById("solutionVolumeOptionsList");
+            if(listEl) listEl.style.setProperty('display', 'none', 'important');
             document.getElementById("solutionKeypadContainer").style.display = "flex";
             document.getElementById("solutionVolumeModalHeader").textContent = "カスタム容量を入力";
             solutionKeypadInputStr = "0";
@@ -1841,17 +1801,12 @@
         }
 
         function openPcrKeypadModal() {
-            document.getElementById("pcrVolumeOptionsList").style.display = "none";
+            const listEl = document.getElementById("pcrVolumeOptionsList");
+            if(listEl) listEl.style.setProperty('display', 'none', 'important');
             document.getElementById("pcrKeypadContainer").style.display = "flex";
             document.getElementById("pcrVolumeModalHeader").textContent = "カスタム反応液量を入力";
             pcrKeypadInputStr = "0";
             updatePcrKeypadPreview();
-        }
-
-        function closePcrKeypadModal() {
-            document.getElementById("pcrVolumeOptionsList").style.display = "grid";
-            document.getElementById("pcrKeypadContainer").style.display = "none";
-            document.getElementById("pcrVolumeModalHeader").textContent = "反応液量を選択";
         }
 
         function pressPcrKeypad(val) {
@@ -1885,7 +1840,6 @@
                 currentPcrVolume = num;
                 localStorage.setItem('lab_pcrVolume', num);
                 closeModal('pcrVolumeModal');
-                closePcrKeypadModal();
                 initApp();
                 updateView();
             } else {
@@ -2206,7 +2160,6 @@
             const solutionInfoBtn = document.getElementById("solutionInfoBtn");
             const mediaModeSwitch = document.getElementById("mediaModeSwitch");
 
-            // 解説ボタンの表示切替
             if (infoButtonFeatureEnabled) {
                 if(pcrInfoBtn) pcrInfoBtn.classList.add("visible");
                 if(mediaInfoBtn) mediaInfoBtn.classList.add("visible");
@@ -2217,7 +2170,6 @@
                 if(solutionInfoBtn) solutionInfoBtn.classList.remove("visible");
             }
 
-            // 1. PCRビュー更新
             const pcr = pcrDatabase[currentPcrKey];
             if (pcr) {
                 document.getElementById("displayPcrSub").textContent = "PCR Master Mix";
@@ -2330,7 +2282,6 @@
                 });
             }
 
-            // 2. 培地ビュー更新
             const media = mediaDatabase[currentMediaKey];
             if (media) {
                 document.getElementById("displayMediaName").textContent = media.name;
@@ -2447,7 +2398,6 @@
                 checkResetButtonState('media');
             }
 
-            // 3. Solutions（ストック溶液）ビュー更新
             const sol = solutionDatabase[currentSolutionKey];
             if (sol) {
                 document.getElementById("displaySolutionName").textContent = sol.name;
@@ -2497,7 +2447,6 @@
                 checkResetButtonState('solution');
             }
 
-            // 4. ガイドビュー更新
             const guide = guideDatabase[currentGuideKey];
             if (guide) {
                 document.getElementById("displayGuideEyebrow").textContent = guide.eyebrow;
@@ -2523,26 +2472,40 @@
         }
 
         function openModal(modalId) {
+            // モーダルを開く時にリストを表示し、キーパッドを非表示にリセット
             if (modalId === 'volumeModal') {
                 const volListEl = document.getElementById("volumeOptionsList");
+                if (volListEl) volListEl.style.removeProperty('display');
+                const keypadEl = document.getElementById("keypadContainer");
+                if (keypadEl) keypadEl.style.display = "none";
+                document.getElementById("volumeModalHeader").textContent = "作製容量を選択";
+
                 volListEl.querySelectorAll('.option-item').forEach(btn => {
                     const val = parseInt(btn.textContent.trim(), 10);
                     btn.classList.toggle('selected', val === currentVolume);
                 });
-                closeKeypadModal();
             } else if (modalId === 'solutionVolumeModal') {
                 const solVolListEl = document.getElementById("solutionVolumeOptionsList");
+                if (solVolListEl) solVolListEl.style.removeProperty('display');
+                const solKeypadEl = document.getElementById("solutionKeypadContainer");
+                if (solKeypadEl) solKeypadEl.style.display = "none";
+                document.getElementById("solutionVolumeModalHeader").textContent = "作製容量を選択";
+
                 solVolListEl.querySelectorAll('.option-item').forEach(btn => {
                     const val = parseInt(btn.textContent.trim(), 10);
                     btn.classList.toggle('selected', val === currentSolutionVolume);
                 });
             } else if (modalId === 'pcrVolumeModal') {
                 const pcrVolListEl = document.getElementById("pcrVolumeOptionsList");
+                if (pcrVolListEl) pcrVolListEl.style.removeProperty('display');
+                const pcrKeypadEl = document.getElementById("pcrKeypadContainer");
+                if (pcrKeypadEl) pcrKeypadEl.style.display = "none";
+                document.getElementById("pcrVolumeModalHeader").textContent = "反応液量を選択";
+
                 pcrVolListEl.querySelectorAll('.option-item').forEach(btn => {
                     const val = parseInt(btn.textContent.trim(), 10);
                     btn.classList.toggle('selected', val === currentPcrVolume);
                 });
-                closePcrKeypadModal();
             }
             document.getElementById(modalId).classList.add("active");
         }
