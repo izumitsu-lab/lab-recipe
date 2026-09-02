@@ -140,22 +140,23 @@
             text-overflow: ellipsis;
         }
 
-        /* カード下部の解説トリガーボタン */
+        /* カード下部の解説トリガーボタン（上部インフォメーションと同じ小ささ・トーンに修正） */
         .card-info-footer-btn {
-            background: var(--accent-soft);
+            background-color: rgba(41, 151, 255, 0.08);
             color: var(--accent-color);
-            border: 1px solid rgba(41, 151, 255, 0.3);
+            border: 1px solid rgba(41, 151, 255, 0.2);
             border-radius: 12px;
-            padding: 10px 14px;
-            font-size: 13px;
-            font-weight: 700;
+            padding: 8px 12px;
+            font-size: 12px;
+            font-weight: 500;
             cursor: pointer;
             display: none;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             gap: 6px;
             margin-top: 8px;
             flex-shrink: 0;
+            line-height: 1.3;
             transition: transform 0.15s, background-color 0.2s;
         }
         .card-info-footer-btn.visible {
@@ -163,7 +164,7 @@
         }
         .card-info-footer-btn:active {
             transform: scale(0.98);
-            background: rgba(41, 151, 255, 0.25);
+            background: rgba(41, 151, 255, 0.15);
         }
 
         /* 右上の容量バッジ（クリック可能） - 拡大版 */
@@ -750,7 +751,7 @@
             transform: scale(1) translateY(0);
         }
         .info-modal-title {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
             color: var(--text-primary);
             margin-bottom: 16px;
@@ -758,15 +759,26 @@
             align-items: center;
             gap: 10px;
             line-height: 1.3;
+            border-left: 3px solid var(--accent-color);
+            padding-left: 10px;
         }
+        /* ポップアップ内の文章をテーマカラーを活用して美しく読ませる工夫 */
         .info-modal-body {
-            font-size: 15px;
+            font-size: 14px;
             color: #d1d1d6;
-            line-height: 1.7;
+            line-height: 1.8;
             margin-bottom: 24px;
             max-height: 50vh;
             overflow-y: auto;
             padding-right: 4px;
+        }
+        .info-modal-body b {
+            color: #ffffff;
+            font-weight: 600;
+        }
+        .info-modal-body strong {
+            color: var(--accent-color);
+            font-weight: 600;
         }
         .info-modal-body::-webkit-scrollbar {
             width: 4px;
@@ -775,22 +787,25 @@
             background: rgba(255, 255, 255, 0.15);
             border-radius: 4px;
         }
+        
+        /* 閉じるボタンを美しい青から、目立たないシックなグレーに変更 */
         .info-close-btn {
-            background: linear-gradient(135deg, #2997ff, #0077ed);
-            color: #ffffff;
-            border: none;
+            background: #25252b;
+            color: var(--text-secondary);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 16px;
-            padding: 14px;
+            padding: 12px;
             width: 100%;
-            font-size: 16px;
-            font-weight: 700;
+            font-size: 15px;
+            font-weight: 600;
             cursor: pointer;
-            box-shadow: 0 8px 20px rgba(41, 151, 255, 0.35);
-            transition: transform 0.15s, box-shadow 0.15s;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: transform 0.15s, background-color 0.2s, color 0.2s;
         }
         .info-close-btn:active {
             transform: scale(0.98);
-            box-shadow: 0 4px 10px rgba(41, 151, 255, 0.2);
+            background: #2c2c34;
+            color: var(--text-primary);
         }
 
         .option-list {
@@ -1260,7 +1275,7 @@
                 },
                 info: {
                     title: "CM培地についての解説",
-                    body: "<b>CM（Complete Medium：完全培地）</b>は、多くの糸状菌などの培養に用いられる基本培地です。菌の種類や研究目的によって様々な処方のCMが存在しますが、本レシピは<b>トウモロコシごま葉枯病菌</b>の培養に適した配合になっています。<br><br>💡 <b>Solution AとBに関する注意:</b> Solution AとBをわざわざ分けて配合しているのは、高濃度で直接混ぜ合わせると<b>不溶性の塩（沈澱）を形成してしまうため</b>です。そのため、液を作る際に高濃度な状態でソリューションA・Bを直接混ぜ合わせるのは厳禁です。"
+                    body: "<b>CM（Complete Medium：完全培地）</b>は、多くの糸状菌などの培養に用いられる基本培地です。菌の種類や研究目的によって様々な処方のCMが存在しますが、本レシピは<b>トウモロコシごま葉枯病菌</b>の培養に適した配合になっています。<br><br><strong>💡 Solution AとBに関する注意:</strong> Solution AとBをわざわざ分けて配合しているのは、高濃度で直接混ぜ合わせると<b>不溶性の塩（沈澱）を形成してしまうため</b>です。そのため、液を作る際に高濃度な状態でソリューションA・Bを直接混ぜ合わせるのは厳禁です。"
                 },
                 ingredients: [
                     { name: "グルコース", amount: 1.0, unit: "g" }, { name: "Yeast extract", amount: 0.1, unit: "g" }, { name: "Tryptone", amount: 0.1, unit: "g" }, { name: "sol. A (CM)", amount: 1.0, unit: "mL" }, { name: "sol. B (CM)", amount: 1.0, unit: "mL" }, { name: "寒天", amount: 1.5, unit: "g" }, { name: "蒸留水", amount: 98.0, unit: "mL" }
@@ -1278,7 +1293,7 @@
                 },
                 info: {
                     title: "V30培地についての解説",
-                    body: "V8野菜ジュースなどをベースにした植物病原菌の培養によく使われる培地です。CaCO<sub>3</sub>を加えることでpHの急激な変動を防ぐ役割があります。"
+                    body: "V8野菜ジュースなどをベースにした植物病原菌の培養によく使われる培地です。<strong>CaCO<sub>3</sub></strong>を加えることでpHの急激な変動を防ぐ役割があります。"
                 },
                 ingredients: [
                     { name: "V30ジュース", amount: 16.0, unit: "mL" }, { name: "CaCO<sub>3</sub>", amount: 0.2, unit: "g" }, { name: "寒天", amount: 1.5, unit: "g" }, { name: "水", amount: 84.0, unit: "mL" }
@@ -1296,7 +1311,7 @@
                 },
                 info: {
                     title: "PDA培地についての解説",
-                    body: "Potato Dextrose Agarの略で、カビや酵母の分離・培養に最も汎用される標準的な培地です。市販の粉末培地を水に溶かしてオートクレーブするだけで簡単に調製できます。"
+                    body: "Potato Dextrose Agarの略で、カビや酵母の分離・培養に最も汎用される標準的な培地です。<strong>市販の粉末培地</strong>を水に溶かしてオートクレーブするだけで簡単に調製できます。"
                 },
                 ingredients: [
                     { name: "PDA (粉)", amount: 3.9, unit: "g" }, { name: "水", amount: 100.0, unit: "mL" }
@@ -1396,7 +1411,7 @@
                 },
                 info: {
                     title: "再生培地についての解説",
-                    body: "<b>プロトプラストの再生用培地</b>です。細胞壁を取り除いたデリケートなプロトプラストは真水に入れると急激な吸水により破裂してしまいますが、この培地には<b>高濃度のスクロース（102.7g/100mL）</b>が含まれており、高い浸透圧を維持することでプロトプラストの破裂を防ぎながら細胞壁の再生を促します。<br><br>💡 <b>使用法:</b> オートクレーブ後、無菌的に<b>10mLずつ分注して</b>使用します。"
+                    body: "<b>プロトプラストの再生用培地</b>です。細胞壁を取り除いたデリケートなプロトプラストは真水に入れると急激な吸水により破裂してしまいますが、この培地には<b>高濃度のスクロース（102.7g/100mL）</b>が含まれており、高い浸透圧を維持することでプロトプラストの破裂を防ぎながら細胞壁の再生を促します。<br><br><strong>💡 使用法:</strong> オートクレーブ後、無菌的に<b>10mLずつ分注して</b>使用します。"
                 },
                 ingredients: [
                     { name: "Yeast extract", amount: 0.1, unit: "g" },
@@ -1418,7 +1433,7 @@
                 },
                 info: {
                     title: "選択培地についての解説",
-                    body: "プロトプラスト法を用いた形質転換後、<b>糸状菌の薬剤耐性株（ハイグロマイシン、ノーセオスリシン、ジェネティシン等）を選抜する</b>ための培地です。<br><br>💡 <b>豆知識:</b> CM培地のSolution AやSolution Bに含まれるような塩類は、<b>ハイグロマイシンの効き目を著しく悪くしてしまう</b>ため、この選択培地にはあえて配合していません。<br><br>💡 <b>使用法:</b> オートクレーブ滅菌・冷却後、10mLの再生培地（下層）の上に10mLの本培地（上層）を重ねて<b>重層（オーバーレイ）</b>して使用します。<br><br>💡 <b>抗生物質の添加メモ:</b><br>・<b>ハイグロマイシンの場合:</b> ストック溶液（100 mg/mL）を培地100mLあたり200 µL添加（再生培地10mL＋選択培地10mLの重層で最終100ppm）。<br>・<b>ノーセオスリシンの場合:</b> ストック溶液（100 mg/mL）を培地100mLあたり200 µL添加（同上の計算で最終100ppm）。"
+                    body: "プロトプラスト法を用いた形質転換後、<b>糸状菌の薬剤耐性株（ハイグロマイシン、ノーセオスリシン、ジェネティシン等）を選抜する</b>ための培地です。<br><br><strong>💡 豆知識:</strong> CM培地のSolution AやSolution Bに含まれるような塩類は、<b>ハイグロマイシンの効き目を著しく悪くしてしまう</b>ため、この選択培地にはあえて配合していません。"
                 },
                 ingredients: [
                     { name: "Yeast extract", amount: 0.1, unit: "g" },
@@ -1542,7 +1557,7 @@
                 calculateCost: (vol) => `💰 概算コスト: -`,
                 info: {
                     title: "40%PEGについての解説",
-                    body: "プロトプラスト法を用いた形質転換（PEG法）に用いる溶液です。<br><br>💡 <b>調製法:</b> 少しずつ水を加え、熱湯で温めながら、瓶ごと激しく振とうして溶かしてゆく。オートクレーブにて滅菌。（冬場は室温で固まるのでオーブンなどで溶かす）"
+                    body: "プロトプラスト法を用いた形質転換（PEG法）に用いる溶液です。<br><br><strong>💡 調製法:</strong> 少しずつ水を加え、熱湯で温めながら、瓶ごと激しく振とうして溶かしてゆく。オートクレーブにて滅菌。（冬場は室温で固まるのでオーブンなどで溶かす）"
                 },
                 ingredients: [
                     { name: "PEG", amount: 40.0, unit: "g" },
