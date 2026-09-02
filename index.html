@@ -84,6 +84,17 @@
             min-height: 0;
             position: relative;
             overflow: hidden;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* 縦スワイプ時のスライド・フェードアニメーション用クラス */
+        .main-display.slide-up {
+            transform: translateY(-25px);
+            opacity: 0.1;
+        }
+        .main-display.slide-down {
+            transform: translateY(25px);
+            opacity: 0.1;
         }
 
         .display-header {
@@ -138,7 +149,6 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            transition: color 0.3s ease;
         }
 
         /* ひっそりと馴染む解説トリガーボタン（組成の下） */
@@ -929,7 +939,7 @@
         
         <!-- 1ページ目：PCRビュー -->
         <div class="view-panel" id="panel0">
-            <div class="main-display">
+            <div class="main-display" id="displayPCR">
                 <div class="display-header">
                     <div class="media-title-wrapper" onclick="openModal('pcrModal')">
                         <span class="media-eyebrow" id="displayPcrSub">PCR Master Mix</span>
@@ -945,7 +955,7 @@
                 </div>
                 <div class="advice-box" id="pcrAdviceBox"></div>
                 <div class="cost-box" id="pcrCostBox"></div>
-                <div class="list-container-wrapper">
+                <div class="list-container-wrapper" id="pcrScrollArea">
                     <ul class="ingredient-list" id="pcrIngredientList"></ul>
                     <div class="cycle-container" id="pcrCycleContainer" style="display: none;"></div>
                 </div>
@@ -958,7 +968,7 @@
 
         <!-- 2ページ目：培地ビュー -->
         <div class="view-panel" id="panel1">
-            <div class="main-display">
+            <div class="main-display" id="displayMedia">
                 <div class="display-header">
                     <div class="media-title-wrapper" onclick="openModal('mediaModal')">
                         <span class="media-eyebrow">Medium Recipe</span>
@@ -974,7 +984,7 @@
                 </div>
                 <div class="advice-box" id="mediaAdviceBox"></div>
                 <div class="cost-box" id="mediaCostBox"></div>
-                <div class="list-container-wrapper">
+                <div class="list-container-wrapper" id="mediaScrollArea">
                     <ul class="ingredient-list" id="ingredientList"></ul>
                 </div>
                 <div class="reset-banner" id="mediaResetBanner">
@@ -986,7 +996,7 @@
 
         <!-- 3ページ目：Solutions（ストック溶液）ビュー -->
         <div class="view-panel" id="panel2">
-            <div class="main-display">
+            <div class="main-display" id="displaySolution">
                 <div class="display-header">
                     <div class="media-title-wrapper" onclick="openModal('solutionModal')">
                         <span class="media-eyebrow">Stock Solutions</span>
@@ -998,7 +1008,7 @@
                 </div>
                 <div class="advice-box" id="solutionAdviceBox"></div>
                 <div class="cost-box" id="solutionCostBox"></div>
-                <div class="list-container-wrapper">
+                <div class="list-container-wrapper" id="solutionScrollArea">
                     <ul class="ingredient-list" id="solutionIngredientList"></ul>
                 </div>
                 <div class="reset-banner" id="solutionResetBanner">
@@ -1853,60 +1863,127 @@
             }, 50);
 
             setupScrollListener();
-            setupPcrVerticalSwipe();
+            setupVerticalSwipeAndWheelForPanels();
             updateView();
         }
 
-        // PCR画面での上下スワイプによる酵素切り替え機能のセットアップ
-        function setupPcrVerticalSwipe() {
-            const pcrPanel = document.getElementById("panel0");
-            let touchStartY = 0;
-            let touchStartX = 0;
+        // PCR(0), 培地(1), ソリューション(2) すべての画面で縦スワイプ＆ホイール切り替えを有効化
+        let isSwitchingCooldown = false;
 
-            pcrPanel.addEventListener('touchstart', (e) => {
-                touchStartY = e.touches[0].clientY;
-                touchStartX = e.touches[0].clientX;
-            }, { passive: true });
+        function setupVerticalSwipeAndWheelForPanels() {
+            const panels = [
+                { panelId: 'panel0', scrollAreaId: 'pcrScrollArea', type: 'pcr' },
+                { panelId: 'panel1', scrollAreaId: 'mediaScrollArea', type: 'media' },
+                { panelId: 'panel2', scrollAreaId: 'solutionScrollArea', type: 'solution' }
+            ];
 
-            pcrPanel.addEventListener('touchend', (e) => {
-                let touchEndY = e.changedTouches[0].clientY;
-                let touchEndX = e.changedTouches[0].clientX;
+            panels.forEach(p => {
+                const panelEl = document.getElementById(p.panelId);
+                const scrollAreaEl = document.getElementById(p.scrollAreaId);
+                let touchStartY = 0;
+                let touchStartX = 0;
 
-                let diffY = touchEndY - touchStartY;
-                let diffX = touchEndX - touchStartX;
+                // タッチ操作
+                panelEl.addEventListener('touchstart', (e) => {
+                    touchStartY = e.touches[0].clientY;
+                    touchStartX = e.touches[0].clientX;
+                }, { passive: true });
 
-                // 横方向のブレよりも縦方向の移動量が明らかに大きく、かつ50px以上のスワイプのときのみ反応
-                if (Math.abs(diffY) > Math.abs(diffX) && Math.abs(diffY) > 50) {
-                    const visibleList = pcrOrderConfig.filter(p => p.visible).map(p => p.key);
-                    if (visibleList.length <= 1) return;
+                panelEl.addEventListener('touchend', (e) => {
+                    if (isSwitchingCooldown) return;
+                    let touchEndY = e.changedTouches[0].clientY;
+                    let touchEndX = e.changedTouches[0].clientX;
 
-                    let currentIndex = visibleList.indexOf(currentPcrKey);
-                    if (currentIndex === -1) currentIndex = 0;
+                    let diffY = touchEndY - touchStartY;
+                    let diffX = touchEndX - touchStartX;
 
-                    if (diffY < 0) {
-                        // 上へスワイプ（指を上に動かす） -> 次の酵素へ
-                        currentIndex = (currentIndex + 1) % visibleList.length;
-                    } else {
-                        // 下へスワイプ（指を下に動かす） -> 前の酵素へ
-                        currentIndex = (currentIndex - 1 + visibleList.length) % visibleList.length;
+                    if (Math.abs(diffY) > Math.abs(diffX) && Math.abs(diffY) > 40) {
+                        triggerItemSwitch(p.type, diffY < 0 ? 'next' : 'prev', diffY < 0 ? 'up' : 'down');
                     }
+                }, { passive: true });
 
-                    currentPcrKey = visibleList[currentIndex];
-                    localStorage.setItem('lab_pcrKey', currentPcrKey);
-                    updateView();
+                // トラックパッド / マウスホイール操作
+                panelEl.addEventListener('wheel', (e) => {
+                    const isAtTop = scrollAreaEl.scrollTop <= 0;
+                    const isAtBottom = scrollAreaEl.scrollHeight - scrollAreaEl.clientHeight <= scrollAreaEl.scrollTop + 1;
 
-                    // 切り替え時にタイトル名に軽くエフェクトをかける演出
-                    const titleEl = document.getElementById("displayPcrName");
-                    if (titleEl) {
-                        titleEl.style.transform = diffY < 0 ? 'translateY(-4px)' : 'translateY(4px)';
-                        titleEl.style.opacity = '0.4';
-                        setTimeout(() => {
-                            titleEl.style.transform = 'translateY(0)';
-                            titleEl.style.opacity = '1';
-                        }, 200);
+                    if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+                        if ((e.deltaY < 0 && isAtTop) || (e.deltaY > 0 && isAtBottom) || scrollAreaEl.scrollHeight <= scrollAreaEl.clientHeight) {
+                            e.preventDefault();
+
+                            if (isSwitchingCooldown) return;
+
+                            if (Math.abs(e.deltaY) > 15) {
+                                triggerItemSwitch(p.type, e.deltaY > 0 ? 'next' : 'prev', e.deltaY > 0 ? 'up' : 'down');
+                            }
+                        }
+                    }
+                }, { passive: false });
+            });
+        }
+
+        function triggerItemSwitch(type, direction, slideDir) {
+            if (isSwitchingCooldown) return;
+            isSwitchingCooldown = true;
+
+            let displayCardId = '';
+            if (type === 'pcr') displayCardId = 'displayPCR';
+            else if (type === 'media') displayCardId = 'displayMedia';
+            else if (type === 'solution') displayCardId = 'displaySolution';
+
+            const cardEl = document.getElementById(displayCardId);
+
+            // 1. 視覚的なスワイプアニメーション効果をカード全体に適用
+            if (cardEl) {
+                cardEl.classList.add(slideDir === 'up' ? 'slide-up' : 'slide-down');
+            }
+
+            setTimeout(() => {
+                // 2. データの切り替えと描画更新
+                if (type === 'pcr') {
+                    const visibleList = pcrOrderConfig.filter(item => item.visible).map(item => item.key);
+                    if (visibleList.length > 1) {
+                        let idx = visibleList.indexOf(currentPcrKey);
+                        if (idx === -1) idx = 0;
+                        idx = direction === 'next' ? (idx + 1) % visibleList.length : (idx - 1 + visibleList.length) % visibleList.length;
+                        currentPcrKey = visibleList[idx];
+                        localStorage.setItem('lab_pcrKey', currentPcrKey);
+                    }
+                } else if (type === 'media') {
+                    const visibleList = mediaOrderConfig.filter(item => item.visible).map(item => item.key);
+                    if (visibleList.length > 1) {
+                        let idx = visibleList.indexOf(currentMediaKey);
+                        if (idx === -1) idx = 0;
+                        idx = direction === 'next' ? (idx + 1) % visibleList.length : (idx - 1 + visibleList.length) % visibleList.length;
+                        currentMediaKey = visibleList[idx];
+                        localStorage.setItem('lab_mediaKey', currentMediaKey);
+                        const m = mediaDatabase[currentMediaKey];
+                        if (m && m.hasModes) currentMediaMode = Object.keys(m.modes)[0];
+                    }
+                } else if (type === 'solution') {
+                    const visibleList = solutionOrderConfig.filter(item => item.visible).map(item => item.key);
+                    if (visibleList.length > 1) {
+                        let idx = visibleList.indexOf(currentSolutionKey);
+                        if (idx === -1) idx = 0;
+                        idx = direction === 'next' ? (idx + 1) % visibleList.length : (idx - 1 + visibleList.length) % visibleList.length;
+                        currentSolutionKey = visibleList[idx];
+                        localStorage.setItem('lab_solutionKey', currentSolutionKey);
                     }
                 }
-            }, { passive: true });
+
+                updateView();
+
+                // 3. アニメーションを元に戻す
+                const newCardEl = document.getElementById(displayCardId);
+                if (newCardEl) {
+                    newCardEl.classList.remove('slide-up', 'slide-down');
+                }
+
+                // クールダウン解除（連続暴走防止）
+                setTimeout(() => {
+                    isSwitchingCooldown = false;
+                }, 200);
+            }, 200);
         }
 
         function openOrderModal(type) {
