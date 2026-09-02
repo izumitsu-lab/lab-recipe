@@ -42,7 +42,7 @@
             overflow: hidden;
         }
 
-        /* 4画面分の横長コンテナ */
+        /* 5画面分の横長コンテナ */
         .views-container {
             display: flex;
             width: 100%;
@@ -721,6 +721,13 @@
             text-transform: uppercase;
         }
 
+        /* 選択モーダル用の2列グリッド（強制2列） */
+        .grid-modal {
+            display: grid !important;
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 8px !important;
+        }
+
         /* 詳細解説ポップアップ用モーダル */
         .info-modal-content {
             background-color: #18181d;
@@ -792,12 +799,6 @@
             color: #ffffff;
             border-color: transparent;
             box-shadow: 0 6px 16px rgba(41, 151, 255, 0.3);
-        }
-
-        .volume-grid-modal {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
         }
 
         /* テンキー専用スタイル */
@@ -912,38 +913,8 @@
 
     <div class="views-container" id="viewsContainer">
         
-        <!-- 1ページ目：培地ビュー -->
+        <!-- 1ページ目：PCRビュー -->
         <div class="view-panel" id="panel0">
-            <div class="main-display">
-                <div class="display-header">
-                    <div class="media-title-wrapper" onclick="openModal('mediaModal')">
-                        <span class="media-eyebrow">Medium Recipe</span>
-                        <div class="media-title-row">
-                            <h1 class="media-title" id="displayMediaName">培地名</h1>
-                            <button class="info-trigger-btn" id="mediaInfoBtn" onclick="event.stopPropagation(); openInfoModal()">i</button>
-                        </div>
-                    </div>
-                    <span class="volume-badge" id="displayVolume" onclick="openModal('volumeModal')">100 mL</span>
-                </div>
-                <!-- 培地ごとの切り替えスイッチ（ガンボーグ専用） -->
-                <div class="mode-switch-container" id="mediaModeSwitch" style="display: none;">
-                    <button class="mode-btn active" id="btnMediaStock" onclick="setMediaMode('stock')">ストック液から</button>
-                    <button class="mode-btn" id="btnMediaPowder" onclick="setMediaMode('powder')">粉から作成</button>
-                </div>
-                <div class="advice-box" id="mediaAdviceBox"></div>
-                <div class="cost-box" id="mediaCostBox"></div>
-                <div class="list-container-wrapper">
-                    <ul class="ingredient-list" id="ingredientList"></ul>
-                </div>
-                <div class="reset-banner" id="mediaResetBanner">
-                    <span class="reset-text">チェックが入っています</span>
-                    <button class="reset-btn" onclick="resetChecks('media')">すべて外す</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- 2ページ目：PCRビュー -->
-        <div class="view-panel" id="panel1">
             <div class="main-display">
                 <div class="display-header">
                     <div class="media-title-wrapper" onclick="openModal('pcrModal')">
@@ -972,8 +943,62 @@
             </div>
         </div>
 
-        <!-- 3ページ目：ガイドビュー -->
+        <!-- 2ページ目：培地ビュー -->
+        <div class="view-panel" id="panel1">
+            <div class="main-display">
+                <div class="display-header">
+                    <div class="media-title-wrapper" onclick="openModal('mediaModal')">
+                        <span class="media-eyebrow">Medium Recipe</span>
+                        <div class="media-title-row">
+                            <h1 class="media-title" id="displayMediaName">培地名</h1>
+                            <button class="info-trigger-btn" id="mediaInfoBtn" onclick="event.stopPropagation(); openInfoModal()">i</button>
+                        </div>
+                    </div>
+                    <span class="volume-badge" id="displayVolume" onclick="openModal('volumeModal')">100 mL</span>
+                </div>
+                <div class="mode-switch-container" id="mediaModeSwitch" style="display: none;">
+                    <button class="mode-btn active" id="btnMediaStock" onclick="setMediaMode('stock')">ストック液から</button>
+                    <button class="mode-btn" id="btnMediaPowder" onclick="setMediaMode('powder')">粉から作成</button>
+                </div>
+                <div class="advice-box" id="mediaAdviceBox"></div>
+                <div class="cost-box" id="mediaCostBox"></div>
+                <div class="list-container-wrapper">
+                    <ul class="ingredient-list" id="ingredientList"></ul>
+                </div>
+                <div class="reset-banner" id="mediaResetBanner">
+                    <span class="reset-text">チェックが入っています</span>
+                    <button class="reset-btn" onclick="resetChecks('media')">すべて外す</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3ページ目：Solutions（ストック溶液）ビュー -->
         <div class="view-panel" id="panel2">
+            <div class="main-display">
+                <div class="display-header">
+                    <div class="media-title-wrapper" onclick="openModal('solutionModal')">
+                        <span class="media-eyebrow">Stock Solutions</span>
+                        <div class="media-title-row">
+                            <h1 class="media-title" id="displaySolutionName">溶液名</h1>
+                            <button class="info-trigger-btn" id="solutionInfoBtn" onclick="event.stopPropagation(); openInfoModal()">i</button>
+                        </div>
+                    </div>
+                    <span class="volume-badge" id="displaySolutionVolume" onclick="openModal('solutionVolumeModal')">100 mL</span>
+                </div>
+                <div class="advice-box" id="solutionAdviceBox"></div>
+                <div class="cost-box" id="solutionCostBox"></div>
+                <div class="list-container-wrapper">
+                    <ul class="ingredient-list" id="solutionIngredientList"></ul>
+                </div>
+                <div class="reset-banner" id="solutionResetBanner">
+                    <span class="reset-text">チェックが入っています</span>
+                    <button class="reset-btn" onclick="resetChecks('solution')">すべて外す</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4ページ目：ガイドビュー -->
+        <div class="view-panel" id="panel3">
             <div class="main-display">
                 <div class="display-header">
                     <div class="media-title-wrapper" onclick="openModal('guideModal')">
@@ -991,8 +1016,8 @@
             </div>
         </div>
 
-        <!-- 4ページ目：オプションビュー -->
-        <div class="view-panel" id="panel3">
+        <!-- 5ページ目：オプションビュー -->
+        <div class="view-panel" id="panel4">
             <div class="main-display">
                 <div class="display-header">
                     <div class="media-title-wrapper">
@@ -1043,20 +1068,6 @@
                     </div>
                     <div class="option-group">
                         <div class="option-label-wrapper">
-                            <span class="option-title">培地の表示・並び替え</span>
-                            <span class="option-desc">学生ごとの使用培地をカスタム</span>
-                        </div>
-                        <button class="option-action-btn" onclick="openModal('mediaConfigModal')">設定する</button>
-                    </div>
-                    <div class="option-group">
-                        <div class="option-label-wrapper">
-                            <span class="option-title">PCR酵素の表示・並び替え</span>
-                            <span class="option-desc">使用する酵素をカスタム</span>
-                        </div>
-                        <button class="option-action-btn" onclick="openModal('pcrConfigModal')">設定する</button>
-                    </div>
-                    <div class="option-group">
-                        <div class="option-label-wrapper">
                             <span class="option-title">設定の初期化</span>
                             <span class="option-desc">保存データをすべて消去してリセット</span>
                         </div>
@@ -1068,11 +1079,13 @@
 
     </div>
 
+    <!-- 5つのドットインジケーター -->
     <div class="pagination-dots">
         <div class="dot active" id="dot0"></div>
         <div class="dot" id="dot1"></div>
         <div class="dot" id="dot2"></div>
         <div class="dot" id="dot3"></div>
+        <div class="dot" id="dot4"></div>
     </div>
 
     <div class="control-bar" id="controlBar"></div>
@@ -1088,16 +1101,16 @@
 
     <!-- モーダル各種 -->
     <div class="modal-overlay" id="mediaModal" onclick="outsideClose(event, 'mediaModal')">
-        <div class="modal-content">
+        <div class="modal-content" style="max-width: 440px;">
             <div class="modal-header">培地を選択</div>
-            <div class="option-list" id="mediaOptionsList"></div>
+            <div class="option-list grid-modal" id="mediaOptionsList"></div>
         </div>
     </div>
 
     <div class="modal-overlay" id="volumeModal" onclick="outsideClose(event, 'volumeModal')">
         <div class="modal-content">
             <div class="modal-header" id="volumeModalHeader">作製容量を選択</div>
-            <div class="option-list volume-grid-modal" id="volumeOptionsList"></div>
+            <div class="option-list grid-modal" id="volumeOptionsList"></div>
             <div class="keypad-container" id="keypadContainer" style="display: none;">
                 <div class="keypad-display-area">
                     <div class="keypad-preview-value" id="keypadPreview">0 mL</div>
@@ -1122,6 +1135,42 @@
         </div>
     </div>
 
+    <!-- ソリューション選択用モーダル -->
+    <div class="modal-overlay" id="solutionModal" onclick="outsideClose(event, 'solutionModal')">
+        <div class="modal-content" style="max-width: 440px;">
+            <div class="modal-header">ストック溶液を選択</div>
+            <div class="option-list grid-modal" id="solutionOptionsList"></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="solutionVolumeModal" onclick="outsideClose(event, 'solutionVolumeModal')">
+        <div class="modal-content">
+            <div class="modal-header" id="solutionVolumeModalHeader">作製容量を選択</div>
+            <div class="option-list grid-modal" id="solutionVolumeOptionsList"></div>
+            <div class="keypad-container" id="solutionKeypadContainer" style="display: none;">
+                <div class="keypad-display-area">
+                    <div class="keypad-preview-value" id="solutionKeypadPreview">0 mL</div>
+                    <div class="keypad-divider-line"></div>
+                </div>
+                <div class="keypad-grid">
+                    <button class="keypad-btn" onclick="pressSolutionKeypad('1')">1</button>
+                    <button class="keypad-btn" onclick="pressSolutionKeypad('2')">2</button>
+                    <button class="keypad-btn" onclick="pressSolutionKeypad('3')">3</button>
+                    <button class="keypad-btn" onclick="pressSolutionKeypad('4')">4</button>
+                    <button class="keypad-btn" onclick="pressSolutionKeypad('5')">5</button>
+                    <button class="keypad-btn" onclick="pressSolutionKeypad('6')">6</button>
+                    <button class="keypad-btn" onclick="pressSolutionKeypad('7')">7</button>
+                    <button class="keypad-btn" onclick="pressSolutionKeypad('8')">8</button>
+                    <button class="keypad-btn" onclick="pressSolutionKeypad('9')">9</button>
+                    <button class="keypad-btn action-btn" onclick="pressSolutionKeypad('clear')">C</button>
+                    <button class="keypad-btn" onclick="pressSolutionKeypad('0')">0</button>
+                    <button class="keypad-btn action-btn" onclick="pressSolutionKeypad('backspace')">⌫</button>
+                    <button class="keypad-btn set-btn" onclick="applyCustomSolutionVolume()">SET</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal-overlay" id="pcrModal" onclick="outsideClose(event, 'pcrModal')">
         <div class="modal-content">
             <div class="modal-header">PCR酵素を選択</div>
@@ -1132,7 +1181,7 @@
     <div class="modal-overlay" id="pcrVolumeModal" onclick="outsideClose(event, 'pcrVolumeModal')">
         <div class="modal-content">
             <div class="modal-header" id="pcrVolumeModalHeader">反応液量を選択</div>
-            <div class="option-list volume-grid-modal" id="pcrVolumeOptionsList"></div>
+            <div class="option-list grid-modal" id="pcrVolumeOptionsList"></div>
             <div class="keypad-container" id="pcrKeypadContainer" style="display: none;">
                 <div class="keypad-display-area">
                     <div class="keypad-preview-value" id="pcrKeypadPreview">0 µL</div>
@@ -1162,20 +1211,6 @@
         <div class="modal-content">
             <div class="modal-header">ガイドを選択</div>
             <div class="option-list" id="guideOptionsList"></div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="mediaConfigModal" onclick="outsideClose(event, 'mediaConfigModal')">
-        <div class="modal-content">
-            <div class="modal-header">培地の表示と並び替え</div>
-            <div class="option-list" id="mediaConfigList"></div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="pcrConfigModal" onclick="outsideClose(event, 'pcrConfigModal')">
-        <div class="modal-content">
-            <div class="modal-header">PCR酵素の表示と並び替え</div>
-            <div class="option-list" id="pcrConfigList"></div>
         </div>
     </div>
 
@@ -1350,7 +1385,7 @@
                 },
                 info: {
                     title: "選択培地についての解説",
-                    body: "プロトプラスト法を用いた形質転換後、<b>糸状菌の薬剤耐性株（ハイグロマイシン、ノーセオスリシン、ジェネティシン等）を選抜する</b>ための培地です。<br><br>💡 <b>豆知識:</b> CM培地のSolution AやSolution Bに含まれるような塩類は、<b>ハイグロマイシンの効き目を著しく悪くしてしまう</b>ため、この選択培地にはあえて配合していません。<br><br>💡 <b>使用法:</b> オートクレーブ滅菌・冷却後、10mLの再生培地（下層）の上に10mLの本培地（上層）を重ねて<b>重層（オーバーレイ）</b>して使用します。<br><br>💡 <b>抗生物質の添加量（100ppmにする場合）:</b><br>・<b>ハイグロマイシン:</b> 10mLの選択培地に対して、ストック溶液（100 mg/mL）を20 µL添加。<br>・<b>ノーセオスリシン:</b> 10mLの選択培地に対して、ストック溶液（100 mg/mL）を20 µL添加。<br>※再生培地10mL＋選択培地10mLの合計20mLに対して100ppmとなる計算です。"
+                    body: "プロトプラスト法を用いた形質転換後、<b>糸状菌の薬剤耐性株（ハイグロマイシン、ノーセオスリシン、ジェネティシン等）を選抜する</b>ための培地です。<br><br>💡 <b>豆知識:</b> CM培地のSolution AやSolution Bに含まれるような塩類は、<b>ハイグロマイシンの効き目を著しく悪くしてしまう</b>ため、この選択培地にはあえて配合していません。<br><br>💡 <b>使用法:</b> オートクレーブ滅菌・冷却後、10mLの再生培地（下層）の上に10mLの本培地（上層）を重ねて<b>重層（オーバーレイ）</b>して使用します。<br><br>💡 <b>抗生物質の添加メモ:</b><br>・<b>ハイグロマイシンの場合:</b> ストック溶液（100 mg/mL）を培地100mLあたり200 µL添加（再生培地10mL＋選択培地10mLの重層で最終100ppm）。<br>・<b>ノーセオスリシンの場合:</b> ストック溶液（100 mg/mL）を培地100mLあたり200 µL添加（同上の計算で最終100ppm）。"
                 },
                 ingredients: [
                     { name: "Yeast extract", amount: 0.1, unit: "g" },
@@ -1362,11 +1397,74 @@
             }
         };
 
+        const solutionDatabase = {
+            "sol_a": {
+                name: "Solution A",
+                baseVolume: 100,
+                getAdvice: (vol) => `💡 CM培地用 ストック溶液`,
+                calculateCost: (vol) => `💰 概算コスト: -`,
+                info: {
+                    title: "Solution A についての解説",
+                    body: "CM培地などで用いられるストック溶液です。Solution Bと高濃度で直接混ぜると不溶性の塩（沈澱）を形成するため、必ず別々に調製・保管してください。"
+                },
+                ingredients: [
+                    { name: "塩類・成分 (要調整)", amount: 10.0, unit: "g" },
+                    { name: "蒸留水", amount: 100.0, unit: "mL" }
+                ]
+            },
+            "sol_b": {
+                name: "Solution B",
+                baseVolume: 100,
+                getAdvice: (vol) => `💡 CM培地用 ストック溶液`,
+                calculateCost: (vol) => `💰 概算コスト: -`,
+                info: {
+                    title: "Solution B についての解説",
+                    body: "CM培地などで用いられるストック溶液です。Solution Aと同様に単体でストックし、培地調製時にそれぞれ希釈して加えます。"
+                },
+                ingredients: [
+                    { name: "塩類・成分 (要調整)", amount: 10.0, unit: "g" },
+                    { name: "蒸留水", amount: 100.0, unit: "mL" }
+                ]
+            },
+            "mm_sol_1": {
+                name: "MM salt solution 1",
+                baseVolume: 100,
+                getAdvice: (vol) => `💡 アグロバクテリウム法用 ストック液`,
+                calculateCost: (vol) => `💰 概算コスト: -`,
+                info: {
+                    title: "MM salt solution 1 について",
+                    body: "アグロバクテリウム用の最小培地（Minimal Medium）に用いる塩類ストック溶液1です。"
+                },
+                ingredients: [
+                    { name: "成分1 (要調整)", amount: 10.0, unit: "g" },
+                    { name: "蒸留水", amount: 100.0, unit: "mL" }
+                ]
+            },
+            "mm_sol_2": {
+                name: "MM salt solution 2",
+                baseVolume: 100,
+                getAdvice: (vol) => `💡 アグロバクテリウム法用 ストック液`,
+                calculateCost: (vol) => `💰 概算コスト: -`,
+                info: {
+                    title: "MM salt solution 2 について",
+                    body: "アグロバクテリウム用の最小培地（Minimal Medium）に用いる塩類ストック溶液2です。"
+                },
+                ingredients: [
+                    { name: "成分2 (要調整)", amount: 10.0, unit: "g" },
+                    { name: "蒸留水", amount: 100.0, unit: "mL" }
+                ]
+            }
+        };
+
         let mediaOrderConfig = JSON.parse(localStorage.getItem('lab_mediaOrderConfig')) || [
             { key: "cm", visible: true }, { key: "v30", visible: true }, { key: "pda", visible: true }, { key: "lb", visible: true }, { key: "im", visible: true }, { key: "gamborg", visible: true }, { key: "regeneration", visible: true }, { key: "selection", visible: true }
         ];
 
-        let currentMediaMode = "stock"; // 培地用モードキー（ガンボーグ専用）
+        let solutionOrderConfig = JSON.parse(localStorage.getItem('lab_solutionOrderConfig')) || [
+            { key: "sol_a", visible: true }, { key: "sol_b", visible: true }, { key: "mm_sol_1", visible: true }, { key: "mm_sol_2", visible: true }
+        ];
+
+        let currentMediaMode = "stock"; 
 
         const pcrDatabase = {
             "ex_premier": {
@@ -1507,8 +1605,12 @@
         let currentVolume = parseInt(localStorage.getItem('lab_mediaVolume')) || 100;
         const mediaVolumes = [50, 100, 150, 200, 250, 300, 350, 400, 450, 500];
 
+        let currentSolutionKey = localStorage.getItem('lab_solutionKey') || "sol_a";
+        let currentSolutionVolume = parseInt(localStorage.getItem('lab_solutionVolume')) || 100;
+
         let keypadInputStr = "0";
         let pcrKeypadInputStr = "0";
+        let solutionKeypadInputStr = "0";
 
         let storedPcrKey = localStorage.getItem('lab_pcrKey');
         let visiblePcrKeys = pcrOrderConfig.filter(p => p.visible).map(p => p.key);
@@ -1532,9 +1634,11 @@
             document.getElementById("costFeatureToggle").checked = costFeatureEnabled;
 
             buildMediaModals();
+            buildSolutionModals();
             buildPcrModals();
             buildGuideModals();
 
+            // 培地容量リスト作成
             const volListEl = document.getElementById("volumeOptionsList");
             volListEl.innerHTML = "";
             mediaVolumes.forEach(vol => {
@@ -1549,16 +1653,36 @@
                 };
                 volListEl.appendChild(btn);
             });
-
             const customBtn = document.createElement("button");
             customBtn.className = `option-item ${!mediaVolumes.includes(currentVolume) ? 'selected' : ''}`;
             customBtn.style.gridColumn = "span 2";
             customBtn.innerHTML = `<span style="width: 100%; text-align: center;">CUSTOM</span>`;
-            customBtn.onclick = () => {
-                openKeypadModal();
-            };
+            customBtn.onclick = () => { openKeypadModal(); };
             volListEl.appendChild(customBtn);
 
+            // ソリューション容量リスト作成
+            const solVolListEl = document.getElementById("solutionVolumeOptionsList");
+            solVolListEl.innerHTML = "";
+            mediaVolumes.forEach(vol => {
+                const btn = document.createElement("button");
+                btn.className = `option-item ${vol === currentSolutionVolume ? 'selected' : ''}`;
+                btn.textContent = `${vol} mL`;
+                btn.onclick = () => {
+                    currentSolutionVolume = vol;
+                    localStorage.setItem('lab_solutionVolume', vol);
+                    closeModal('solutionVolumeModal');
+                    updateView();
+                };
+                solVolListEl.appendChild(btn);
+            });
+            const solCustomBtn = document.createElement("button");
+            solCustomBtn.className = `option-item ${!mediaVolumes.includes(currentSolutionVolume) ? 'selected' : ''}`;
+            solCustomBtn.style.gridColumn = "span 2";
+            solCustomBtn.innerHTML = `<span style="width: 100%; text-align: center;">CUSTOM</span>`;
+            solCustomBtn.onclick = () => { openSolutionKeypadModal(); };
+            solVolListEl.appendChild(solCustomBtn);
+
+            // PCR容量リスト作成
             const pcrVolListEl = document.getElementById("pcrVolumeOptionsList");
             pcrVolListEl.innerHTML = "";
             pcrVolumes.forEach(vol => {
@@ -1573,18 +1697,14 @@
                 };
                 pcrVolListEl.appendChild(btn);
             });
-
             const pcrCustomBtn = document.createElement("button");
             pcrCustomBtn.className = `option-item ${!pcrVolumes.includes(currentPcrVolume) ? 'selected' : ''}`;
             pcrCustomBtn.style.gridColumn = "span 2";
             pcrCustomBtn.innerHTML = `<span style="width: 100%; text-align: center;">CUSTOM</span>`;
-            pcrCustomBtn.onclick = () => {
-                openPcrKeypadModal();
-            };
+            pcrCustomBtn.onclick = () => { openPcrKeypadModal(); };
             pcrVolListEl.appendChild(pcrCustomBtn);
 
             const container = document.getElementById("viewsContainer");
-            
             setTimeout(() => {
                 container.scrollLeft = currentViewIndex * container.clientWidth;
                 updateDotsAndBar();
@@ -1647,6 +1767,52 @@
             }
         }
 
+        function openSolutionKeypadModal() {
+            document.getElementById("solutionVolumeOptionsList").style.display = "none";
+            document.getElementById("solutionKeypadContainer").style.display = "flex";
+            document.getElementById("solutionVolumeModalHeader").textContent = "カスタム容量を入力";
+            solutionKeypadInputStr = "0";
+            updateSolutionKeypadPreview();
+        }
+
+        function pressSolutionKeypad(val) {
+            if (val === 'clear') {
+                solutionKeypadInputStr = "0";
+            } else if (val === 'backspace') {
+                if (solutionKeypadInputStr.length > 1) {
+                    solutionKeypadInputStr = solutionKeypadInputStr.slice(0, -1);
+                } else {
+                    solutionKeypadInputStr = "0";
+                }
+            } else {
+                if (solutionKeypadInputStr === "0") {
+                    solutionKeypadInputStr = val;
+                } else {
+                    if (solutionKeypadInputStr.length < 5) {
+                        solutionKeypadInputStr += val;
+                    }
+                }
+            }
+            updateSolutionKeypadPreview();
+        }
+
+        function updateSolutionKeypadPreview() {
+            document.getElementById("solutionKeypadPreview").textContent = `${solutionKeypadInputStr} mL`;
+        }
+
+        function applyCustomSolutionVolume() {
+            const num = parseInt(solutionKeypadInputStr, 10);
+            if (!isNaN(num) && num > 0) {
+                currentSolutionVolume = num;
+                localStorage.setItem('lab_solutionVolume', num);
+                closeModal('solutionVolumeModal');
+                initApp();
+                updateView();
+            } else {
+                alert("有効な数値を入力してください。");
+            }
+        }
+
         function openPcrKeypadModal() {
             document.getElementById("pcrVolumeOptionsList").style.display = "none";
             document.getElementById("pcrKeypadContainer").style.display = "flex";
@@ -1701,7 +1867,7 @@
         }
 
         function resetAllSettings() {
-            if (confirm("すべてのカスタム設定（表示・並び替え・チェック状態など）を初期状態に戻しますか？")) {
+            if (confirm("すべてのカスタム設定を初期状態に戻しますか？")) {
                 localStorage.clear();
                 location.reload();
             }
@@ -1726,7 +1892,6 @@
                 btn.onclick = () => {
                     currentMediaKey = key;
                     localStorage.setItem('lab_mediaKey', key);
-                    // 培地変更時にデフォルトモードを初期化
                     const m = mediaDatabase[key];
                     if (m && m.hasModes) {
                         currentMediaMode = Object.keys(m.modes)[0];
@@ -1736,31 +1901,25 @@
                 };
                 mediaListEl.appendChild(btn);
             });
+        }
 
-            const configListEl = document.getElementById("mediaConfigList");
-            configListEl.innerHTML = "";
-            mediaOrderConfig.forEach((mObj, index) => {
-                const media = mediaDatabase[mObj.key];
-                if (!media) return;
-
-                const row = document.createElement("div");
-                row.className = "custom-row";
-                row.innerHTML = `
-                    <div class="custom-row-left">
-                        <span style="font-weight: 600; font-size: 15px; color: var(--text-primary);">${media.name}</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 12px;">
-                        <div class="order-btn-group">
-                            <button class="order-btn" onclick="moveMedia(${index}, -1)" ${index === 0 ? 'style="opacity:0.3;pointer-events:none;"' : ''}>▲</button>
-                            <button class="order-btn" onclick="moveMedia(${index}, 1)" ${index === mediaOrderConfig.length - 1 ? 'style="opacity:0.3;pointer-events:none;"' : ''}>▼</button>
-                        </div>
-                        <label class="switch">
-                            <input type="checkbox" ${mObj.visible ? 'checked' : ''} onchange="toggleMediaVisible('${mObj.key}')">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                `;
-                configListEl.appendChild(row);
+        function buildSolutionModals() {
+            const solListEl = document.getElementById("solutionOptionsList");
+            solListEl.innerHTML = "";
+            solutionOrderConfig.forEach(sObj => {
+                const key = sObj.key;
+                const sol = solutionDatabase[key];
+                if (!sol) return;
+                const btn = document.createElement("button");
+                btn.className = `option-item ${key === currentSolutionKey ? 'selected' : ''}`;
+                btn.textContent = sol.name;
+                btn.onclick = () => {
+                    currentSolutionKey = key;
+                    localStorage.setItem('lab_solutionKey', key);
+                    closeModal('solutionModal');
+                    updateView();
+                };
+                solListEl.appendChild(btn);
             });
         }
 
@@ -1788,32 +1947,6 @@
                 };
                 pcrListEl.appendChild(btn);
             });
-
-            const configListEl = document.getElementById("pcrConfigList");
-            configListEl.innerHTML = "";
-            pcrOrderConfig.forEach((pObj, index) => {
-                const pcr = pcrDatabase[pObj.key];
-                if (!pcr) return;
-
-                const row = document.createElement("div");
-                row.className = "custom-row";
-                row.innerHTML = `
-                    <div class="custom-row-left">
-                        <span style="font-weight: 600; font-size: 15px; color: var(--text-primary);">${pcr.shortName}</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 12px;">
-                        <div class="order-btn-group">
-                            <button class="order-btn" onclick="movePcr(${index}, -1)" ${index === 0 ? 'style="opacity:0.3;pointer-events:none;"' : ''}>▲</button>
-                            <button class="order-btn" onclick="movePcr(${index}, 1)" ${index === pcrOrderConfig.length - 1 ? 'style="opacity:0.3;pointer-events:none;"' : ''}>▼</button>
-                        </div>
-                        <label class="switch">
-                            <input type="checkbox" ${pObj.visible ? 'checked' : ''} onchange="togglePcrVisible('${pObj.key}')">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                `;
-                configListEl.appendChild(row);
-            });
         }
 
         function buildGuideModals() {
@@ -1831,48 +1964,6 @@
                 };
                 guideListEl.appendChild(btn);
             });
-        }
-
-        function toggleMediaVisible(key) {
-            const target = mediaOrderConfig.find(m => m.key === key);
-            if (target) {
-                target.visible = !target.visible;
-                localStorage.setItem('lab_mediaOrderConfig', JSON.stringify(mediaOrderConfig));
-                buildMediaModals();
-                updateView();
-            }
-        }
-
-        function moveMedia(index, direction) {
-            const newIndex = index + direction;
-            if (newIndex < 0 || newIndex >= mediaOrderConfig.length) return;
-            const temp = mediaOrderConfig[index];
-            mediaOrderConfig[index] = mediaOrderConfig[newIndex];
-            mediaOrderConfig[newIndex] = temp;
-            localStorage.setItem('lab_mediaOrderConfig', JSON.stringify(mediaOrderConfig));
-            buildMediaModals();
-            updateView();
-        }
-
-        function togglePcrVisible(key) {
-            const target = pcrOrderConfig.find(p => p.key === key);
-            if (target) {
-                target.visible = !target.visible;
-                localStorage.setItem('lab_pcrOrderConfig', JSON.stringify(pcrOrderConfig));
-                buildPcrModals();
-                updateView();
-            }
-        }
-
-        function movePcr(index, direction) {
-            const newIndex = index + direction;
-            if (newIndex < 0 || newIndex >= pcrOrderConfig.length) return;
-            const temp = pcrOrderConfig[index];
-            pcrOrderConfig[index] = pcrOrderConfig[newIndex];
-            pcrOrderConfig[newIndex] = temp;
-            localStorage.setItem('lab_pcrOrderConfig', JSON.stringify(pcrOrderConfig));
-            buildPcrModals();
-            updateView();
         }
 
         function setPcrMode(mode) {
@@ -1923,6 +2014,7 @@
             if (!checkFeatureEnabled) {
                 document.querySelectorAll('.ingredient-item.checked').forEach(el => el.classList.remove('checked'));
                 checkResetButtonState('media');
+                checkResetButtonState('solution');
                 checkResetButtonState('pcr');
             }
         }
@@ -1967,6 +2059,7 @@
             document.getElementById("dot1").classList.toggle('active', currentViewIndex === 1);
             document.getElementById("dot2").classList.toggle('active', currentViewIndex === 2);
             document.getElementById("dot3").classList.toggle('active', currentViewIndex === 3);
+            document.getElementById("dot4").classList.toggle('active', currentViewIndex === 4);
             updateControlBar();
         }
 
@@ -1975,17 +2068,6 @@
             bar.innerHTML = "";
 
             if (currentViewIndex === 0) {
-                bar.innerHTML = `
-                    <button class="trigger-btn" onclick="openModal('mediaModal')">
-                        <span style="font-weight: 700;">${mediaDatabase[currentMediaKey] ? mediaDatabase[currentMediaKey].name : '選択'}</span>
-                        <span class="arrow-icon">▾</span>
-                    </button>
-                    <button class="trigger-btn" onclick="openModal('volumeModal')">
-                        <span style="font-weight: 700;">${currentVolume} mL</span>
-                        <span class="arrow-icon">▾</span>
-                    </button>
-                `;
-            } else if (currentViewIndex === 1) {
                 const pcr = pcrDatabase[currentPcrKey];
                 bar.innerHTML = `
                     <button class="trigger-btn" onclick="openModal('pcrModal')">
@@ -1997,7 +2079,29 @@
                         <span class="arrow-icon">▾</span>
                     </button>
                 `;
+            } else if (currentViewIndex === 1) {
+                bar.innerHTML = `
+                    <button class="trigger-btn" onclick="openModal('mediaModal')">
+                        <span style="font-weight: 700;">${mediaDatabase[currentMediaKey] ? mediaDatabase[currentMediaKey].name : '選択'}</span>
+                        <span class="arrow-icon">▾</span>
+                    </button>
+                    <button class="trigger-btn" onclick="openModal('volumeModal')">
+                        <span style="font-weight: 700;">${currentVolume} mL</span>
+                        <span class="arrow-icon">▾</span>
+                    </button>
+                `;
             } else if (currentViewIndex === 2) {
+                bar.innerHTML = `
+                    <button class="trigger-btn" onclick="openModal('solutionModal')">
+                        <span style="font-weight: 700;">${solutionDatabase[currentSolutionKey] ? solutionDatabase[currentSolutionKey].name : '選択'}</span>
+                        <span class="arrow-icon">▾</span>
+                    </button>
+                    <button class="trigger-btn" onclick="openModal('solutionVolumeModal')">
+                        <span style="font-weight: 700;">${currentSolutionVolume} mL</span>
+                        <span class="arrow-icon">▾</span>
+                    </button>
+                `;
+            } else if (currentViewIndex === 3) {
                 const guide = guideDatabase[currentGuideKey];
                 bar.innerHTML = `
                     <button class="trigger-btn" onclick="openModal('guideModal')" style="grid-column: span 2; width: 100%;">
@@ -2016,8 +2120,8 @@
 
         function checkResetButtonState(type) {
             if (type === 'pcr' && currentPcrMode === 'cycle') return;
-            const containerId = type === 'media' ? 'ingredientList' : 'pcrIngredientList';
-            const bannerId = type === 'media' ? 'mediaResetBanner' : 'pcrResetBanner';
+            const containerId = type === 'media' ? 'ingredientList' : (type === 'solution' ? 'solutionIngredientList' : 'pcrIngredientList');
+            const bannerId = type === 'media' ? 'mediaResetBanner' : (type === 'solution' ? 'solutionResetBanner' : 'pcrResetBanner');
             
             const list = document.getElementById(containerId);
             const banner = document.getElementById(bannerId);
@@ -2032,7 +2136,7 @@
         }
 
         function resetChecks(type) {
-            const containerId = type === 'media' ? 'ingredientList' : 'pcrIngredientList';
+            const containerId = type === 'media' ? 'ingredientList' : (type === 'solution' ? 'solutionIngredientList' : 'pcrIngredientList');
             const list = document.getElementById(containerId);
             if (list) {
                 list.querySelectorAll('.ingredient-item.checked').forEach(el => {
@@ -2045,11 +2149,14 @@
         function openInfoModal() {
             let infoData = null;
             if (currentViewIndex === 0) {
-                const media = mediaDatabase[currentMediaKey];
-                if (media && media.info) infoData = media.info;
-            } else if (currentViewIndex === 1) {
                 const pcr = pcrDatabase[currentPcrKey];
                 if (pcr && pcr.info) infoData = pcr.info;
+            } else if (currentViewIndex === 1) {
+                const media = mediaDatabase[currentMediaKey];
+                if (media && media.info) infoData = media.info;
+            } else if (currentViewIndex === 2) {
+                const sol = solutionDatabase[currentSolutionKey];
+                if (sol && sol.info) infoData = sol.info;
             }
 
             if (infoData) {
@@ -2062,142 +2169,28 @@
         function updateView() {
             const mediaAdviceBox = document.getElementById("mediaAdviceBox");
             const mediaCostBox = document.getElementById("mediaCostBox");
+            const solutionAdviceBox = document.getElementById("solutionAdviceBox");
+            const solutionCostBox = document.getElementById("solutionCostBox");
             const pcrAdviceBox = document.getElementById("pcrAdviceBox");
             const pcrCostBox = document.getElementById("pcrCostBox");
-            const mediaInfoBtn = document.getElementById("mediaInfoBtn");
+            
             const pcrInfoBtn = document.getElementById("pcrInfoBtn");
+            const mediaInfoBtn = document.getElementById("mediaInfoBtn");
+            const solutionInfoBtn = document.getElementById("solutionInfoBtn");
             const mediaModeSwitch = document.getElementById("mediaModeSwitch");
 
-            // 解説ボタン（i アイコン）の表示切替
+            // 解説ボタンの表示切替
             if (infoButtonFeatureEnabled) {
-                mediaInfoBtn.classList.add("visible");
-                pcrInfoBtn.classList.add("visible");
+                if(pcrInfoBtn) pcrInfoBtn.classList.add("visible");
+                if(mediaInfoBtn) mediaInfoBtn.classList.add("visible");
+                if(solutionInfoBtn) solutionInfoBtn.classList.add("visible");
             } else {
-                mediaInfoBtn.classList.remove("visible");
-                pcrInfoBtn.classList.remove("visible");
+                if(pcrInfoBtn) pcrInfoBtn.classList.remove("visible");
+                if(mediaInfoBtn) mediaInfoBtn.classList.remove("visible");
+                if(solutionInfoBtn) solutionInfoBtn.classList.remove("visible");
             }
 
-            // 1. 培地ビュー更新
-            const media = mediaDatabase[currentMediaKey];
-            if (media) {
-                document.getElementById("displayMediaName").textContent = media.name;
-                document.getElementById("displayVolume").textContent = `${currentVolume} mL`;
-
-                // モード（切り替えスイッチ）を持つ培地の場合の処理
-                if (media.hasModes) {
-                    mediaModeSwitch.style.display = "grid";
-                    const modeKeys = Object.keys(media.modes);
-                    if (!media.modes[currentMediaMode]) {
-                        currentMediaMode = modeKeys[0];
-                    }
-                    const btnStock = document.getElementById("btnMediaStock");
-                    const btnPowder = document.getElementById("btnMediaPowder");
-                    btnStock.textContent = media.modeLabels[0];
-                    btnPowder.textContent = media.modeLabels[1];
-                    
-                    if (currentMediaMode === modeKeys[0]) {
-                        btnStock.classList.add("active");
-                        btnPowder.classList.remove("active");
-                    } else {
-                        btnPowder.classList.add("active");
-                        btnStock.classList.remove("active");
-                    }
-                } else {
-                    mediaModeSwitch.style.display = "none";
-                }
-
-                if (adviceFeatureEnabled) {
-                    mediaAdviceBox.textContent = media.getAdvice(currentVolume);
-                    mediaAdviceBox.classList.add("visible");
-                } else {
-                    mediaAdviceBox.classList.remove("visible");
-                }
-
-                if (costFeatureEnabled) {
-                    mediaCostBox.textContent = media.calculateCost(currentVolume);
-                    mediaCostBox.classList.add("visible");
-                } else {
-                    mediaCostBox.classList.remove("visible");
-                }
-
-                const listContainer = document.getElementById("ingredientList");
-                listContainer.innerHTML = "";
-                const ratio = currentVolume / media.baseVolume;
-
-                // 対象の成分リストを取得（モードごとに ingredients が別定義されている場合はそちらを優先）
-                let currentIngredients = media.ingredients;
-                if (media.hasModes && media.modes[currentMediaMode] && media.modes[currentMediaMode].ingredients) {
-                    currentIngredients = media.modes[currentMediaMode].ingredients;
-                }
-
-                currentIngredients.forEach(ing => {
-                    const calcAmount = ing.amount * ratio;
-                    const formatted = typeof ing.amount === 'number' 
-                        ? (calcAmount >= 10 ? calcAmount.toFixed(1) : calcAmount.toFixed(2).replace(/\.?0+$/, ""))
-                        : ing.amount;
-
-                    const li = document.createElement("li");
-                    li.className = "ingredient-item";
-                    li.onclick = () => {
-                        if (checkFeatureEnabled) {
-                            li.classList.toggle('checked');
-                            checkResetButtonState('media');
-                        }
-                    };
-                    li.innerHTML = `
-                        <span class="ing-name">${ing.name}</span>
-                        <div class="ing-amount-wrapper">
-                            <span class="ing-amount">${formatted}</span>
-                            <span class="ing-unit">${ing.unit}</span>
-                        </div>
-                    `;
-                    listContainer.appendChild(li);
-                });
-
-                // オートクレーブ後（Post-autoclave）の成分
-                let currentPostIngredients = media.postIngredients || [];
-                if (media.hasModes && media.modes[currentMediaMode] && media.modes[currentMediaMode].postIngredients) {
-                    currentPostIngredients = media.modes[currentMediaMode].postIngredients;
-                }
-
-                if (currentPostIngredients.length > 0) {
-                    const sectionHeader = document.createElement("div");
-                    sectionHeader.className = "recipe-section-header";
-                    sectionHeader.innerHTML = `⚡ オートクレーブ後に追加`;
-                    listContainer.appendChild(sectionHeader);
-
-                    currentPostIngredients.forEach(ing => {
-                        let formatted = ing.amount;
-                        if (typeof ing.amount === 'number') {
-                            const calcAmount = ing.amount * ratio;
-                            formatted = calcAmount >= 10 
-                                ? calcAmount.toFixed(1) 
-                                : calcAmount.toFixed(2).replace(/\.?0+$/, "");
-                        }
-
-                        const li = document.createElement("li");
-                        li.className = "ingredient-item";
-                        li.onclick = () => {
-                            if (checkFeatureEnabled) {
-                                li.classList.toggle('checked');
-                                checkResetButtonState('media');
-                            }
-                        };
-                        li.innerHTML = `
-                            <span class="ing-name">${ing.name}</span>
-                            <div class="ing-amount-wrapper">
-                                <span class="ing-amount">${formatted}</span>
-                                <span class="ing-unit">${ing.unit}</span>
-                            </div>
-                        `;
-                        listContainer.appendChild(li);
-                    });
-                }
-
-                checkResetButtonState('media');
-            }
-
-            // 2. PCRビュー更新
+            // 1. PCRビュー更新
             const pcr = pcrDatabase[currentPcrKey];
             if (pcr) {
                 document.getElementById("displayPcrSub").textContent = "PCR Master Mix";
@@ -2237,10 +2230,7 @@
 
                 pcr.ingredients.forEach(ing => {
                     const calcAmount = ing.amount * pcrRatio;
-                    const formatted = calcAmount >= 10 
-                        ? calcAmount.toFixed(1) 
-                        : calcAmount.toFixed(2).replace(/\.?0+$/, "");
-
+                    const formatted = calcAmount >= 10 ? calcAmount.toFixed(1) : calcAmount.toFixed(2).replace(/\.?0+$/, "");
                     const li = document.createElement("li");
                     li.className = "ingredient-item";
                     li.onclick = () => {
@@ -2313,7 +2303,171 @@
                 });
             }
 
-            // 3. ガイドビュー更新
+            // 2. 培地ビュー更新
+            const media = mediaDatabase[currentMediaKey];
+            if (media) {
+                document.getElementById("displayMediaName").textContent = media.name;
+                document.getElementById("displayVolume").textContent = `${currentVolume} mL`;
+
+                if (media.hasModes) {
+                    mediaModeSwitch.style.display = "grid";
+                    const modeKeys = Object.keys(media.modes);
+                    if (!media.modes[currentMediaMode]) {
+                        currentMediaMode = modeKeys[0];
+                    }
+                    const btnStock = document.getElementById("btnMediaStock");
+                    const btnPowder = document.getElementById("btnMediaPowder");
+                    btnStock.textContent = media.modeLabels[0];
+                    btnPowder.textContent = media.modeLabels[1];
+                    
+                    if (currentMediaMode === modeKeys[0]) {
+                        btnStock.classList.add("active");
+                        btnPowder.classList.remove("active");
+                    } else {
+                        btnPowder.classList.add("active");
+                        btnStock.classList.remove("active");
+                    }
+                } else {
+                    mediaModeSwitch.style.display = "none";
+                }
+
+                if (adviceFeatureEnabled) {
+                    mediaAdviceBox.textContent = media.getAdvice(currentVolume);
+                    mediaAdviceBox.classList.add("visible");
+                } else {
+                    mediaAdviceBox.classList.remove("visible");
+                }
+
+                if (costFeatureEnabled) {
+                    mediaCostBox.textContent = media.calculateCost(currentVolume);
+                    mediaCostBox.classList.add("visible");
+                } else {
+                    mediaCostBox.classList.remove("visible");
+                }
+
+                const listContainer = document.getElementById("ingredientList");
+                listContainer.innerHTML = "";
+                const ratio = currentVolume / media.baseVolume;
+
+                let currentIngredients = media.ingredients;
+                if (media.hasModes && media.modes[currentMediaMode] && media.modes[currentMediaMode].ingredients) {
+                    currentIngredients = media.modes[currentMediaMode].ingredients;
+                }
+
+                currentIngredients.forEach(ing => {
+                    const calcAmount = ing.amount * ratio;
+                    const formatted = typeof ing.amount === 'number' 
+                        ? (calcAmount >= 10 ? calcAmount.toFixed(1) : calcAmount.toFixed(2).replace(/\.?0+$/, ""))
+                        : ing.amount;
+
+                    const li = document.createElement("li");
+                    li.className = "ingredient-item";
+                    li.onclick = () => {
+                        if (checkFeatureEnabled) {
+                            li.classList.toggle('checked');
+                            checkResetButtonState('media');
+                        }
+                    };
+                    li.innerHTML = `
+                        <span class="ing-name">${ing.name}</span>
+                        <div class="ing-amount-wrapper">
+                            <span class="ing-amount">${formatted}</span>
+                            <span class="ing-unit">${ing.unit}</span>
+                        </div>
+                    `;
+                    listContainer.appendChild(li);
+                });
+
+                let currentPostIngredients = media.postIngredients || [];
+                if (media.hasModes && media.modes[currentMediaMode] && media.modes[currentMediaMode].postIngredients) {
+                    currentPostIngredients = media.modes[currentMediaMode].postIngredients;
+                }
+
+                if (currentPostIngredients.length > 0) {
+                    const sectionHeader = document.createElement("div");
+                    sectionHeader.className = "recipe-section-header";
+                    sectionHeader.innerHTML = `⚡ オートクレーブ後に追加`;
+                    listContainer.appendChild(sectionHeader);
+
+                    currentPostIngredients.forEach(ing => {
+                        let formatted = ing.amount;
+                        if (typeof ing.amount === 'number') {
+                            const calcAmount = ing.amount * ratio;
+                            formatted = calcAmount >= 10 
+                                ? calcAmount.toFixed(1) 
+                                : calcAmount.toFixed(2).replace(/\.?0+$/, "");
+                        }
+
+                        const li = document.createElement("li");
+                        li.className = "ingredient-item";
+                        li.onclick = () => {
+                            if (checkFeatureEnabled) {
+                                li.classList.toggle('checked');
+                                checkResetButtonState('media');
+                            }
+                        };
+                        li.innerHTML = `
+                            <span class="ing-name">${ing.name}</span>
+                            <div class="ing-amount-wrapper">
+                                <span class="ing-amount">${formatted}</span>
+                                <span class="ing-unit">${ing.unit}</span>
+                            </div>
+                        `;
+                        listContainer.appendChild(li);
+                    });
+                }
+
+                checkResetButtonState('media');
+            }
+
+            // 3. Solutions（ストック溶液）ビュー更新
+            const sol = solutionDatabase[currentSolutionKey];
+            if (sol) {
+                document.getElementById("displaySolutionName").textContent = sol.name;
+                document.getElementById("displaySolutionVolume").textContent = `${currentSolutionVolume} mL`;
+
+                if (adviceFeatureEnabled) {
+                    solutionAdviceBox.textContent = sol.getAdvice(currentSolutionVolume);
+                    solutionAdviceBox.classList.add("visible");
+                } else {
+                    solutionAdviceBox.classList.remove("visible");
+                }
+
+                if (costFeatureEnabled) {
+                    solutionCostBox.textContent = sol.calculateCost(currentSolutionVolume);
+                    solutionCostBox.classList.add("visible");
+                } else {
+                    solutionCostBox.classList.remove("visible");
+                }
+
+                const solListContainer = document.getElementById("solutionIngredientList");
+                solListContainer.innerHTML = "";
+                const solRatio = currentSolutionVolume / sol.baseVolume;
+
+                sol.ingredients.forEach(ing => {
+                    const calcAmount = ing.amount * solRatio;
+                    const formatted = calcAmount >= 10 ? calcAmount.toFixed(1) : calcAmount.toFixed(2).replace(/\.?0+$/, "");
+                    const li = document.createElement("li");
+                    li.className = "ingredient-item";
+                    li.onclick = () => {
+                        if (checkFeatureEnabled) {
+                            li.classList.toggle('checked');
+                            checkResetButtonState('solution');
+                        }
+                    };
+                    li.innerHTML = `
+                        <span class="ing-name">${ing.name}</span>
+                        <div class="ing-amount-wrapper">
+                            <span class="ing-amount">${formatted}</span>
+                            <span class="ing-unit">${ing.unit}</span>
+                        </div>
+                    `;
+                    solListContainer.appendChild(li);
+                });
+                checkResetButtonState('solution');
+            }
+
+            // 4. ガイドビュー更新
             const guide = guideDatabase[currentGuideKey];
             if (guide) {
                 document.getElementById("displayGuideEyebrow").textContent = guide.eyebrow;
@@ -2332,6 +2486,7 @@
             }
 
             buildMediaModals();
+            buildSolutionModals();
             buildPcrModals();
             buildGuideModals();
             updateControlBar();
@@ -2339,8 +2494,24 @@
 
         function openModal(modalId) {
             if (modalId === 'volumeModal') {
+                const volListEl = document.getElementById("volumeOptionsList");
+                volListEl.querySelectorAll('.option-item').forEach(btn => {
+                    const val = parseInt(btn.textContent.trim(), 10);
+                    btn.classList.toggle('selected', val === currentVolume);
+                });
                 closeKeypadModal();
+            } else if (modalId === 'solutionVolumeModal') {
+                const solVolListEl = document.getElementById("solutionVolumeOptionsList");
+                solVolListEl.querySelectorAll('.option-item').forEach(btn => {
+                    const val = parseInt(btn.textContent.trim(), 10);
+                    btn.classList.toggle('selected', val === currentSolutionVolume);
+                });
             } else if (modalId === 'pcrVolumeModal') {
+                const pcrVolListEl = document.getElementById("pcrVolumeOptionsList");
+                pcrVolListEl.querySelectorAll('.option-item').forEach(btn => {
+                    const val = parseInt(btn.textContent.trim(), 10);
+                    btn.classList.toggle('selected', val === currentPcrVolume);
+                });
                 closePcrKeypadModal();
             }
             document.getElementById(modalId).classList.add("active");
