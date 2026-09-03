@@ -1213,6 +1213,43 @@
         </div>
     </div>
 
+    <!-- 電気泳動用アイテム選択モーダル -->
+    <div class="modal-overlay" id="electrophoresisModal" onclick="outsideClose(event, 'electrophoresisModal')">
+        <div class="modal-content" style="max-width: 440px;">
+            <div class="modal-header">電気泳動試薬・マーカーを選択</div>
+            <div class="option-list grid-modal" id="electrophoresisOptionsList"></div>
+        </div>
+    </div>
+
+    <!-- 電気泳動用容量選択モーダル -->
+    <div class="modal-overlay" id="elecVolumeModal" onclick="outsideClose(event, 'elecVolumeModal')">
+        <div class="modal-content">
+            <div class="modal-header" id="elecVolumeModalHeader">作製容量を選択</div>
+            <div class="option-list grid-modal" id="elecVolumeOptionsList"></div>
+            <div class="keypad-container" id="elecKeypadContainer" style="display: none;">
+                <div class="keypad-display-area">
+                    <div class="keypad-preview-value" id="elecKeypadPreview">0 mL</div>
+                    <div class="keypad-divider-line"></div>
+                </div>
+                <div class="keypad-grid">
+                    <button class="keypad-btn" onclick="pressElecKeypad('1')">1</button>
+                    <button class="keypad-btn" onclick="pressElecKeypad('2')">2</button>
+                    <button class="keypad-btn" onclick="pressElecKeypad('3')">3</button>
+                    <button class="keypad-btn" onclick="pressElecKeypad('4')">4</button>
+                    <button class="keypad-btn" onclick="pressElecKeypad('5')">5</button>
+                    <button class="keypad-btn" onclick="pressElecKeypad('6')">6</button>
+                    <button class="keypad-btn" onclick="pressElecKeypad('7')">7</button>
+                    <button class="keypad-btn" onclick="pressElecKeypad('8')">8</button>
+                    <button class="keypad-btn" onclick="pressElecKeypad('9')">9</button>
+                    <button class="keypad-btn action-btn" onclick="pressElecKeypad('clear')">C</button>
+                    <button class="keypad-btn" onclick="pressElecKeypad('0')">0</button>
+                    <button class="keypad-btn action-btn" onclick="pressElecKeypad('backspace')">⌫</button>
+                    <button class="keypad-btn set-btn" onclick="applyCustomElecVolume()">SET</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal-overlay" id="solutionModal" onclick="outsideClose(event, 'solutionModal')">
         <div class="modal-content" style="max-width: 440px;">
             <div class="modal-header">ストック試薬を選択</div>
@@ -1507,12 +1544,49 @@
                 name: "ラムダマーカー",
                 fullName: "ラムダマーカー (EcoT14i切断)",
                 eyebrow: "Electrophoresis Marker",
+                type: "image",
                 image: "ramda.png",
                 advice: "💡 500bp以上のバンド、通常は1500bp以上のバンドを見分ける時に使用",
                 info: {
                     title: "ラムダマーカーについての解説",
                     body: "ラムダDNAを制限酵素EcoT14iで切断したDNAマーカーです。<br><br><strong>💡 用途・特徴:</strong> <b>500bp以上のバンド、通常は1500bp以上のバンドを見分ける時</b>に主に使用されます。アガロースゲル電気泳動でのサイズ確認において非常に標準的で信頼性の高いマーカーです。"
                 }
+            },
+            "gel_red": {
+                name: "ゲルレッド染色液",
+                fullName: "ゲルレッド染色液 (後染め用)",
+                eyebrow: "Staining Solution",
+                type: "recipe",
+                baseVolume: 100,
+                getAdvice: (vol) => `💡 後染め（ポストステイン）用染色液`,
+                calculateCost: (vol) => `💰 概算コスト: -`,
+                info: {
+                    title: "ゲルレッド染色液についての解説",
+                    body: "アガロースゲル電気泳動後の核酸染色（後染め）に使用するGelRed希釈溶液です。<br><br>💡 <b>濃度・希釈倍率について:</b><br>製品ラベルには『10,000x』と記載されていますが、これは<b>アガロースゲル作製時に直接添加する「先染め（プレキャスト）」を基準とした倍率</b>です。電気泳動後のゲルを浸漬して染める<b>「後染め（ポストステイン）」として使用する場合の至適濃度は約3,300x</b>（水100mLあたり30µL）となります。"
+                },
+                ingredients: [
+                    { name: "蒸留水", amount: 100.0, unit: "mL" },
+                    { name: "GelRed (10000x)", amount: 30.0, unit: "µL" }
+                ]
+            },
+            "tae_50x": {
+                name: "50xTAEバッファ",
+                fullName: "50xTAE バッファ",
+                eyebrow: "Electrophoresis Buffer",
+                type: "recipe",
+                baseVolume: 1000,
+                getAdvice: (vol) => `💡 電気泳動用 50倍濃縮ストックバッファ`,
+                calculateCost: (vol) => `💰 概算コスト: -`,
+                info: {
+                    title: "50xTAEバッファについての解説",
+                    body: "アガロースゲル電気泳動において最も汎用される泳動バッファ（50倍濃縮ストック）です。<br><br>💡 <b>使用法:</b> ゲル作製時および泳動槽に満たす泳動液として、蒸留水で<b>1xに希釈（50倍希釈）</b>して使用します（例：1xTAE 1 L作成時は50xストック20mLを水980mLで希釈）。"
+                },
+                ingredients: [
+                    { name: "Tris (トリス塩基)", amount: 242.0, unit: "g" },
+                    { name: "酢酸 (氷酢酸)", amount: 57.1, unit: "mL" },
+                    { name: "0.5M EDTA (pH 8.0)", amount: 100.0, unit: "mL" },
+                    { name: "蒸留水 (メスアップ)", amount: 1000.0, unit: "mLまで" }
+                ]
             }
         };
 
@@ -1799,9 +1873,14 @@
         let currentSolutionKey = localStorage.getItem('lab_solutionKey') || "mm_sol_1";
         let currentSolutionVolume = parseInt(localStorage.getItem('lab_solutionVolume')) || 100;
 
+        let currentElecKey = localStorage.getItem('lab_elecKey') || "lambda_marker";
+        let currentElecVolumes = JSON.parse(localStorage.getItem('lab_elecVolumes')) || { "gel_red": 100, "tae_50x": 1000 };
+        const elecPresetVolumes = [50, 100, 200, 500, 1000];
+
         let keypadInputStr = "0";
         let pcrKeypadInputStr = "0";
         let solutionKeypadInputStr = "0";
+        let elecKeypadInputStr = "0";
 
         let storedPcrKey = localStorage.getItem('lab_pcrKey');
         let visiblePcrKeys = pcrOrderConfig.filter(p => p.visible).map(p => p.key);
@@ -1949,7 +2028,6 @@
         function renderPreferencesCarousel() {
             const container = document.getElementById("preferencesCarouselContainer");
             if (!container) return;
-            // 無限ループ構造: [Card 2 (clone), Card 1 (real), Card 2 (real), Card 1 (clone)]
             container.innerHTML = getPreferencesCard2Html() + getPreferencesCard1Html("real") + getPreferencesCard2Html() + getPreferencesCard1Html("clone");
             syncPreferenceToggleStates();
             setupPreferencesCarousel(container);
@@ -1972,7 +2050,6 @@
                 const panelWidth = container.clientWidth;
                 if (panelWidth === 0) return;
 
-                // 左端（Card 2 clone）に達したら Card 2 real (インデックス 2) にワープ
                 if (scrollLeft <= 1) {
                     container.style.scrollBehavior = 'auto';
                     container.style.scrollSnapType = 'none';
@@ -1984,7 +2061,6 @@
                     return;
                 }
 
-                // 右端（Card 1 clone）に達したら Card 1 real (インデックス 1) にワープ
                 const rightThreshold = 3 * panelWidth - 1;
                 if (scrollLeft >= rightThreshold) {
                     container.style.scrollBehavior = 'auto';
@@ -2004,6 +2080,7 @@
             applyFavoriteFeatureState();
 
             buildMediaModals();
+            buildElectrophoresisModals();
             buildSolutionModals();
             buildPcrModals();
             buildGuideModals();
@@ -2154,7 +2231,8 @@
                                 const visibleMediaList = mediaOrderConfig.filter(m => m.visible);
                                 activeRealIndex = visibleMediaList.findIndex(m => m.key === currentMediaKey);
                             } else if (idx === 2) {
-                                activeRealIndex = 0; // 電気泳動
+                                const elecKeys = Object.keys(electrophoresisDatabase);
+                                activeRealIndex = elecKeys.indexOf(currentElecKey);
                             } else if (idx === 3) {
                                 const visibleSolList = solutionOrderConfig.filter(s => s.visible);
                                 activeRealIndex = visibleSolList.findIndex(s => s.key === currentSolutionKey);
@@ -2162,7 +2240,7 @@
                                 const guideKeys = Object.keys(guideDatabase);
                                 activeRealIndex = guideKeys.indexOf(currentGuideKey);
                             } else if (idx === 5) {
-                                activeRealIndex = 0; // オプション設定の1枚目 (インデックス 1)
+                                activeRealIndex = 0;
                             }
                             if (activeRealIndex !== -1) {
                                 container.style.scrollBehavior = 'auto';
@@ -2194,7 +2272,8 @@
                 const media = mediaDatabase[currentMediaKey];
                 return { type: 'media', key: currentMediaKey, name: media ? media.name : '' };
             } else if (currentViewIndex === 2) {
-                return { type: 'electrophoresis', key: 'lambda_marker', name: 'ラムダマーカー' };
+                const elec = electrophoresisDatabase[currentElecKey];
+                return { type: 'electrophoresis', key: currentElecKey, name: elec ? elec.name : '' };
             } else if (currentViewIndex === 3) {
                 const sol = solutionDatabase[currentSolutionKey];
                 return { type: 'solution', key: currentSolutionKey, name: sol ? sol.name : '' };
@@ -2305,6 +2384,9 @@
                         } else if (fav.type === 'media') {
                             currentMediaKey = fav.key;
                             localStorage.setItem('lab_mediaKey', fav.key);
+                        } else if (fav.type === 'electrophoresis') {
+                            currentElecKey = fav.key;
+                            localStorage.setItem('lab_elecKey', fav.key);
                         } else if (fav.type === 'solution') {
                             currentSolutionKey = fav.key;
                             localStorage.setItem('lab_solutionKey', fav.key);
@@ -2502,6 +2584,88 @@
             }
         }
 
+        function openElecVolumeModal(itemKey) {
+            const elec = electrophoresisDatabase[itemKey];
+            if (!elec || elec.type !== 'recipe') return;
+            const currentVol = currentElecVolumes[itemKey] || elec.baseVolume;
+
+            const solVolListEl = document.getElementById("elecVolumeOptionsList");
+            solVolListEl.innerHTML = "";
+            solVolListEl.style.removeProperty('display');
+            document.getElementById("elecKeypadContainer").style.display = "none";
+            document.getElementById("elecVolumeModalHeader").textContent = "作製容量を選択";
+
+            elecPresetVolumes.forEach(vol => {
+                const btn = document.createElement("button");
+                btn.className = `option-item ${vol === currentVol ? 'selected' : ''}`;
+                btn.textContent = `${vol} mL`;
+                btn.onclick = () => {
+                    currentElecVolumes[itemKey] = vol;
+                    localStorage.setItem('lab_elecVolumes', JSON.stringify(currentElecVolumes));
+                    closeModal('elecVolumeModal');
+                    updateView();
+                };
+                solVolListEl.appendChild(btn);
+            });
+
+            const customBtn = document.createElement("button");
+            customBtn.className = `option-item ${!elecPresetVolumes.includes(currentVol) ? 'selected' : ''}`;
+            customBtn.style.gridColumn = "span 2";
+            customBtn.innerHTML = `<span style="width: 100%; text-align: center;">CUSTOM</span>`;
+            customBtn.onclick = () => { openElecKeypadModal(itemKey); };
+            solVolListEl.appendChild(customBtn);
+
+            openModal('elecVolumeModal');
+        }
+
+        let currentEditingElecKey = "";
+        function openElecKeypadModal(itemKey) {
+            currentEditingElecKey = itemKey;
+            const listEl = document.getElementById("elecVolumeOptionsList");
+            if(listEl) listEl.style.setProperty('display', 'none', 'important');
+            document.getElementById("elecKeypadContainer").style.display = "flex";
+            document.getElementById("elecVolumeModalHeader").textContent = "カスタム容量を入力";
+            elecKeypadInputStr = "0";
+            updateElecKeypadPreview();
+        }
+
+        function pressElecKeypad(val) {
+            if (val === 'clear') {
+                elecKeypadInputStr = "0";
+            } else if (val === 'backspace') {
+                if (elecKeypadInputStr.length > 1) {
+                    elecKeypadInputStr = elecKeypadInputStr.slice(0, -1);
+                } else {
+                    elecKeypadInputStr = "0";
+                }
+            } else {
+                if (elecKeypadInputStr === "0") {
+                    elecKeypadInputStr = val;
+                } else {
+                    if (elecKeypadInputStr.length < 5) {
+                        elecKeypadInputStr += val;
+                    }
+                }
+            }
+            updateElecKeypadPreview();
+        }
+
+        function updateElecKeypadPreview() {
+            document.getElementById("elecKeypadPreview").textContent = `${elecKeypadInputStr} mL`;
+        }
+
+        function applyCustomElecVolume() {
+            const num = parseInt(elecKeypadInputStr, 10);
+            if (!isNaN(num) && num > 0 && currentEditingElecKey) {
+                currentElecVolumes[currentEditingElecKey] = num;
+                localStorage.setItem('lab_elecVolumes', JSON.stringify(currentElecVolumes));
+                closeModal('elecVolumeModal');
+                updateView();
+            } else {
+                alert("有効な数値を入力してください。");
+            }
+        }
+
         function openPcrKeypadModal() {
             const listEl = document.getElementById("pcrVolumeOptionsList");
             if(listEl) listEl.style.setProperty('display', 'none', 'important');
@@ -2583,6 +2747,29 @@
                     updateView(true);
                 };
                 mediaListEl.appendChild(btn);
+            });
+        }
+
+        function buildElectrophoresisModals() {
+            const elecListEl = document.getElementById("electrophoresisOptionsList");
+            if (!elecListEl) return;
+            elecListEl.innerHTML = "";
+            const keys = Object.keys(electrophoresisDatabase);
+            if (!keys.includes(currentElecKey)) {
+                currentElecKey = keys[0];
+            }
+            keys.forEach(key => {
+                const item = electrophoresisDatabase[key];
+                const btn = document.createElement("button");
+                btn.className = `option-item ${key === currentElecKey ? 'selected' : ''}`;
+                btn.textContent = item.name;
+                btn.onclick = () => {
+                    currentElecKey = key;
+                    localStorage.setItem('lab_elecKey', key);
+                    closeModal('electrophoresisModal');
+                    updateView(true);
+                };
+                elecListEl.appendChild(btn);
             });
         }
 
@@ -2675,6 +2862,7 @@
                 checkResetButtonState('media');
                 checkResetButtonState('solution');
                 checkResetButtonState('pcr');
+                checkResetButtonState('elec');
             }
         }
 
@@ -2700,8 +2888,8 @@
         }
 
         function checkResetButtonState(type) {
-            const containerId = type === 'media' ? 'mediaCarouselContainer' : (type === 'solution' ? 'solutionCarouselContainer' : 'pcrCarouselContainer');
-            const bannerId = type === 'media' ? 'mediaResetBanner' : (type === 'solution' ? 'solutionResetBanner' : 'pcrResetBanner');
+            const containerId = type === 'media' ? 'mediaCarouselContainer' : (type === 'solution' ? 'solutionCarouselContainer' : (type === 'elec' ? 'electrophoresisCarouselContainer' : 'pcrCarouselContainer'));
+            const bannerId = type === 'media' ? 'mediaResetBanner' : (type === 'solution' ? 'solutionResetBanner' : (type === 'elec' ? 'elecResetBanner' : 'pcrResetBanner'));
             
             const container = document.getElementById(containerId);
             const banner = document.getElementById(bannerId);
@@ -2718,7 +2906,7 @@
         }
 
         function resetChecks(type) {
-            const containerId = type === 'media' ? 'mediaCarouselContainer' : (type === 'solution' ? 'solutionCarouselContainer' : 'pcrCarouselContainer');
+            const containerId = type === 'media' ? 'mediaCarouselContainer' : (type === 'solution' ? 'solutionCarouselContainer' : (type === 'elec' ? 'electrophoresisCarouselContainer' : 'pcrCarouselContainer'));
             const container = document.getElementById(containerId);
             if (container) {
                 const activePanel = container.querySelector('.card-carousel-panel:not([style*="display: none"])');
@@ -2740,7 +2928,8 @@
                 const media = mediaDatabase[currentMediaKey];
                 if (media && media.info) infoData = media.info;
             } else if (currentViewIndex === 2) {
-                infoData = electrophoresisDatabase["lambda_marker"].info;
+                const elec = electrophoresisDatabase[currentElecKey];
+                if (elec && elec.info) infoData = elec.info;
             } else if (currentViewIndex === 3) {
                 const sol = solutionDatabase[currentSolutionKey];
                 if (sol && sol.info) infoData = sol.info;
@@ -3069,42 +3258,146 @@
                 }
             }
 
-            // --- 3. 電気泳動ビュー（ラムダマーカー）の更新 ---
-            const elecData = electrophoresisDatabase["lambda_marker"];
+            // --- 3. 電気泳動ビューの更新（複数アイテム・循環対応） ---
             const elecCarouselContainer = document.getElementById("electrophoresisCarouselContainer");
-            if (elecCarouselContainer && elecData) {
+            if (elecCarouselContainer) {
                 elecCarouselContainer.innerHTML = "";
-                const panel = document.createElement("div");
-                panel.className = "card-carousel-panel";
-                panel.innerHTML = `
-                    <div class="main-display">
-                        <div class="display-header" style="cursor: default;">
-                            <div class="media-title-wrapper" style="cursor: default; background: none; border: none;">
-                                <span class="media-eyebrow">${elecData.eyebrow}</span>
-                                <div class="media-title-row">
-                                    <h1 class="media-title">${elecData.fullName}</h1>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="advice-box ${adviceFeatureEnabled ? 'visible' : ''}">${elecData.advice}</div>
-                        
-                        <div class="list-container-wrapper" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 10px 0;">
-                            <div style="background: #000; border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; padding: 16px; display: flex; justify-content: center; align-items: center; box-shadow: inset 0 2px 10px rgba(0,0,0,0.8); width: 100%; flex: 1; max-height: 280px;">
-                                <img src="${elecData.image}" alt="Lambda Marker" style="max-height: 100%; max-width: 100%; object-fit: contain; filter: drop-shadow(0 0 8px rgba(255,255,255,0.1));">
-                            </div>
-                            <div style="font-size: 14px; color: #d1d1d6; text-align: center; line-height: 1.5; padding: 0 8px;">
-                                <b>EcoT14i切断ラムダDNAマーカー</b><br>500bp以上（通常1500bp以上）のバンド識別向け
-                            </div>
-                        </div>
+                const elecKeys = Object.keys(electrophoresisDatabase);
+                if (!elecKeys.includes(currentElecKey)) {
+                    currentElecKey = elecKeys[0];
+                }
 
-                        ${infoButtonFeatureEnabled ? `
-                            <button class="card-info-footer-btn" onclick="openInfoModal()">
-                                <span>このマーカーの解説を見る</span>
-                            </button>
-                        ` : ''}
-                    </div>
-                `;
-                elecCarouselContainer.appendChild(panel);
+                if (elecKeys.length > 0) {
+                    const loopElecList = [elecKeys[elecKeys.length - 1], ...elecKeys, elecKeys[0]];
+
+                    loopElecList.forEach((eKey, loopIdx) => {
+                        const eData = electrophoresisDatabase[eKey];
+                        if (!eData) return;
+
+                        const panel = document.createElement("div");
+                        panel.className = "card-carousel-panel";
+
+                        if (eData.type === 'image') {
+                            panel.innerHTML = `
+                                <div class="main-display">
+                                    <div class="display-header">
+                                        <div class="media-title-wrapper" onclick="openModal('electrophoresisModal')">
+                                            <span class="media-eyebrow">${eData.eyebrow}</span>
+                                            <div class="media-title-row">
+                                                <h1 class="media-title">${eData.fullName}</h1>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="advice-box ${adviceFeatureEnabled ? 'visible' : ''}">${eData.advice}</div>
+                                    
+                                    <div class="list-container-wrapper" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 10px 0;">
+                                        <div style="background: #000; border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; padding: 16px; display: flex; justify-content: center; align-items: center; box-shadow: inset 0 2px 10px rgba(0,0,0,0.8); width: 100%; flex: 1; max-height: 280px;">
+                                            <img src="${eData.image}" alt="${eData.name}" style="max-height: 100%; max-width: 100%; object-fit: contain; filter: drop-shadow(0 0 8px rgba(255,255,255,0.1));">
+                                        </div>
+                                        <div style="font-size: 14px; color: #d1d1d6; text-align: center; line-height: 1.5; padding: 0 8px;">
+                                            <b>EcoT14i切断ラムダDNAマーカー</b><br>500bp以上（通常1500bp以上）のバンド識別向け
+                                        </div>
+                                    </div>
+
+                                    ${infoButtonFeatureEnabled ? `
+                                        <button class="card-info-footer-btn" onclick="openInfoModal()">
+                                            <span>このマーカーの解説を見る</span>
+                                        </button>
+                                    ` : ''}
+                                </div>
+                            `;
+                        } else {
+                            const vol = currentElecVolumes[eKey] || eData.baseVolume;
+                            panel.innerHTML = `
+                                <div class="main-display">
+                                    <div class="display-header">
+                                        <div class="media-title-wrapper" onclick="openModal('electrophoresisModal')">
+                                            <span class="media-eyebrow">${eData.eyebrow}</span>
+                                            <div class="media-title-row">
+                                                <h1 class="media-title">${eData.fullName || eData.name}</h1>
+                                            </div>
+                                        </div>
+                                        <span class="volume-badge" onclick="openElecVolumeModal('${eKey}')">${vol} mL</span>
+                                    </div>
+                                    <div class="advice-box ${adviceFeatureEnabled ? 'visible' : ''}">${eData.getAdvice(vol)}</div>
+                                    <div class="cost-box ${costFeatureEnabled ? 'visible' : ''}">${eData.calculateCost(vol)}</div>
+                                    
+                                    <div class="list-container-wrapper">
+                                        <ul class="ingredient-list" id="elecList_${eKey}_${loopIdx}"></ul>
+                                    </div>
+
+                                    <div class="reset-banner" id="elecResetBanner">
+                                        <span class="reset-text">チェックが入っています</span>
+                                        <button class="reset-btn" onclick="resetChecks('elec')">すべて外す</button>
+                                    </div>
+                                </div>
+                            `;
+                            const listContainer = panel.querySelector(`#elecList_${eKey}_${loopIdx}`);
+                            const ratio = vol / eData.baseVolume;
+
+                            eData.ingredients.forEach(ing => {
+                                let formatted = ing.amount;
+                                if (typeof ing.amount === 'number') {
+                                    const calcAmount = ing.amount * ratio;
+                                    formatted = calcAmount >= 10 ? calcAmount.toFixed(1) : calcAmount.toFixed(3).replace(/\.?0+$/, "");
+                                }
+
+                                const li = document.createElement("li");
+                                li.className = "ingredient-item";
+                                li.onclick = () => {
+                                    if (checkFeatureEnabled) {
+                                        li.classList.toggle('checked');
+                                        checkResetButtonState('elec');
+                                    }
+                                };
+                                li.innerHTML = `
+                                    <span class="ing-name">${ing.name}</span>
+                                    <div class="ing-amount-wrapper">
+                                        <span class="ing-amount">${formatted}</span>
+                                        <span class="ing-unit">${ing.unit}</span>
+                                    </div>
+                                `;
+                                listContainer.appendChild(li);
+                            });
+
+                            if (infoButtonFeatureEnabled) {
+                                const infoBtn = document.createElement("button");
+                                infoBtn.className = "card-info-footer-btn";
+                                infoBtn.onclick = openInfoModal;
+                                infoBtn.innerHTML = "<span>このレシピの解説を見る</span>";
+                                listContainer.appendChild(infoBtn);
+                            }
+                        }
+
+                        elecCarouselContainer.appendChild(panel);
+                    });
+
+                    const activeElecIndex = elecKeys.indexOf(currentElecKey);
+                    if (activeElecIndex !== -1) {
+                        const targetScrollLeft = (activeElecIndex + 1) * elecCarouselContainer.clientWidth;
+                        if (instantJump) {
+                            elecCarouselContainer.style.scrollBehavior = 'auto';
+                            elecCarouselContainer.scrollLeft = targetScrollLeft;
+                            requestAnimationFrame(() => {
+                                requestAnimationFrame(() => {
+                                    elecCarouselContainer.style.scrollBehavior = 'smooth';
+                                });
+                            });
+                        } else {
+                            setTimeout(() => {
+                                elecCarouselContainer.scrollLeft = targetScrollLeft;
+                            }, 10);
+                        }
+                    }
+
+                    const elecObjList = elecKeys.map(k => ({ key: k }));
+                    setupInfiniteCarouselSwipe(elecCarouselContainer, elecObjList, (newKey) => {
+                        currentElecKey = newKey;
+                        localStorage.setItem('lab_elecKey', newKey);
+                    });
+
+                    checkResetButtonState('elec');
+                }
             }
 
             // --- 4. ストック溶液 カードカルーセルの更新 ---
@@ -3290,6 +3583,7 @@
 
             syncPreferenceToggleStates();
             buildMediaModals();
+            buildElectrophoresisModals();
             buildSolutionModals();
             buildPcrModals();
             buildGuideModals();
@@ -3338,6 +3632,7 @@
                     let currentKey = "";
                     if (containerEl.id === 'pcrCarouselContainer') currentKey = currentPcrKey;
                     else if (containerEl.id === 'mediaCarouselContainer') currentKey = currentMediaKey;
+                    else if (containerEl.id === 'electrophoresisCarouselContainer') currentKey = currentElecKey;
                     else if (containerEl.id === 'solutionCarouselContainer') currentKey = currentSolutionKey;
                     else if (containerEl.id === 'guideCarouselContainer') currentKey = currentGuideKey;
 
