@@ -2114,7 +2114,35 @@
                     { name: "滅菌水", amount: 15.0, unit: "mL" }
                 ]
             },
-            "im": mediaDatabase["im"],
+            "im": {
+                name: "IM培地",
+                fullName: "IM培地 (Infection Medium)",
+                eyebrow: "Agrobacterium Medium",
+                type: "recipe",
+                baseVolume: 100,
+                getAdvice: (vol) => getDishAdvice(vol),
+                calculateCost: (vol) => {
+                    const ratio = vol / 100;
+                    const cost = (400 + 0.4 + 4 + (1.5 * 42)) * ratio;
+                    return `💰 概算コスト: 約 ${Math.round(cost)} 円 (${vol} mLあたり)`;
+                },
+                info: {
+                    title: "IM培地についての解説",
+                    body: "アグロバクテリウムを介した形質転換（Infection Medium / Induction Medium）に特化した培地です。アセトシリンゴンは熱に非常に弱いため、<b>必ずオートクレーブ滅菌・冷却後</b>に無菌的に添加してください。"
+                },
+                ingredients: [
+                    { name: "MM salt sol. 1", amount: 10.0, unit: "mL" },
+                    { name: "MM salt sol. 2", amount: 10.0, unit: "mL" },
+                    { name: "400mM MES", amount: 10.0, unit: "mL" },
+                    { name: "グルコース", amount: 0.1, unit: "g" },
+                    { name: "グリセロール", amount: 1.0, unit: "mL" },
+                    { name: "蒸留水", amount: 70.0, unit: "mL" },
+                    { name: "寒天", amount: 1.5, unit: "g" }
+                ],
+                postIngredients: [
+                    { name: "アセトシリンゴン", amount: "適量", unit: "" }
+                ]
+            },
             "acetosyringone_100mm": {
                 name: "100mMアセトシリンゴン",
                 fullName: "100mM アセトシリンゴン",
@@ -3500,7 +3528,11 @@
             document.getElementById("agroKeypadContainer").style.display = "none";
             document.getElementById("agroVolumeModalHeader").textContent = "作製容量を選択";
 
-            agroPresetVolumes.forEach(vol => {
+            const targetPresets = (itemKey === "im") 
+                ? [50, 100, 150, 200, 250, 300, 400, 500] 
+                : agroPresetVolumes;
+
+            targetPresets.forEach(vol => {
                 const btn = document.createElement("button");
                 btn.className = `option-item ${vol === currentVol ? 'selected' : ''}`;
                 btn.textContent = `${vol} mL`;
@@ -3514,7 +3546,7 @@
             });
 
             const customBtn = document.createElement("button");
-            customBtn.className = `option-item ${!agroPresetVolumes.includes(currentVol) ? 'selected' : ''}`;
+            customBtn.className = `option-item ${!targetPresets.includes(currentVol) ? 'selected' : ''}`;
             customBtn.style.gridColumn = "span 2";
             customBtn.innerHTML = `<span style="width: 100%; text-align: center;">CUSTOM</span>`;
             customBtn.onclick = () => { openAgroKeypadModal(itemKey); };
@@ -4732,7 +4764,7 @@
                         const targetScrollLeft = (activeAgroIndex + 1) * agroCarouselContainer.clientWidth;
                         if (instantJump) {
                             agroCarouselContainer.style.scrollBehavior = 'auto';
-                            agroCarouselContainer.scrollLeft = targetScrollLeft;
+                            agroCarouselContainer.style.scrollLeft = targetScrollLeft;
                             requestAnimationFrame(() => {
                                 requestAnimationFrame(() => {
                                     agroCarouselContainer.style.scrollBehavior = 'smooth';
@@ -4903,7 +4935,7 @@
                         const targetScrollLeft = (activeGuideIndex + 1) * guideCarouselContainer.clientWidth;
                         if (instantJump) {
                             guideCarouselContainer.style.scrollBehavior = 'auto';
-                            guideCarouselContainer.style.scrollLeft = targetScrollLeft;
+                            guideCarouselContainer.scrollLeft = targetScrollLeft;
                             requestAnimationFrame(() => {
                                 requestAnimationFrame(() => {
                                     guideCarouselContainer.style.scrollBehavior = 'smooth';
