@@ -176,7 +176,7 @@
             background: transparent;
             color: var(--text-secondary);
             border: none;
-            padding: 12px 4px 6px 4px;
+            padding: 8px 4px 4px 4px;
             font-size: 12px;
             font-weight: 500;
             cursor: pointer;
@@ -184,7 +184,7 @@
             align-items: center;
             justify-content: center;
             gap: 6px;
-            margin-top: 12px;
+            margin-top: 4px;
             flex-shrink: 0;
             width: 100%;
             transition: color 0.2s;
@@ -648,21 +648,74 @@
             transform: translateX(20px);
         }
 
+        /* 下部ランチャーバー（左右とも背景なしで完全に一体化） */
         .bottom-launcher-bar {
+            display: grid;
+            grid-template-columns: 22% 1fr 18%;
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 22px;
+            height: 56px;
+            padding: 0;
+            flex-shrink: 0;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            align-items: center;
+        }
+
+        .launcher-fav-part {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-right: 1px solid rgba(255,255,255,0.06);
+            background: transparent;
+            transition: background-color 0.2s, transform 0.15s;
+        }
+        .launcher-fav-part:active {
+            background-color: rgba(255, 255, 255, 0.08);
+            transform: scale(0.96);
+        }
+        .launcher-fav-icon {
+            width: 20px;
+            height: 20px;
+            fill: var(--accent-color);
+        }
+
+        .launcher-main-part {
+            height: 100%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 20px;
-            padding: 10px 18px;
-            flex-shrink: 0;
+            padding: 0 14px;
             cursor: pointer;
+            background: transparent;
+            transition: background-color 0.2s, transform 0.15s;
+            border-right: 1px solid rgba(255,255,255,0.06);
+        }
+        .launcher-main-part:active {
+            background-color: #1c1c20;
+            transform: scale(0.98);
+        }
+
+        .launcher-edit-part {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: transparent;
             transition: background-color 0.2s, transform 0.15s;
         }
-        .bottom-launcher-bar:active {
-            transform: scale(0.98);
-            background-color: #1c1c20;
+        .launcher-edit-part:active {
+            background-color: rgba(41, 151, 255, 0.2);
+            transform: scale(0.96);
+        }
+        .launcher-edit-icon {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--accent-color);
         }
 
         .launcher-left {
@@ -672,7 +725,7 @@
         }
 
         .launcher-icon {
-            font-size: 16px;
+            font-size: 15px;
             color: var(--accent-color);
         }
 
@@ -684,7 +737,7 @@
         }
 
         .launcher-right {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
             color: var(--accent-color);
             background: var(--accent-soft);
@@ -1040,14 +1093,16 @@
             <div class="card-carousel-container" id="guideCarouselContainer"></div>
         </div>
 
-        <!-- 5ページ目：オプションビュー -->
+        <!-- 5ページ目：オプションビュー（2枚のカルーセルカードに分割） -->
         <div class="view-panel" id="panel4">
-            <div class="card-carousel-container">
+            <div class="card-carousel-container" id="preferencesCarouselContainer">
+                
+                <!-- オプションカード1枚目：基本設定 -->
                 <div class="card-carousel-panel">
                     <div class="main-display">
                         <div class="display-header" style="cursor: default;">
                             <div class="media-title-wrapper" style="cursor: default; background: none; border: none;">
-                                <span class="media-eyebrow">Preferences</span>
+                                <span class="media-eyebrow">Preferences (1/2)</span>
                                 <div class="media-title-row">
                                     <h1 class="media-title">オプション設定</h1>
                                 </div>
@@ -1094,7 +1149,39 @@
                                     <span class="slider"></span>
                                 </label>
                             </div>
-                            
+                            <div class="option-group">
+                                <div class="option-label-wrapper">
+                                    <span class="option-title">お気に入り機能の表示</span>
+                                    <span class="option-desc">お気に入りボタンやリスト機能を有効化</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="favoriteFeatureToggle" onchange="toggleFavoriteFeature()">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="option-group">
+                                <div class="option-label-wrapper">
+                                    <span class="option-title">設定の初期化</span>
+                                    <span class="option-desc">保存データをすべて消去してリセット</span>
+                                </div>
+                                <button class="option-danger-btn" onclick="resetAllSettings()">初期に戻す</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- オプションカード2枚目：各リストの編集 -->
+                <div class="card-carousel-panel">
+                    <div class="main-display">
+                        <div class="display-header" style="cursor: default;">
+                            <div class="media-title-wrapper" style="cursor: default; background: none; border: none;">
+                                <span class="media-eyebrow">List Customization (2/2)</span>
+                                <div class="media-title-row">
+                                    <h1 class="media-title">リストの編集</h1>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="list-container-wrapper" style="display: flex; flex-direction: column; gap: 12px; padding-bottom: 20px;">
                             <div class="option-group">
                                 <div class="option-label-wrapper">
                                     <span class="option-title">PCR酵素リストの編集</span>
@@ -1116,28 +1203,61 @@
                                 </div>
                                 <button class="option-action-btn" onclick="openOrderModal('solution')">編集する</button>
                             </div>
-
-                            <div class="option-group">
-                                <div class="option-label-wrapper">
-                                    <span class="option-title">設定の初期化</span>
-                                    <span class="option-desc">保存データをすべて消去してリセット</span>
-                                </div>
-                                <button class="option-danger-btn" onclick="resetAllSettings()">初期に戻す</button>
-                            </div>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
 
     </div>
 
-    <div class="bottom-launcher-bar" onclick="openLauncherModal()">
-        <div class="launcher-left">
-            <span class="launcher-icon">❖</span>
-            <span class="launcher-label" id="currentLauncherLabel">PCRレシピ</span>
+    <!-- 一番下のランチャーバー -->
+    <div class="bottom-launcher-bar" id="bottomLauncherBar">
+        <div class="launcher-fav-part" id="launcherFavPart" onclick="openFavoriteModal()">
+            <svg class="launcher-fav-icon" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
         </div>
-        <div class="launcher-right" id="currentLauncherIndex">1 / 5</div>
+        <div class="launcher-main-part" onclick="openLauncherModal()">
+            <div class="launcher-left">
+                <span class="launcher-icon">❖</span>
+                <span class="launcher-label" id="currentLauncherLabel">PCRレシピ</span>
+            </div>
+            <div class="launcher-right" id="currentLauncherIndex">1 / 5</div>
+        </div>
+        <div class="launcher-edit-part" id="launcherEditPart" onclick="openFavoriteEditModal()">
+            <span class="launcher-edit-icon">+</span>
+        </div>
+    </div>
+
+    <!-- お気に入りリスト選択用モーダル（元仕様のシンプルなリスト） -->
+    <div class="modal-overlay" id="favoriteModal" onclick="outsideClose(event, 'favoriteModal')">
+        <div class="modal-content" style="max-width: 440px;">
+            <div class="modal-header">お気に入りレシピを選択</div>
+            <div class="option-list" id="favoriteOptionsList" style="gap: 8px; max-height: 55vh; overflow-y: auto; margin-bottom: 16px;"></div>
+            <button class="info-close-btn" onclick="closeModal('favoriteModal')">閉じる</button>
+        </div>
+    </div>
+
+    <!-- お気に入り・編集用まとめモーダル（右端のプラスボタン用） -->
+    <div class="modal-overlay" id="favoriteEditModal" onclick="outsideClose(event, 'favoriteEditModal')">
+        <div class="modal-content" style="max-width: 440px;">
+            <div class="modal-header">お気に入りの管理・追加</div>
+            <div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 16px; max-height: 60vh; overflow-y: auto;">
+                <div class="option-group" style="background-color: rgba(255,255,255,0.03);">
+                    <div class="option-label-wrapper">
+                        <span class="option-title" id="favToggleLabelName" style="font-size: 15px;">このページ</span>
+                        <span class="option-desc">このページをお気に入り登録する</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="favSwitchInput" onchange="toggleCurrentFavorite()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div style="font-size: 13px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px;">登録済みお気に入りの並び替え・削除</div>
+                <div class="option-list" id="favoriteEditListContainer" style="gap: 8px;"></div>
+            </div>
+            <button class="info-close-btn" onclick="closeModal('favoriteEditModal')">完了</button>
+        </div>
     </div>
 
     <div class="launcher-modal-overlay" id="launcherModal" onclick="outsideCloseLauncher(event)">
@@ -1611,16 +1731,6 @@
             }
         };
 
-        let mediaOrderConfig = JSON.parse(localStorage.getItem('lab_mediaOrderConfig')) || [
-            { key: "cm", visible: true }, { key: "v30", visible: true }, { key: "pda", visible: true }, { key: "lb", visible: true }, { key: "im", visible: true }, { key: "gamborg", visible: true }, { key: "regeneration", visible: true }, { key: "selection", visible: true }, { key: "sachs", visible: true }
-        ];
-
-        let solutionOrderConfig = JSON.parse(localStorage.getItem('lab_solutionOrderConfig')) || [
-            { key: "mm_sol_1", visible: true }, { key: "mm_sol_2", visible: true }, { key: "sol_a", visible: true }, { key: "sol_b", visible: true }, { key: "isotonic", visible: true }, { key: "peg_40", visible: true }, { key: "stc", visible: true }
-        ];
-
-        let currentMediaMode = "stock"; 
-
         const pcrDatabase = {
             "ex_premier": {
                 shortName: "ExPremier",
@@ -1759,10 +1869,21 @@
             }
         };
 
+        let mediaOrderConfig = JSON.parse(localStorage.getItem('lab_mediaOrderConfig')) || [
+            { key: "cm", visible: true }, { key: "v30", visible: true }, { key: "pda", visible: true }, { key: "lb", visible: true }, { key: "im", visible: true }, { key: "gamborg", visible: true }, { key: "regeneration", visible: true }, { key: "selection", visible: true }, { key: "sachs", visible: true }
+        ];
+
+        let solutionOrderConfig = JSON.parse(localStorage.getItem('lab_solutionOrderConfig')) || [
+            { key: "mm_sol_1", visible: true }, { key: "mm_sol_2", visible: true }, { key: "sol_a", visible: true }, { key: "sol_b", visible: true }, { key: "isotonic", visible: true }, { key: "peg_40", visible: true }, { key: "stc", visible: true }
+        ];
+
         let pcrOrderConfig = JSON.parse(localStorage.getItem('lab_pcrOrderConfig')) || [
             { key: "ex_premier", visible: true }, { key: "prime_star_max", visible: true }, { key: "prime_star_gxl", visible: true }, { key: "emerald_amp", visible: true }
         ];
 
+        let favorites = JSON.parse(localStorage.getItem('lab_favorites')) || [];
+
+        let currentMediaMode = "stock"; 
         let currentViewIndex = parseInt(localStorage.getItem('lab_viewIndex')) || 0;
         let currentMediaKey = localStorage.getItem('lab_mediaKey') || "cm";
         let currentVolume = parseInt(localStorage.getItem('lab_mediaVolume')) || 100;
@@ -1789,6 +1910,7 @@
         let adviceFeatureEnabled = localStorage.getItem('lab_adviceFeature') !== null ? localStorage.getItem('lab_adviceFeature') === 'true' : true;
         let infoButtonFeatureEnabled = localStorage.getItem('lab_infoButtonFeature') !== null ? localStorage.getItem('lab_infoButtonFeature') === 'true' : true;
         let costFeatureEnabled = localStorage.getItem('lab_costFeature') !== null ? localStorage.getItem('lab_costFeature') === 'true' : false;
+        let favoriteFeatureEnabled = localStorage.getItem('lab_favoriteFeature') !== null ? localStorage.getItem('lab_favoriteFeature') === 'true' : true;
 
         let currentOrderType = "";
 
@@ -1805,6 +1927,9 @@
             document.getElementById("adviceFeatureToggle").checked = adviceFeatureEnabled;
             document.getElementById("infoButtonToggle").checked = infoButtonFeatureEnabled;
             document.getElementById("costFeatureToggle").checked = costFeatureEnabled;
+            document.getElementById("favoriteFeatureToggle").checked = favoriteFeatureEnabled;
+
+            applyFavoriteFeatureState();
 
             buildMediaModals();
             buildSolutionModals();
@@ -1880,6 +2005,30 @@
             document.body.classList.add('ready');
         }
 
+        function applyFavoriteFeatureState() {
+            const bar = document.getElementById("bottomLauncherBar");
+            const favPart = document.getElementById("launcherFavPart");
+            const editPart = document.getElementById("launcherEditPart");
+            if (!bar || !favPart || !editPart) return;
+
+            if (favoriteFeatureEnabled) {
+                favPart.style.display = "flex";
+                editPart.style.display = "flex";
+                bar.style.gridTemplateColumns = "22% 1fr 18%";
+            } else {
+                favPart.style.display = "none";
+                editPart.style.display = "none";
+                bar.style.gridTemplateColumns = "1fr";
+            }
+        }
+
+        function toggleFavoriteFeature() {
+            favoriteFeatureEnabled = document.getElementById("favoriteFeatureToggle").checked;
+            localStorage.setItem('lab_favoriteFeature', favoriteFeatureEnabled);
+            applyFavoriteFeatureState();
+            updateView();
+        }
+
         function openLauncherModal() {
             buildLauncherGrid();
             document.getElementById("launcherModal").classList.add("active");
@@ -1937,10 +2086,12 @@
                             } else if (idx === 3) {
                                 const guideKeys = Object.keys(guideDatabase);
                                 activeRealIndex = guideKeys.indexOf(currentGuideKey);
+                            } else if (idx === 4) {
+                                activeRealIndex = 0;
                             }
                             if (activeRealIndex !== -1) {
                                 container.style.scrollBehavior = 'auto';
-                                container.scrollLeft = (activeRealIndex + 1) * container.clientWidth;
+                                container.scrollLeft = activeRealIndex * container.clientWidth;
                                 requestAnimationFrame(() => {
                                     container.style.scrollBehavior = 'smooth';
                                 });
@@ -1958,6 +2109,138 @@
             const current = appPages[currentViewIndex] || appPages[0];
             document.getElementById("currentLauncherLabel").textContent = current.name;
             document.getElementById("currentLauncherIndex").textContent = `${currentViewIndex + 1} / ${appPages.length}`;
+        }
+
+        function getCurrentActiveItemInfo() {
+            if (currentViewIndex === 0) {
+                const pcr = pcrDatabase[currentPcrKey];
+                return { type: 'pcr', key: currentPcrKey, name: pcr ? pcr.shortName : '' };
+            } else if (currentViewIndex === 1) {
+                const media = mediaDatabase[currentMediaKey];
+                return { type: 'media', key: currentMediaKey, name: media ? media.name : '' };
+            } else if (currentViewIndex === 2) {
+                const sol = solutionDatabase[currentSolutionKey];
+                return { type: 'solution', key: currentSolutionKey, name: sol ? sol.name : '' };
+            } else if (currentViewIndex === 3) {
+                const guide = guideDatabase[currentGuideKey];
+                return { type: 'guide', key: currentGuideKey, name: guide ? guide.name : '' };
+            }
+            return null;
+        }
+
+        function openFavoriteEditModal() {
+            const info = getCurrentActiveItemInfo();
+            if (info) {
+                const isFav = favorites.some(f => f.type === info.type && f.key === info.key);
+                document.getElementById("favToggleLabelName").textContent = info.name;
+                document.getElementById("favSwitchInput").checked = isFav;
+            }
+            renderFavoriteEditList();
+            openModal('favoriteEditModal');
+        }
+
+        function renderFavoriteEditList() {
+            const container = document.getElementById("favoriteEditListContainer");
+            container.innerHTML = "";
+
+            if (favorites.length === 0) {
+                container.innerHTML = `<div style="text-align: center; color: var(--text-secondary); padding: 12px; font-size: 13px;">登録されているお気に入りはありません。</div>`;
+            } else {
+                favorites.forEach((fav, index) => {
+                    const row = document.createElement("div");
+                    row.style.cssText = "display: flex; justify-content: space-between; align-items: center; background-color: #222228; border: 1px solid rgba(255,255,255,0.04); border-radius: 12px; padding: 8px 12px;";
+
+                    row.innerHTML = `
+                        <div style="display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0;">
+                            <span style="font-size: 14px; font-weight: 600; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">⭐ ${fav.name}</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <button class="mode-btn" style="padding: 4px 8px; font-size: 12px;" onclick="moveFavoriteItem(${index}, -1)" ${index === 0 ? 'disabled style="opacity: 0.3; cursor: default;"' : ''}>▲</button>
+                            <button class="mode-btn" style="padding: 4px 8px; font-size: 12px;" onclick="moveFavoriteItem(${index}, 1)" ${index === favorites.length - 1 ? 'disabled style="opacity: 0.3; cursor: default;"' : ''}>▼</button>
+                            <button class="option-action-btn" style="padding: 4px 10px; font-size: 12px;" onclick="removeFavoriteItem(${index})">削除</button>
+                        </div>
+                    `;
+                    container.appendChild(row);
+                });
+            }
+        }
+
+        function toggleCurrentFavorite() {
+            const info = getCurrentActiveItemInfo();
+            if (!info) return;
+
+            const isChecked = document.getElementById("favSwitchInput").checked;
+            const index = favorites.findIndex(f => f.type === info.type && f.key === info.key);
+
+            if (isChecked && index === -1) {
+                favorites.push({ type: info.type, key: info.key, name: info.name });
+            } else if (!isChecked && index !== -1) {
+                favorites.splice(index, 1);
+            }
+            localStorage.setItem('lab_favorites', JSON.stringify(favorites));
+            renderFavoriteEditList();
+        }
+
+        function moveFavoriteItem(index, direction) {
+            const newIndex = index + direction;
+            if (newIndex < 0 || newIndex >= favorites.length) return;
+            const temp = favorites[index];
+            favorites[index] = favorites[newIndex];
+            favorites[newIndex] = temp;
+            localStorage.setItem('lab_favorites', JSON.stringify(favorites));
+            renderFavoriteEditList();
+        }
+
+        function removeFavoriteItem(index) {
+            favorites.splice(index, 1);
+            localStorage.setItem('lab_favorites', JSON.stringify(favorites));
+            renderFavoriteEditList();
+            const info = getCurrentActiveItemInfo();
+            if (info) {
+                const isFav = favorites.some(f => f.type === info.type && f.key === info.key);
+                document.getElementById("favSwitchInput").checked = isFav;
+            }
+        }
+
+        function openFavoriteModal() {
+            const listEl = document.getElementById("favoriteOptionsList");
+            listEl.innerHTML = "";
+
+            if (favorites.length === 0) {
+                listEl.innerHTML = `<div style="text-align: center; color: var(--text-secondary); padding: 20px; font-size: 14px;">お気に入りに登録された項目はありません。<br>右下のプラスボタンから追加してください。</div>`;
+            } else {
+                favorites.forEach(fav => {
+                    let pageIdx = 0;
+                    if (fav.type === 'pcr') pageIdx = 0;
+                    else if (fav.type === 'media') pageIdx = 1;
+                    else if (fav.type === 'solution') pageIdx = 2;
+                    else if (fav.type === 'guide') pageIdx = 3;
+
+                    const btn = document.createElement("button");
+                    btn.className = "option-item";
+                    btn.innerHTML = `<span>⭐ ${fav.name}</span><span style="font-size: 12px; color: var(--text-secondary); text-transform: uppercase;">${fav.type}</span>`;
+                    btn.onclick = () => {
+                        jumpToPage(pageIdx);
+                        if (fav.type === 'pcr') {
+                            currentPcrKey = fav.key;
+                            localStorage.setItem('lab_pcrKey', fav.key);
+                        } else if (fav.type === 'media') {
+                            currentMediaKey = fav.key;
+                            localStorage.setItem('lab_mediaKey', fav.key);
+                        } else if (fav.type === 'solution') {
+                            currentSolutionKey = fav.key;
+                            localStorage.setItem('lab_solutionKey', fav.key);
+                        } else if (fav.type === 'guide') {
+                            currentGuideKey = fav.key;
+                            localStorage.setItem('lab_guideKey', fav.key);
+                        }
+                        closeModal('favoriteModal');
+                        updateView(true);
+                    };
+                    listEl.appendChild(btn);
+                });
+            }
+            openModal('favoriteModal');
         }
 
         function openOrderModal(type) {
