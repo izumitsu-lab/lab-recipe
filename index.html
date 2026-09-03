@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <!-- iOS / iPadOS ホーム画面アプリ化・ステータスバー連動設定 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#08080a">
@@ -1278,7 +1277,6 @@
     <div class="views-container" id="viewsContainer">
         <div class="view-panel active" id="panel0"><div class="card-carousel-container" id="pcrCarouselContainer"></div></div>
         <div class="view-panel" id="panel1"><div class="card-carousel-container" id="mediaCarouselContainer"></div></div>
-        <!-- 3ページ目：電気泳動ビュー -->
         <div class="view-panel" id="panel2"><div class="card-carousel-container" id="electrophoresisCarouselContainer"></div></div>
         <div class="view-panel" id="panel3"><div class="card-carousel-container" id="ecoliCarouselContainer"></div></div>
         <div class="view-panel" id="panel4"><div class="card-carousel-container" id="agroCarouselContainer"></div></div>
@@ -1368,55 +1366,10 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="volumeModal" onclick="outsideClose(event, 'volumeModal')">
-        <div class="modal-content">
-            <div class="modal-header" id="volumeModalHeader">作製容量を選択</div>
-            <div class="option-list grid-modal" id="volumeOptionsList"></div>
-            <div class="keypad-container" id="keypadContainer" style="display: none;">
-                <div class="keypad-display-area">
-                    <div class="keypad-preview-value" id="keypadPreview">0 mL</div>
-                    <div class="keypad-divider-line"></div>
-                </div>
-                <div class="keypad-grid">
-                    <button class="keypad-btn" onclick="pressKeypad('1')">1</button>
-                    <button class="keypad-btn" onclick="pressKeypad('2')">2</button>
-                    <button class="keypad-btn" onclick="pressKeypad('3')">3</button>
-                    <button class="keypad-btn" onclick="pressKeypad('4')">4</button>
-                    <button class="keypad-btn" onclick="pressKeypad('5')">5</button>
-                    <button class="keypad-btn" onclick="pressKeypad('6')">6</button>
-                    <button class="keypad-btn" onclick="pressKeypad('7')">7</button>
-                    <button class="keypad-btn" onclick="pressKeypad('8')">8</button>
-                    <button class="keypad-btn" onclick="pressKeypad('9')">9</button>
-                    <button class="keypad-btn action-btn" onclick="pressKeypad('clear')">C</button>
-                    <button class="keypad-btn" onclick="pressKeypad('0')">0</button>
-                    <button class="keypad-btn action-btn" onclick="pressKeypad('backspace')">⌫</button>
-                    <button class="keypad-btn set-btn" onclick="applyCustomVolume()">SET</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="modal-overlay" id="electrophoresisModal" onclick="outsideClose(event, 'electrophoresisModal')">
         <div class="modal-content" style="max-width: 440px;">
             <div class="modal-header">電気泳動試薬・マーカーを選択</div>
             <div class="option-list grid-modal" id="electrophoresisOptionsList"></div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="elecVolumeModal" onclick="outsideClose(event, 'elecVolumeModal')">
-        <div class="modal-content">
-            <div class="modal-header" id="elecVolumeModalHeader">作製容量を選択</div>
-            <div class="option-list grid-modal" id="elecVolumeOptionsList"></div>
-            <div class="keypad-container" id="elecKeypadContainer" style="display: none;">
-                <div class="keypad-display-area"><div class="keypad-preview-value" id="elecKeypadPreview">0 mL</div><div class="keypad-divider-line"></div></div>
-                <div class="keypad-grid">
-                    <button class="keypad-btn" onclick="pressElecKeypad('1')">1</button><button class="keypad-btn" onclick="pressElecKeypad('2')">2</button><button class="keypad-btn" onclick="pressElecKeypad('3')">3</button>
-                    <button class="keypad-btn" onclick="pressElecKeypad('4')">4</button><button class="keypad-btn" onclick="pressElecKeypad('5')">5</button><button class="keypad-btn" onclick="pressElecKeypad('6')">6</button>
-                    <button class="keypad-btn" onclick="pressElecKeypad('7')">7</button><button class="keypad-btn" onclick="pressElecKeypad('8')">8</button><button class="keypad-btn" onclick="pressElecKeypad('9')">9</button>
-                    <button class="keypad-btn action-btn" onclick="pressElecKeypad('clear')">C</button><button class="keypad-btn" onclick="pressElecKeypad('0')">0</button><button class="keypad-btn action-btn" onclick="pressElecKeypad('backspace')">⌫</button>
-                    <button class="keypad-btn set-btn" onclick="applyCustomElecVolume()">SET</button>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -1427,44 +1380,10 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="agroVolumeModal" onclick="outsideClose(event, 'agroVolumeModal')">
-        <div class="modal-content">
-            <div class="modal-header" id="agroVolumeModalHeader">作製容量を選択</div>
-            <div class="option-list grid-modal" id="agroVolumeOptionsList"></div>
-            <div class="keypad-container" id="agroKeypadContainer" style="display: none;">
-                <div class="keypad-display-area"><div class="keypad-preview-value" id="agroKeypadPreview">0 mL</div><div class="keypad-divider-line"></div></div>
-                <div class="keypad-grid">
-                    <button class="keypad-btn" onclick="pressAgroKeypad('1')">1</button><button class="keypad-btn" onclick="pressAgroKeypad('2')">2</button><button class="keypad-btn" onclick="pressAgroKeypad('3')">3</button>
-                    <button class="keypad-btn" onclick="pressAgroKeypad('4')">4</button><button class="keypad-btn" onclick="pressAgroKeypad('5')">5</button><button class="keypad-btn" onclick="pressAgroKeypad('6')">6</button>
-                    <button class="keypad-btn" onclick="pressAgroKeypad('7')">7</button><button class="keypad-btn" onclick="pressAgroKeypad('8')">8</button><button class="keypad-btn" onclick="pressAgroKeypad('9')">9</button>
-                    <button class="keypad-btn action-btn" onclick="pressAgroKeypad('clear')">C</button><button class="keypad-btn" onclick="pressAgroKeypad('0')">0</button><button class="keypad-btn action-btn" onclick="pressAgroKeypad('backspace')">⌫</button>
-                    <button class="keypad-btn set-btn" onclick="applyCustomAgroVolume()">SET</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="modal-overlay" id="protoplastModal" onclick="outsideClose(event, 'protoplastModal')">
         <div class="modal-content" style="max-width: 440px;">
             <div class="modal-header">プロトプラスト試薬を選択</div>
             <div class="option-list grid-modal" id="protoplastOptionsList"></div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="protoVolumeModal" onclick="outsideClose(event, 'protoVolumeModal')">
-        <div class="modal-content">
-            <div class="modal-header" id="protoVolumeModalHeader">作製容量を選択</div>
-            <div class="option-list grid-modal" id="protoVolumeOptionsList"></div>
-            <div class="keypad-container" id="protoKeypadContainer" style="display: none;">
-                <div class="keypad-display-area"><div class="keypad-preview-value" id="protoKeypadPreview">0 mL</div><div class="keypad-divider-line"></div></div>
-                <div class="keypad-grid">
-                    <button class="keypad-btn" onclick="pressProtoKeypad('1')">1</button><button class="keypad-btn" onclick="pressProtoKeypad('2')">2</button><button class="keypad-btn" onclick="pressProtoKeypad('3')">3</button>
-                    <button class="keypad-btn" onclick="pressProtoKeypad('4')">4</button><button class="keypad-btn" onclick="pressProtoKeypad('5')">5</button><button class="keypad-btn" onclick="pressProtoKeypad('6')">6</button>
-                    <button class="keypad-btn" onclick="pressProtoKeypad('7')">7</button><button class="keypad-btn" onclick="pressProtoKeypad('8')">8</button><button class="keypad-btn" onclick="pressProtoKeypad('9')">9</button>
-                    <button class="keypad-btn action-btn" onclick="pressProtoKeypad('clear')">C</button><button class="keypad-btn" onclick="pressProtoKeypad('0')">0</button><button class="keypad-btn action-btn" onclick="pressProtoKeypad('backspace')">⌫</button>
-                    <button class="keypad-btn set-btn" onclick="applyCustomProtoVolume()">SET</button>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -1475,44 +1394,10 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="ecoliVolumeModal" onclick="outsideClose(event, 'ecoliVolumeModal')">
-        <div class="modal-content">
-            <div class="modal-header" id="ecoliVolumeModalHeader">作製容量を選択</div>
-            <div class="option-list grid-modal" id="ecoliVolumeOptionsList"></div>
-            <div class="keypad-container" id="ecoliKeypadContainer" style="display: none;">
-                <div class="keypad-display-area"><div class="keypad-preview-value" id="ecoliKeypadPreview">0 mL</div><div class="keypad-divider-line"></div></div>
-                <div class="keypad-grid">
-                    <button class="keypad-btn" onclick="pressEcoliKeypad('1')">1</button><button class="keypad-btn" onclick="pressEcoliKeypad('2')">2</button><button class="keypad-btn" onclick="pressEcoliKeypad('3')">3</button>
-                    <button class="keypad-btn" onclick="pressEcoliKeypad('4')">4</button><button class="keypad-btn" onclick="pressEcoliKeypad('5')">5</button><button class="keypad-btn" onclick="pressEcoliKeypad('6')">6</button>
-                    <button class="keypad-btn" onclick="pressEcoliKeypad('7')">7</button><button class="keypad-btn" onclick="pressEcoliKeypad('8')">8</button><button class="keypad-btn" onclick="pressEcoliKeypad('9')">9</button>
-                    <button class="keypad-btn action-btn" onclick="pressEcoliKeypad('clear')">C</button><button class="keypad-btn" onclick="pressEcoliKeypad('0')">0</button><button class="keypad-btn action-btn" onclick="pressEcoliKeypad('backspace')">⌫</button>
-                    <button class="keypad-btn set-btn" onclick="applyCustomEcoliVolume()">SET</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="modal-overlay" id="solutionModal" onclick="outsideClose(event, 'solutionModal')">
         <div class="modal-content" style="max-width: 440px;">
             <div class="modal-header">ストック試薬を選択</div>
             <div class="option-list grid-modal" id="solutionOptionsList"></div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="solutionVolumeModal" onclick="outsideClose(event, 'solutionVolumeModal')">
-        <div class="modal-content">
-            <div class="modal-header" id="solutionVolumeModalHeader">作製容量を選択</div>
-            <div class="option-list grid-modal" id="solutionVolumeOptionsList"></div>
-            <div class="keypad-container" id="solutionKeypadContainer" style="display: none;">
-                <div class="keypad-display-area"><div class="keypad-preview-value" id="solutionKeypadPreview">0 mL</div><div class="keypad-divider-line"></div></div>
-                <div class="keypad-grid">
-                    <button class="keypad-btn" onclick="pressSolutionKeypad('1')">1</button><button class="keypad-btn" onclick="pressSolutionKeypad('2')">2</button><button class="keypad-btn" onclick="pressSolutionKeypad('3')">3</button>
-                    <button class="keypad-btn" onclick="pressSolutionKeypad('4')">4</button><button class="keypad-btn" onclick="pressSolutionKeypad('5')">5</button><button class="keypad-btn" onclick="pressSolutionKeypad('6')">6</button>
-                    <button class="keypad-btn" onclick="pressSolutionKeypad('7')">7</button><button class="keypad-btn" onclick="pressSolutionKeypad('8')">8</button><button class="keypad-btn" onclick="pressSolutionKeypad('9')">9</button>
-                    <button class="keypad-btn action-btn" onclick="pressSolutionKeypad('clear')">C</button><button class="keypad-btn" onclick="pressSolutionKeypad('0')">0</button><button class="keypad-btn action-btn" onclick="pressSolutionKeypad('backspace')">⌫</button>
-                    <button class="keypad-btn set-btn" onclick="applyCustomSolutionVolume()">SET</button>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -1523,46 +1408,41 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="additiveVolumeModal" onclick="outsideClose(event, 'additiveVolumeModal')">
-        <div class="modal-content">
-            <div class="modal-header" id="additiveVolumeModalHeader">作製容量を選択</div>
-            <div class="option-list grid-modal" id="additiveVolumeOptionsList"></div>
-            <div class="keypad-container" id="additiveKeypadContainer" style="display: none;">
-                <div class="keypad-display-area"><div class="keypad-preview-value" id="additiveKeypadPreview">0 mL</div><div class="keypad-divider-line"></div></div>
-                <div class="keypad-grid">
-                    <button class="keypad-btn" onclick="pressAdditiveKeypad('1')">1</button><button class="keypad-btn" onclick="pressAdditiveKeypad('2')">2</button><button class="keypad-btn" onclick="pressAdditiveKeypad('3')">3</button>
-                    <button class="keypad-btn" onclick="pressAdditiveKeypad('4')">4</button><button class="keypad-btn" onclick="pressAdditiveKeypad('5')">5</button><button class="keypad-btn" onclick="pressAdditiveKeypad('6')">6</button>
-                    <button class="keypad-btn" onclick="pressAdditiveKeypad('7')">7</button><button class="keypad-btn" onclick="pressAdditiveKeypad('8')">8</button><button class="keypad-btn" onclick="pressAdditiveKeypad('9')">9</button>
-                    <button class="keypad-btn action-btn" onclick="pressAdditiveKeypad('clear')">C</button><button class="keypad-btn" onclick="pressAdditiveKeypad('0')">0</button><button class="keypad-btn action-btn" onclick="pressAdditiveKeypad('backspace')">⌫</button>
-                    <button class="keypad-btn set-btn" onclick="applyCustomAdditiveVolume()">SET</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="modal-overlay" id="pcrModal" onclick="outsideClose(event, 'pcrModal')">
         <div class="modal-content"><div class="modal-header">PCR酵素を選択</div><div class="option-list" id="pcrOptionsList"></div></div>
     </div>
 
-    <div class="modal-overlay" id="pcrVolumeModal" onclick="outsideClose(event, 'pcrVolumeModal')">
+    <div class="modal-overlay" id="guideModal" onclick="outsideClose(event, 'guideModal')">
+        <div class="modal-content"><div class="modal-header">ガイドを選択</div><div class="option-list" id="guideOptionsList"></div></div>
+    </div>
+
+    <!-- 全カード対応・個別容量設定モーダル -->
+    <div class="modal-overlay" id="cardVolumeModal" onclick="outsideClose(event, 'cardVolumeModal')">
         <div class="modal-content">
-            <div class="modal-header" id="pcrVolumeModalHeader">反応液量を選択</div>
-            <div class="option-list grid-modal" id="pcrVolumeOptionsList"></div>
-            <div class="keypad-container" id="pcrKeypadContainer" style="display: none;">
-                <div class="keypad-display-area"><div class="keypad-preview-value" id="pcrKeypadPreview">0 µL</div><div class="keypad-divider-line"></div></div>
+            <div class="modal-header" id="cardVolumeModalHeader">作製容量を選択</div>
+            <div class="option-list grid-modal" id="cardVolumeOptionsList"></div>
+            <div class="keypad-container" id="cardVolumeKeypadContainer" style="display: none;">
+                <div class="keypad-display-area">
+                    <div class="keypad-preview-value" id="cardVolumeKeypadPreview">0 mL</div>
+                    <div class="keypad-divider-line"></div>
+                </div>
                 <div class="keypad-grid">
-                    <button class="keypad-btn" onclick="pressPcrKeypad('1')">1</button><button class="keypad-btn" onclick="pressPcrKeypad('2')">2</button><button class="keypad-btn" onclick="pressPcrKeypad('3')">3</button>
-                    <button class="keypad-btn" onclick="pressPcrKeypad('4')">4</button><button class="keypad-btn" onclick="pressPcrKeypad('5')">5</button><button class="keypad-btn" onclick="pressPcrKeypad('6')">6</button>
-                    <button class="keypad-btn" onclick="pressPcrKeypad('7')">7</button><button class="keypad-btn" onclick="pressPcrKeypad('8')">8</button><button class="keypad-btn" onclick="pressPcrKeypad('9')">9</button>
-                    <button class="keypad-btn action-btn" onclick="pressPcrKeypad('clear')">C</button><button class="keypad-btn" onclick="pressPcrKeypad('0')">0</button><button class="keypad-btn action-btn" onclick="pressPcrKeypad('backspace')">⌫</button>
-                    <button class="keypad-btn set-btn" onclick="applyCustomPcrVolume()">SET</button>
+                    <button class="keypad-btn" onclick="pressCardVolumeKeypad('1')">1</button>
+                    <button class="keypad-btn" onclick="pressCardVolumeKeypad('2')">2</button>
+                    <button class="keypad-btn" onclick="pressCardVolumeKeypad('3')">3</button>
+                    <button class="keypad-btn" onclick="pressCardVolumeKeypad('4')">4</button>
+                    <button class="keypad-btn" onclick="pressCardVolumeKeypad('5')">5</button>
+                    <button class="keypad-btn" onclick="pressCardVolumeKeypad('6')">6</button>
+                    <button class="keypad-btn" onclick="pressCardVolumeKeypad('7')">7</button>
+                    <button class="keypad-btn" onclick="pressCardVolumeKeypad('8')">8</button>
+                    <button class="keypad-btn" onclick="pressCardVolumeKeypad('9')">9</button>
+                    <button class="keypad-btn action-btn" onclick="pressCardVolumeKeypad('clear')">C</button>
+                    <button class="keypad-btn" onclick="pressCardVolumeKeypad('0')">0</button>
+                    <button class="keypad-btn action-btn" onclick="pressCardVolumeKeypad('backspace')">⌫</button>
+                    <button class="keypad-btn set-btn" onclick="applyCustomCardVolume()">SET</button>
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="modal-overlay" id="guideModal" onclick="outsideClose(event, 'guideModal')">
-        <div class="modal-content"><div class="modal-header">ガイドを選択</div><div class="option-list" id="guideOptionsList"></div></div>
     </div>
 
     <script>
@@ -1575,7 +1455,8 @@
 
         const mediaDatabase = {
             "cm": { 
-                name: "CM培地", baseVolume: 100, getAdvice: (vol) => getDishAdvice(vol), 
+                name: "CM培地", baseVolume: 100, unit: "mL", presets: [50, 100, 150, 200, 250, 300, 350, 400, 450, 500], hasVolume: true,
+                getAdvice: (vol) => getDishAdvice(vol), 
                 calculateCost: (vol) => `💰 概算コスト: 約 ${Math.round((1.0*4.4 + 0.1*16 + 0.1*26 + 1.5*42)*(vol/100))} 円 (${vol} mLあたり)`,
                 info: {
                     title: "CM培地についての解説",
@@ -1587,7 +1468,8 @@
                 postIngredients: []
             },
             "v30": { 
-                name: "V30培地", baseVolume: 100, getAdvice: (vol) => getDishAdvice(vol), 
+                name: "V30培地", baseVolume: 100, unit: "mL", presets: [50, 100, 150, 200, 250, 300, 350, 400, 450, 500], hasVolume: true,
+                getAdvice: (vol) => getDishAdvice(vol), 
                 calculateCost: (vol) => `💰 概算コスト: 約 ${Math.round((16.0*0.3 + 0.2*5.9 + 1.5*42)*(vol/100))} 円 (${vol} mLあたり)`,
                 info: {
                     title: "V30培地についての解説",
@@ -1599,11 +1481,12 @@
                 postIngredients: []
             },
             "pda": { 
-                name: "PDA培地", baseVolume: 100, getAdvice: (vol) => getDishAdvice(vol), 
+                name: "PDA培地", baseVolume: 100, unit: "mL", presets: [50, 100, 150, 200, 250, 300, 350, 400, 450, 500], hasVolume: true,
+                getAdvice: (vol) => getDishAdvice(vol), 
                 calculateCost: (vol) => `💰 概算コスト: 約 ${Math.round((3.9 * 27.17)*(vol/100))} 円 (${vol} mLあたり)`,
                 info: {
                     title: "PDA培地についての解説",
-                    body: "Potato Dextrose Agarの略で、カビや酵母の分離・培養に最も汎用される標準培地です。<br><br>💡 <b>豆知識:</b> ウリ類炭疽病菌104T株などはニッスイ（現アキュディア™）のPDAでないと育ちが悪い等のロット・メーカー差があります。"
+                    body: "Potato Dextrose Agarの略で、カビや酵母の分離・培養に最も汎用される標準培地です。<br><br>💡 <b>豆知識:</b> <i>Colletotrichum orbiculare</i>（104T株）などはニッスイ（現アキュディア™）のPDAでないと育ちが悪い等のロット・メーカー差があります。"
                 },
                 ingredients: [
                     { name: "PDA (粉)", amount: 3.9, unit: "g" }, { name: "水", amount: 100.0, unit: "mL" }
@@ -1611,7 +1494,8 @@
                 postIngredients: []
             },
             "lb": { 
-                name: "LB培地", baseVolume: 100, getAdvice: (vol) => getDishAdvice(vol), 
+                name: "LB培地", baseVolume: 100, unit: "mL", presets: [50, 100, 150, 200, 250, 300, 350, 400, 450, 500], hasVolume: true,
+                getAdvice: (vol) => getDishAdvice(vol), 
                 calculateCost: (vol) => `💰 概算コスト: 約 ${Math.round((2.0*66 + 1.5*42)*(vol/100))} 円 (${vol} mLあたり)`,
                 info: {
                     title: "LB培地についての解説",
@@ -1625,7 +1509,8 @@
                 ]
             },
             "im": {
-                name: "IM培地", baseVolume: 100, eyebrow: "Agrobacterium Medium", getAdvice: (vol) => getDishAdvice(vol),
+                name: "IM培地", baseVolume: 100, unit: "mL", presets: [50, 100, 150, 200, 250, 300, 400, 500], hasVolume: true, eyebrow: "Agrobacterium Medium",
+                getAdvice: (vol) => getDishAdvice(vol),
                 calculateCost: (vol) => `💰 概算コスト: 約 ${Math.round((400 + 0.4 + 4 + (1.5 * 42))*(vol/100))} 円 (${vol} mLあたり)`,
                 info: {
                     title: "IM培地についての解説",
@@ -1639,7 +1524,8 @@
                 ]
             },
             "gamborg": {
-                name: "ガンボーグ培地", baseVolume: 100, hasModes: true, modeLabels: ["ストック液から", "粉から作成"],
+                name: "ガンボーグ培地", baseVolume: 100, unit: "mL", presets: [50, 100, 150, 200, 250, 300, 350, 400, 450, 500], hasVolume: true,
+                hasModes: true, modeLabels: ["ストック液から", "粉から作成"],
                 getAdvice: (vol) => `💡 液体培養用（${vol} mL）`,
                 calculateCost: (vol) => `💰 概算コスト: 約 ${Math.round((0.45 * 4)*(vol/100))} 円 (${vol} mLあたり)`,
                 info: {
@@ -1662,7 +1548,8 @@
                 }
             },
             "regeneration": {
-                name: "再生培地", baseVolume: 100, getAdvice: (vol) => `💡 10mLずつ分注して使用（計 ${(vol / 10).toFixed(0)} 本分）`,
+                name: "再生培地", baseVolume: 100, unit: "mL", presets: [50, 100, 150, 200, 250, 300, 350, 400, 450, 500], hasVolume: true,
+                getAdvice: (vol) => `💡 10mLずつ分注して使用（計 ${(vol / 10).toFixed(0)} 本分）`,
                 calculateCost: (vol) => `💰 概算コスト: 約 ${Math.round((0.1*16 + 0.1*26 + 102.7*1 + 1.5*42)*(vol/100))} 円 (${vol} mLあたり)`,
                 info: {
                     title: "再生培地についての解説",
@@ -1674,7 +1561,8 @@
                 postIngredients: []
             },
             "selection": {
-                name: "選択培地", baseVolume: 100, getAdvice: (vol) => `💡 10mLずつ分注・重層用（計 ${(vol / 10).toFixed(0)} 本分）`,
+                name: "選択培地", baseVolume: 100, unit: "mL", presets: [50, 100, 150, 200, 250, 300, 350, 400, 450, 500], hasVolume: true,
+                getAdvice: (vol) => `💡 10mLずつ分注・重層用（計 ${(vol / 10).toFixed(0)} 本分）`,
                 calculateCost: (vol) => `💰 概算コスト: 約 ${Math.round((0.1*16 + 0.1*26 + 1.5*42)*(vol/100))} 円 (${vol} mLあたり)`,
                 info: {
                     title: "選択培地についての解説",
@@ -1686,7 +1574,8 @@
                 postIngredients: []
             },
             "sachs": { 
-                name: "Sachs培地", baseVolume: 100, getAdvice: (vol) => getDishAdvice(vol), calculateCost: (vol) => `💰 概算コスト: -`,
+                name: "Sachs培地", baseVolume: 100, unit: "mL", presets: [50, 100, 150, 200, 250, 300, 350, 400, 450, 500], hasVolume: true,
+                getAdvice: (vol) => getDishAdvice(vol), calculateCost: (vol) => `💰 概算コスト: -`,
                 info: {
                     title: "Sachs培地についての解説",
                     body: "トウモロコシごま葉枯病菌などの糸状菌における交配実験（子のう殻形成など）に用いられる専用培地です。"
@@ -1700,14 +1589,15 @@
 
         const commonReagentDatabase = {
             "lb": {
-                name: "LB培地", fullName: "LB培地 (Luria-Bertani)", eyebrow: "E. coli Medium", type: "recipe", baseVolume: 100,
+                name: "LB培地", fullName: "LB培地 (Luria-Bertani)", eyebrow: "E. coli Medium", type: "recipe", baseVolume: 100, unit: "mL", presets: [50, 100, 150, 200, 250, 300, 350, 400, 450, 500], hasVolume: true,
                 getAdvice: (vol) => getDishAdvice(vol), calculateCost: (vol) => `💰 概算コスト: 約 ${Math.round((2.0*66 + 1.5*42)*(vol/100))} 円 (${vol} mLあたり)`,
                 info: { title: "LB培地についての解説", body: "大腸菌培養の標準培地。50〜55℃に冷却後、適切な抗生物質を加えてプレートを作製します。" },
                 ingredients: [{ name: "LB (粉)", amount: 2.0, unit: "g" }, { name: "寒天", amount: 1.5, unit: "g" }, { name: "水", amount: 100.0, unit: "mL" }],
                 postIngredients: [{ name: "カナマイシン (100 mg/mL)", amount: 100.0, unit: "µL" }]
             },
             "sob": {
-                name: "SOB培地", fullName: "SOB培地 (Hanahan's Broth)", eyebrow: "E. coli Medium", type: "recipe", baseVolume: 1000, hasModes: true, modeLabels: ["ストック液から", "粉から作成"],
+                name: "SOB培地", fullName: "SOB培地 (Hanahan's Broth)", eyebrow: "E. coli Medium", type: "recipe", baseVolume: 1000, unit: "mL", presets: [50, 100, 200, 250, 500, 1000], hasVolume: true,
+                hasModes: true, modeLabels: ["ストック液から", "粉から作成"],
                 getAdvice: (vol) => `💡 コンピテントセル調製等に使用（${vol} mL）`, calculateCost: (vol) => `💰 概算コスト: -`,
                 info: { title: "SOB培地についての解説", body: "大腸菌の高効率コンピテントセル調製や形質転換後の回復培養用液体培地。沈殿を防ぐためオートクレーブ後に2M Mg²⁺溶液を加えます。" },
                 modes: {
@@ -1716,29 +1606,26 @@
                 }
             },
             "soc": {
-                name: "SOC培地", fullName: "SOC培地 (SOB + Glucose)", eyebrow: "E. coli Medium", type: "recipe", baseVolume: 100,
+                name: "SOC培地", fullName: "SOC培地 (SOB + Glucose)", eyebrow: "E. coli Medium", type: "recipe", baseVolume: 100, unit: "mL", presets: [50, 100, 200, 250, 500, 1000], hasVolume: true,
                 getAdvice: (vol) => `💡 形質転換後の回復培養用（${vol} mL）`, calculateCost: (vol) => `💰 概算コスト: -`,
                 info: { title: "SOC培地についての解説", body: "SOB培地にグルコースを最終濃度20mM添加した培地。ヒートショックやエレポ後の回復培養に使用。グルコースは熱で分解するため必ずフィルター滅菌液を添加します。" },
                 ingredients: [{ name: "SOB培地", amount: 99.0, unit: "mL" }],
                 postIngredients: [{ name: "2M グルコース（フィルター滅菌済）", amount: 1.0, unit: "mL" }]
             },
             "mg_sol_2m": {
-                name: "2M Mg<sup>2+</sup>溶液", fullName: "2M Mg<sup>2+</sup>溶液 (1M MgSO<sub>4</sub> + 1M MgCl<sub>2</sub>)", eyebrow: "Stock Solutions", type: "recipe", baseVolume: 100,
+                name: "2M Mg<sup>2+</sup>溶液", fullName: "2M Mg<sup>2+</sup>溶液 (1M MgSO<sub>4</sub> + 1M MgCl<sub>2</sub>)", eyebrow: "Stock Solutions", type: "recipe", baseVolume: 100, unit: "mL", presets: [10, 20, 50, 100, 200, 500], hasVolume: true,
                 getAdvice: (vol) => `💡 フィルター滅菌して使用`, calculateCost: (vol) => `💰 概算コスト: -`,
                 info: { title: "2M Mg²⁺溶液についての解説", body: "SOB/SOC培地調製用ストック。オートクレーブ不可のためシリンジフィルター滅菌して保管します。" },
                 ingredients: [{ name: "MgSO<sub>4</sub>・7H<sub>2</sub>O", amount: 24.6, unit: "g" }, { name: "MgCl<sub>2</sub>・6H<sub>2</sub>O", amount: 20.3, unit: "g" }, { name: "蒸留水 (メスアップ)", amount: 100.0, unit: "mLまで" }]
             },
             "glucose_2m": {
-                name: "2M グルコース", fullName: "2M グルコース溶液", eyebrow: "Stock Solutions", type: "recipe", baseVolume: 100,
+                name: "2M グルコース", fullName: "2M グルコース溶液", eyebrow: "Stock Solutions", type: "recipe", baseVolume: 100, unit: "mL", presets: [10, 20, 50, 100, 200, 500], hasVolume: true,
                 getAdvice: (vol) => `💡 フィルター滅菌して使用（※オートクレーブ不可）`, calculateCost: (vol) => `💰 概算コスト: -`,
                 info: { title: "2M グルコース溶液についての解説", body: "高温高圧で加熱するとメイラード反応等で劣化するため、必ず0.22µmフィルター滅菌を行ってください。" },
                 ingredients: [{ name: "グルコース", amount: 36.0, unit: "g" }, { name: "蒸留水 (メスアップ)", amount: 100.0, unit: "mLまで" }]
             },
             "lambda_marker": {
-                name: "ラムダマーカー",
-                fullName: "ラムダマーカー (EcoT14i切断)",
-                eyebrow: "Electrophoresis Marker",
-                type: "pseudo_ladder",
+                name: "ラムダマーカー", fullName: "ラムダマーカー (EcoT14i切断)", eyebrow: "Electrophoresis Marker", type: "pseudo_ladder", hasVolume: false,
                 advice: "💡 500bp以上のバンド、通常は1500bp以上のバンドを見分ける時に使用",
                 info: {
                     title: "ラムダマーカーについての解説",
@@ -1758,7 +1645,7 @@
                 ]
             },
             "ladder_100bp": {
-                name: "100bpラダー", fullName: "100bp DNAラダーマーカー", eyebrow: "Electrophoresis Marker", type: "pseudo_ladder",
+                name: "100bpラダー", fullName: "100bp DNAラダーマーカー", eyebrow: "Electrophoresis Marker", type: "pseudo_ladder", hasVolume: false,
                 advice: "💡 100〜1,500 bpのサイズ識別用（500, 1000, 1500 bpは太い基準バンド）",
                 info: {
                     title: "100bp DNAラダーについての解説",
@@ -1779,97 +1666,97 @@
                 ]
             },
             "gel_red": {
-                name: "ゲルレッド染色液", fullName: "ゲルレッド染色液", eyebrow: "Staining Solution", type: "recipe", baseVolume: 100,
+                name: "ゲルレッド染色液", fullName: "ゲルレッド染色液", eyebrow: "Staining Solution", type: "recipe", baseVolume: 100, unit: "mL", presets: [25, 50, 100, 200, 500, 1000], hasVolume: true,
                 getAdvice: (vol) => `💡 後染め（ポストステイン）用染色液`, calculateCost: (vol) => `💰 概算コスト: -`,
                 info: { title: "ゲルレッド染色液についての解説", body: "後染め（ポストステイン）の場合の至適濃度は約3,300x（水100mLあたり30µL）となります。" },
                 ingredients: [{ name: "蒸留水", amount: 100.0, unit: "mL" }, { name: "GelRed (10000x)", amount: 30.0, unit: "µL" }]
             },
             "tae_50x": {
-                name: "50xTAEバッファ", fullName: "50xTAE バッファ", eyebrow: "Electrophoresis Buffer", type: "recipe", baseVolume: 1000,
+                name: "50xTAEバッファ", fullName: "50xTAE バッファ", eyebrow: "Electrophoresis Buffer", type: "recipe", baseVolume: 1000, unit: "mL", presets: [25, 50, 100, 200, 500, 1000], hasVolume: true,
                 getAdvice: (vol) => `💡 電気泳動用 50倍濃縮ストックバッファ`, calculateCost: (vol) => `💰 概算コスト: -`,
                 info: { title: "50xTAEバッファについての解説", body: "蒸留水で1xに希釈（50倍希釈）してゲル作製および泳動槽に満たして使用します。" },
                 ingredients: [{ name: "Tris (トリス塩基)", amount: 242.0, unit: "g" }, { name: "酢酸 (氷酢酸)", amount: 57.1, unit: "mL" }, { name: "0.5M EDTA (pH 8.0)", amount: 100.0, unit: "mL" }, { name: "蒸留水 (メスアップ)", amount: 1000.0, unit: "mLまで" }]
             },
             "loading_dye_6x": {
-                name: "6xLoading Dye", fullName: "6x Loading Dye", eyebrow: "Electrophoresis Buffer", type: "recipe", baseVolume: 100,
+                name: "6xLoading Dye", fullName: "6x Loading Dye", eyebrow: "Electrophoresis Buffer", type: "recipe", baseVolume: 100, unit: "mL", presets: [25, 50, 100, 200, 500, 1000], hasVolume: true,
                 getAdvice: (vol) => `💡 染色液につき衣服等の付着に注意・保護具着用`, calculateCost: (vol) => `💰 概算コスト: -`,
                 info: { title: "6x Loading Dyeについての解説", body: "70mLのTEバッファに色素を完全に溶かした後、グリセロールを添加して混合します。白衣・手袋着用推奨。" },
                 ingredients: [{ name: "TEバッファ", amount: 70.0, unit: "mL" }, { name: "ブロモフェノールブルー", amount: 0.25, unit: "g" }, { name: "キシレンシアノール", amount: 0.25, unit: "g" }, { name: "グリセロール", amount: 30.0, unit: "mL" }]
             },
             "ethanol_70": {
-                name: "70%エタノール", fullName: "70% エタノール", eyebrow: "Stock Solutions", type: "recipe", baseVolume: 50,
+                name: "70%エタノール", fullName: "70% エタノール", eyebrow: "Stock Solutions", type: "recipe", baseVolume: 50, unit: "mL", presets: [10, 20, 50, 100, 200, 500], hasVolume: true,
                 getAdvice: (vol) => `💡 エタ沈のDNAリンス・実験台や器具の消毒用`, calculateCost: (vol) => `💰 概算コスト: -`,
                 info: { title: "70% エタノールについての解説", body: "エタノール35mLと滅菌水15mLを混合。DNA沈殿時のリンスや器具消毒に日常的に使用。" },
                 ingredients: [{ name: "エタノール", amount: 35.0, unit: "mL" }, { name: "滅菌水", amount: 15.0, unit: "mL" }]
             },
             "acetosyringone_100mm": {
-                name: "100mMアセトシリンゴン", fullName: "100mM アセトシリンゴン", eyebrow: "培地添加物", type: "recipe", baseVolume: 10,
+                name: "100mMアセトシリンゴン", fullName: "100mM アセトシリンゴン", eyebrow: "培地添加物", type: "recipe", baseVolume: 10, unit: "mL", presets: [5, 10, 20, 25, 50, 100], hasVolume: true,
                 getAdvice: (vol) => `💡 vir遺伝子誘導用ストック（※オートクレーブ厳禁）`, calculateCost: (vol) => `💰 概算コスト: -`,
                 info: { title: "100mM アセトシリンゴンについての解説", body: "アグロバクテリウムのvir遺伝子群を特異的に活性化します。熱分解するためオートクレーブ厳禁。DMSOに溶解し遮光・冷凍保存します。" },
                 ingredients: [{ name: "アセトシリンゴン", amount: 196.0, unit: "mg" }, { name: "DMSO", amount: 10.0, unit: "mL" }]
             },
             "uridine_1m": {
-                name: "1M ウリジン", fullName: "1M ウリジン溶液", eyebrow: "培地添加物", type: "recipe", baseVolume: 10,
+                name: "1M ウリジン", fullName: "1M ウリジン溶液", eyebrow: "培地添加物", type: "recipe", baseVolume: 10, unit: "mL", presets: [5, 10, 20, 25, 50, 100], hasVolume: true,
                 getAdvice: (vol) => `💡 フィルター滅菌して使用`, calculateCost: (vol) => `💰 概算コスト: -`,
                 info: { title: "1M ウリジン溶液についての解説", body: "ウラシル要求性変異株の選抜や培地添加用ストック溶液です。10mLの蒸留水に2.4gを溶解し、シリンジフィルター滅菌して保存します。" },
                 ingredients: [{ name: "蒸留水", amount: 10.0, unit: "mL" }, { name: "ウリジン", amount: 2.4, unit: "g" }]
             },
             "mm_sol_1": {
-                name: "MM salt sol. 1", fullName: "MM salt solution 1", eyebrow: "Agrobacterium Solution", type: "recipe", baseVolume: 100,
+                name: "MM salt sol. 1", fullName: "MM salt solution 1", eyebrow: "Agrobacterium Solution", type: "recipe", baseVolume: 100, unit: "mL", presets: [10, 25, 40, 50, 100, 200, 300, 500], hasVolume: true,
                 getAdvice: (vol) => `💡 アグロバクテリウム法用 ストック液`, calculateCost: (vol) => `💰 概算コスト: -`,
                 info: { title: "MM salt solution 1 について", body: "アグロバクテリウム用の最小培地（MM）に用いる塩類ストック溶液1です。" },
                 ingredients: [{ name: "KH<sub>2</sub>PO<sub>4</sub>", amount: 1.45, unit: "g" }, { name: "K<sub>2</sub>HPO<sub>4</sub>", amount: 2.05, unit: "g" }, { name: "蒸留水", amount: 100.0, unit: "mL" }]
             },
             "mm_sol_2": {
-                name: "MM salt sol. 2", fullName: "MM salt solution 2", eyebrow: "Agrobacterium Solution", type: "recipe", baseVolume: 100,
+                name: "MM salt sol. 2", fullName: "MM salt solution 2", eyebrow: "Agrobacterium Solution", type: "recipe", baseVolume: 100, unit: "mL", presets: [10, 25, 40, 50, 100, 200, 300, 500], hasVolume: true,
                 getAdvice: (vol) => `💡 アグロバクテリウム法用 ストック液`, calculateCost: (vol) => `💰 概算コスト: -`,
                 info: { title: "MM salt solution 2 について", body: "アグロバクテリウム用の最小培地（MM）に用いる塩類ストック溶液2です。" },
                 ingredients: [{ name: "NaCl", amount: 0.15, unit: "g" }, { name: "MgSO<sub>4</sub>・7H<sub>2</sub>O", amount: 0.5, unit: "g" }, { name: "CaCl<sub>2</sub>・2H<sub>2</sub>O", amount: 0.053, unit: "g" }, { name: "(NH<sub>4</sub>)<sub>2</sub>SO<sub>4</sub>", amount: 0.5, unit: "g" }, { name: "蒸留水", amount: 100.0, unit: "mL" }]
             },
             "sol_a": {
-                name: "sol. A (CM)", fullName: "Solution A (CM用)", eyebrow: "Stock Solutions", type: "recipe", baseVolume: 500,
+                name: "sol. A (CM)", fullName: "Solution A (CM用)", eyebrow: "Stock Solutions", type: "recipe", baseVolume: 500, unit: "mL", presets: [10, 20, 50, 100, 200, 500], hasVolume: true,
                 getAdvice: (vol) => `💡 CM培地用ストック溶液 A`, calculateCost: (vol) => `💰 概算コスト: -`,
                 info: { title: "Solution A (CM用) についての解説", body: "カルシウムを含む溶液。Solution Bと高濃度で直接混ざると沈殿するため別ストックとして保管します。" },
                 ingredients: [{ name: "Ca(NO<sub>3</sub>)<sub>2</sub>・4H<sub>2</sub>O", amount: 75.0, unit: "g" }, { name: "蒸留水", amount: 500.0, unit: "mL" }]
             },
             "sol_b": {
-                name: "sol. B (CM)", fullName: "Solution B (CM用)", eyebrow: "Stock Solutions", type: "recipe", baseVolume: 500,
+                name: "sol. B (CM)", fullName: "Solution B (CM用)", eyebrow: "Stock Solutions", type: "recipe", baseVolume: 500, unit: "mL", presets: [10, 20, 50, 100, 200, 500], hasVolume: true,
                 getAdvice: (vol) => `💡 CM培地用ストック溶液 B`, calculateCost: (vol) => `💰 概算コスト: -`,
                 info: { title: "Solution B (CM用) についての解説", body: "リン酸・硫酸塩を含む溶液。Solution Aとは別々に希釈して培地に加えます。" },
                 ingredients: [{ name: "MgSO<sub>4</sub>・7H<sub>2</sub>O", amount: 25.0, unit: "g" }, { name: "KCl", amount: 25.0, unit: "g" }, { name: "KH<sub>2</sub>PO<sub>4</sub>", amount: 20.0, unit: "g" }, { name: "K<sub>2</sub>HPO<sub>4</sub>", amount: 1.5, unit: "g" }, { name: "蒸留水", amount: 500.0, unit: "mL" }]
             },
             "ammonium_acetate_10m": {
-                name: "10M 酢酸アンモニウム", fullName: "10M 酢酸アンモニウム", eyebrow: "Stock Solutions", type: "recipe", baseVolume: 100,
+                name: "10M 酢酸アンモニウム", fullName: "10M 酢酸アンモニウム", eyebrow: "Stock Solutions", type: "recipe", baseVolume: 100, unit: "mL", presets: [10, 20, 50, 100, 200, 500], hasVolume: true,
                 getAdvice: (vol) => `💡 フィルター滅菌（※オートクレーブ厳禁）`, calculateCost: (vol) => `💰 概算コスト: -`,
                 info: { title: "10M 酢酸アンモニウムについての解説", body: "高温高圧下で分解するためオートクレーブ不可。0.2µmシリンジフィルターで滅菌します。" },
                 ingredients: [{ name: "酢酸アンモニウム", amount: 77.8, unit: "g" }, { name: "蒸留水 (メスアップ)", amount: 100.0, unit: "mLまで" }]
             },
             "naoh_2n": {
-                name: "2N NaOH", fullName: "2N 水酸化ナトリウム (NaOH)", eyebrow: "Stock Solutions", type: "recipe", baseVolume: 40,
+                name: "2N NaOH", fullName: "2N 水酸化ナトリウム (NaOH)", eyebrow: "Stock Solutions", type: "recipe", baseVolume: 40, unit: "mL", presets: [10, 25, 40, 50, 100, 200, 300, 500], hasVolume: true,
                 getAdvice: (vol) => `💡 プラスチック容器保存・吸湿注意`, calculateCost: (vol) => `💰 概算コスト: -`,
                 info: { title: "2N NaOHについての解説", body: "ガラスを侵食するため必ずプラスチック容器（PP/PE）で保存してください。強い潮解性があるため秤量は素早く行います。" },
                 ingredients: [{ name: "NaOH (タブレット)", amount: 3.2, unit: "g" }, { name: "蒸留水", amount: 40.0, unit: "mL" }]
             },
             "isotonic": {
-                name: "等張液", fullName: "等張液", eyebrow: "Protoplast Solution", type: "recipe", baseVolume: 500,
+                name: "等張液", fullName: "等張液", eyebrow: "Protoplast Solution", type: "recipe", baseVolume: 500, unit: "mL", presets: [25, 50, 100, 200, 500], hasVolume: true,
                 getAdvice: (vol) => `💡 プロトプラスト作製・懸濁用`, calculateCost: (vol) => `💰 概算コスト: -`,
                 info: { title: "等張液についての解説", body: "プロトプラストの単離や洗浄に使用するKClベースの浸透圧調節等張液です。" },
                 ingredients: [{ name: "KCl", amount: 26.1, unit: "g" }, { name: "CaCl<sub>2</sub>・2H<sub>2</sub>O", amount: 0.736, unit: "g" }, { name: "Water (メスアップ)", amount: 500.0, unit: "mLまで" }]
             },
             "stc": {
-                name: "STCバッファ", fullName: "STCバッファ", eyebrow: "Protoplast Buffer", type: "recipe", baseVolume: 100,
+                name: "STCバッファ", fullName: "STCバッファ", eyebrow: "Protoplast Buffer", type: "recipe", baseVolume: 100, unit: "mL", presets: [25, 50, 100, 200, 500], hasVolume: true,
                 getAdvice: (vol) => `💡 プロトプラスト調製・洗浄用`, calculateCost: (vol) => `💰 概算コスト: -`,
                 info: { title: "STCバッファについての解説", body: "ソルビトール、Tris、塩化カルシウムを含有。Ca²⁺が細胞膜とDNAを架橋して取り込みを促進します。" },
                 ingredients: [{ name: "ソルビトール", amount: 21.8, unit: "g" }, { name: "CaCl<sub>2</sub>・2H<sub>2</sub>O", amount: 0.147, unit: "g" }, { name: "1M Tris-HCl (pH7.5)", amount: 1000, unit: "µL" }, { name: "Water (メスアップ)", amount: 100.0, unit: "mLまで" }]
             },
             "peg_40": {
-                name: "40%PEG", fullName: "40%PEG", eyebrow: "Transformation Reagent", type: "recipe", baseVolume: 100,
+                name: "40%PEG", fullName: "40%PEG", eyebrow: "Transformation Reagent", type: "recipe", baseVolume: 100, unit: "mL", presets: [25, 50, 100, 200, 500], hasVolume: true,
                 getAdvice: (vol) => `💡 プロトプラストの形質転換用`, calculateCost: (vol) => `💰 概算コスト: -`,
                 info: { title: "40%PEGについての解説", body: "PEG法形質転換用。熱湯で温め激しく振とうして溶解後オートクレーブ滅菌。" },
                 ingredients: [{ name: "PEG", amount: 40.0, unit: "g" }, { name: "ソルビトール", amount: 21.8, unit: "g" }, { name: "CaCl<sub>2</sub>・2H<sub>2</sub>O", amount: 0.736, unit: "g" }, { name: "1M Tris-HCl (pH7.5)", amount: 1000, unit: "µL" }, { name: "2N NaOH", amount: 300, unit: "µL" }, { name: "Water (メスアップ)", amount: 100.0, unit: "mLまで" }]
             },
             "cell_wall_enzyme": {
-                name: "細胞壁分解酵素", fullName: "細胞壁分解酵素溶液", eyebrow: "Protoplasting Enzyme", type: "recipe", baseVolume: 50,
+                name: "細胞壁分解酵素", fullName: "細胞壁分解酵素溶液", eyebrow: "Protoplasting Enzyme", type: "recipe", baseVolume: 50, unit: "mL", presets: [25, 50, 100, 200, 500], hasVolume: true,
                 getAdvice: (vol) => `💡 フィルター滅菌して使用`, calculateCost: (vol) => `💰 概算コスト: -`,
                 info: { title: "細胞壁分解酵素溶液についての解説", body: "糸状菌の細胞壁を消化してプロトプラスト化します。酵素が失活するため加熱滅菌不可、フィルター滅菌を使用。" },
                 ingredients: [{ name: "等張液", amount: 50.0, unit: "mL" }, { name: "Vinotaste Pro", amount: 2.5, unit: "g" }, { name: "キタラーゼ", amount: 0.5, unit: "g" }]
@@ -1878,7 +1765,8 @@
 
         const pcrDatabase = {
             "ex_premier": {
-                shortName: "ExPremier", fullName: "ExPremier (Premix)", baseVolume: 50, getAdvice: (vol) => `💡 タカラバイオが推す1stチョイス・高成功率酵素`,
+                shortName: "ExPremier", fullName: "ExPremier (Premix)", baseVolume: 50, unit: "µL", presets: [50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200], hasVolume: true,
+                getAdvice: (vol) => `💡 タカラバイオが推す1stチョイス・高成功率酵素`,
                 calculateCost: (vol) => `💰 概算コスト: 約 ${Math.round((21.4 / 10) * vol)} 円 (${vol} µLあたり)`,
                 info: { title: "ExPremierについての解説", body: "圧倒的な成功率の高さを誇るプレミックス。遺伝子破壊チェックなど電気泳動確認にベスト。" },
                 cycles: [
@@ -1892,7 +1780,8 @@
                 ingredients: [{ name: "Ex Premier DNA Polymerase (2x)", amount: 25.0, unit: "µL" }, { name: "Forward Primer (10 µM)", amount: 1.0, unit: "µL" }, { name: "Reverse Primer (10 µM)", amount: 1.0, unit: "µL" }, { name: "滅菌水 (dH<sub>2</sub>O)", amount: 23.0, unit: "µL" }]
             },
             "prime_star_max": {
-                shortName: "PrimeSTAR MAX", fullName: "PrimeSTAR MAX (Premix)", baseVolume: 50, getAdvice: (vol) => `💡 クローニングの高正確性において最強の酵素`,
+                shortName: "PrimeSTAR MAX", fullName: "PrimeSTAR MAX (Premix)", baseVolume: 50, unit: "µL", presets: [50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200], hasVolume: true,
+                getAdvice: (vol) => `💡 クローニングの高正確性において最強の酵素`,
                 calculateCost: (vol) => `💰 概算コスト: 約 ${Math.round((56.0 / 10) * vol)} 円 (${vol} µLあたり)`,
                 info: { title: "PrimeSTAR MAXについての解説", body: "クローニングにおいて最高峰の正確性。伸長反応は60sec/kbでじっくり行うと増幅が安定します。" },
                 cycles: [
@@ -1911,7 +1800,8 @@
                 ingredients: [{ name: "PrimeSTAR Max Premix (2x)", amount: 25.0, unit: "µL" }, { name: "Forward Primer (10 µM)", amount: 1.0, unit: "µL" }, { name: "Reverse Primer (10 µM)", amount: 1.0, unit: "µL" }, { name: "滅菌水 (dH<sub>2</sub>O)", amount: 23.0, unit: "µL" }]
             },
             "prime_star_gxl": {
-                shortName: "PrimeSTAR GXL", fullName: "PrimeSTAR GXL (Premix)", baseVolume: 50, getAdvice: (vol) => `💡 MAXが予算外や増えにくい時の強力な2ndチョイス`,
+                shortName: "PrimeSTAR GXL", fullName: "PrimeSTAR GXL (Premix)", baseVolume: 50, unit: "µL", presets: [50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200], hasVolume: true,
+                getAdvice: (vol) => `💡 MAXが予算外や増えにくい時の強力な2ndチョイス`,
                 calculateCost: (vol) => `💰 概算コスト: 約 ${Math.round((26.6 / 10) * vol)} 円 (${vol} µLあたり)`,
                 info: { title: "PrimeSTAR GXLについての解説", body: "GCリッチやロングレンジに強い高正確性酵素。MAXで増えない場合の代替に最適。" },
                 cycles: [
@@ -1924,7 +1814,8 @@
                 ingredients: [{ name: "PrimeSTAR GXL Premix (2x)", amount: 25.0, unit: "µL" }, { name: "Forward Primer (10 µM)", amount: 1.0, unit: "µL" }, { name: "Reverse Primer (10 µM)", amount: 1.0, unit: "µL" }, { name: "滅菌水 (dH<sub>2</sub>O)", amount: 23.0, unit: "µL" }]
             },
             "emerald_amp": {
-                shortName: "EmeraldAmp", fullName: "EmeraldAmp (Premix)", baseVolume: 50, getAdvice: (vol) => `💡 コスパ最強。コロニーPCR、ルーチンPCRに。`,
+                shortName: "EmeraldAmp", fullName: "EmeraldAmp (Premix)", baseVolume: 50, unit: "µL", presets: [50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200], hasVolume: true,
+                getAdvice: (vol) => `💡 コスパ最強。コロニーPCR、ルーチンPCRに。`,
                 calculateCost: (vol) => `💰 概算コスト: 約 ${Math.round((16.7 / 10) * vol)} 円 (${vol} µLあたり)`,
                 info: { title: "EmeraldAmpについての解説", body: "色素入りでPCR後にそのままゲルにロード可能。大腸菌コロニーPCRなど大量スクリーニングに。" },
                 cycles: [
@@ -1940,7 +1831,7 @@
 
         const guideDatabase = {
             "pcr_enzyme_guide": {
-                name: "PCR酵素の使い分け", eyebrow: "Selection Guide",
+                name: "PCR酵素の使い分け", eyebrow: "Selection Guide", hasVolume: false,
                 cards: [
                     { title: "🧬 プラスミドクローニング（正確性重視）", desc: "高正確性が必要なため <b>PrimeSTAR MAX</b> がベストチョイス。 MAXで増えない場合の2ndチョイスとして <b>PrimeSTAR GXL</b> がおすすめ。" },
                     { title: "🎯 遺伝子破壊チェックなど（成功率重視）", desc: "とにかくPCRを成功させたい場合は、高成功率を誇る <b>ExPremier</b> が最適。また、コスパを優先したいルーチンPCRには <b>EmeraldAmp</b> もおすすめ。" },
@@ -1948,13 +1839,70 @@
                 ]
             },
             "peg_method_guide": {
-                name: "プロトプラストPEG法の原理", eyebrow: "Transformation Guide",
+                name: "プロトプラストPEG法の原理", eyebrow: "Transformation Guide", hasVolume: false,
                 cards: [
                     { title: "⚡ Ca²⁺の役割", desc: "プロトプラストの細胞膜表面（負電荷）とDNA（負電荷）の静電的反発をCa²⁺が中和・架橋し、細胞膜表面にDNA分子を吸着させます。" },
                     { title: "💧 PEGの役割", desc: "PEGの強い脱水作用で細胞膜を一過的に不安定化・微小孔を生じさせ、表面のDNA-Ca²⁺複合体を細胞内に取り込ませます。" }
                 ]
             }
         };
+
+        function getCardItem(key) {
+            return mediaDatabase[key] || pcrDatabase[key] || commonReagentDatabase[key] || guideDatabase[key] || null;
+        }
+
+        let cardVolumes = JSON.parse(localStorage.getItem('lab_cardVolumes')) || {};
+
+        function migrateLegacyVolumes() {
+            const legacyMediaVol = parseInt(localStorage.getItem('lab_mediaVolume'), 10);
+            const legacyPcrVol = parseInt(localStorage.getItem('lab_pcrVolume'), 10);
+            const legacySolVol = parseInt(localStorage.getItem('lab_solutionVolume'), 10);
+            const legacyElec = JSON.parse(localStorage.getItem('lab_elecVolumes')) || {};
+            const legacyAgro = JSON.parse(localStorage.getItem('lab_agroVolumes')) || {};
+            const legacyProto = JSON.parse(localStorage.getItem('lab_protoVolumes')) || {};
+            const legacyEcoli = JSON.parse(localStorage.getItem('lab_ecoliVolumes')) || {};
+            const legacyAdditive = JSON.parse(localStorage.getItem('lab_additiveVolumes')) || {};
+
+            let modified = false;
+            Object.keys(mediaDatabase).forEach(k => {
+                if (cardVolumes[k] === undefined) {
+                    cardVolumes[k] = !isNaN(legacyMediaVol) ? legacyMediaVol : mediaDatabase[k].baseVolume;
+                    modified = true;
+                }
+            });
+            Object.keys(pcrDatabase).forEach(k => {
+                if (cardVolumes[k] === undefined) {
+                    cardVolumes[k] = !isNaN(legacyPcrVol) ? legacyPcrVol : pcrDatabase[k].baseVolume;
+                    modified = true;
+                }
+            });
+            Object.keys(commonReagentDatabase).forEach(k => {
+                if (cardVolumes[k] === undefined) {
+                    if (legacyElec[k] !== undefined) cardVolumes[k] = legacyElec[k];
+                    else if (legacyAgro[k] !== undefined) cardVolumes[k] = legacyAgro[k];
+                    else if (legacyProto[k] !== undefined) cardVolumes[k] = legacyProto[k];
+                    else if (legacyEcoli[k] !== undefined) cardVolumes[k] = legacyEcoli[k];
+                    else if (legacyAdditive[k] !== undefined) cardVolumes[k] = legacyAdditive[k];
+                    else if (!isNaN(legacySolVol)) cardVolumes[k] = legacySolVol;
+                    else cardVolumes[k] = commonReagentDatabase[k].baseVolume || 100;
+                    modified = true;
+                }
+            });
+            if (modified) {
+                localStorage.setItem('lab_cardVolumes', JSON.stringify(cardVolumes));
+            }
+        }
+
+        function getCardVolume(key) {
+            if (cardVolumes[key] !== undefined) return cardVolumes[key];
+            const item = getCardItem(key);
+            return item && item.baseVolume ? item.baseVolume : 100;
+        }
+
+        function setCardVolume(key, vol) {
+            cardVolumes[key] = vol;
+            localStorage.setItem('lab_cardVolumes', JSON.stringify(cardVolumes));
+        }
 
         let mediaOrderConfig = JSON.parse(localStorage.getItem('lab_mediaOrderConfig')) || [
             { key: "cm", visible: true }, { key: "v30", visible: true }, { key: "pda", visible: true }, { key: "lb", visible: true }, { key: "im", visible: true }, { key: "gamborg", visible: true }, { key: "regeneration", visible: true }, { key: "selection", visible: true }, { key: "sachs", visible: true }
@@ -1990,14 +1938,10 @@
         let favorites = JSON.parse(localStorage.getItem('lab_favorites')) || [];
         let currentMediaMode = "stock"; 
         let currentSobMode = "stock";
-        let currentViewIndex = parseInt(localStorage.getItem('lab_viewIndex')) || 0;
+        let currentViewIndex = parseInt(localStorage.getItem('lab_viewIndex'), 10) || 0;
         let currentMediaKey = localStorage.getItem('lab_mediaKey') || "cm";
-        let currentVolume = parseInt(localStorage.getItem('lab_mediaVolume')) || 100;
-        const mediaVolumes = [50, 100, 150, 200, 250, 300, 350, 400, 450, 500];
 
         let currentSolutionKey = localStorage.getItem('lab_solutionKey') || "acetosyringone_100mm";
-        let currentSolutionVolume = parseInt(localStorage.getItem('lab_solutionVolume')) || 10;
-
         let visibleElecKeys = electrophoresisOrderConfig.filter(e => e.visible).map(e => e.key);
         let currentElecKey = localStorage.getItem('lab_elecKey') || visibleElecKeys[0] || "lambda_marker";
 
@@ -2013,25 +1957,9 @@
         let visibleAdditiveKeys = additiveOrderConfig.filter(a => a.visible).map(a => a.key);
         let currentAdditiveKey = localStorage.getItem('lab_additiveKey') || visibleAdditiveKeys[0] || "acetosyringone_100mm";
 
-        let currentElecVolumes = JSON.parse(localStorage.getItem('lab_elecVolumes')) || { "loading_dye_6x": 100, "gel_red": 100, "tae_50x": 1000 };
-        let currentAgroVolumes = JSON.parse(localStorage.getItem('lab_agroVolumes')) || { "im": 100, "acetosyringone_100mm": 10, "mm_sol_1": 100, "mm_sol_2": 100, "naoh_2n": 40 };
-        let currentProtoVolumes = JSON.parse(localStorage.getItem('lab_protoVolumes')) || { "isotonic": 500, "stc": 100, "peg_40": 100, "cell_wall_enzyme": 50 };
-        let currentEcoliVolumes = JSON.parse(localStorage.getItem('lab_ecoliVolumes')) || { "lb": 100, "sob": 1000, "soc": 100, "mg_sol_2m": 100, "glucose_2m": 100 };
-        let currentAdditiveVolumes = JSON.parse(localStorage.getItem('lab_additiveVolumes')) || { "acetosyringone_100mm": 10, "uridine_1m": 10 };
-
-        const elecPresetVolumes = [25, 50, 100, 200, 500, 1000];
-        const agroPresetVolumes = [10, 25, 40, 50, 100, 200, 300, 500];
-        const protoPresetVolumes = [25, 50, 100, 200, 500];
-        const ecoliPresetVolumes = [50, 100, 200, 250, 500, 1000];
-        const additivePresetVolumes = [5, 10, 20, 25, 50, 100];
-
-        let keypadInputStr = "0", pcrKeypadInputStr = "0", solutionKeypadInputStr = "0", elecKeypadInputStr = "0", agroKeypadInputStr = "0", protoKeypadInputStr = "0", ecoliKeypadInputStr = "0", additiveKeypadInputStr = "0";
-
         let visiblePcrKeys = pcrOrderConfig.filter(p => p.visible).map(p => p.key);
         let currentPcrKey = localStorage.getItem('lab_pcrKey') || visiblePcrKeys[0] || "ex_premier";
-        let currentPcrVolume = parseInt(localStorage.getItem('lab_pcrVolume')) || 50;
         let currentPcrMode = "recipe";
-        const pcrVolumes = [50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200];
         let currentGuideKey = localStorage.getItem('lab_guideKey') || "pcr_enzyme_guide";
 
         let lightThemeEnabled = localStorage.getItem('lab_lightTheme') === 'true';
@@ -2075,6 +2003,83 @@
             localStorage.setItem('lab_lightTheme', lightThemeEnabled);
             applyTheme();
             syncPreferenceToggleStates();
+        }
+
+        let currentEditingCardKey = "";
+        let cardKeypadInputStr = "0";
+
+        function openCardVolumeModal(key) {
+            const item = getCardItem(key);
+            if (!item || item.hasVolume === false) return;
+            currentEditingCardKey = key;
+            const currentVol = getCardVolume(key);
+            const unit = item.unit || "mL";
+            const presets = item.presets || [50, 100, 150, 200, 500];
+
+            const listEl = document.getElementById("cardVolumeOptionsList");
+            listEl.innerHTML = "";
+            listEl.style.removeProperty('display');
+            document.getElementById("cardVolumeKeypadContainer").style.display = "none";
+            document.getElementById("cardVolumeModalHeader").textContent = `${item.name || item.shortName || '作製'}容量を選択`;
+
+            presets.forEach(vol => {
+                const btn = document.createElement("button");
+                btn.className = `option-item ${vol === currentVol ? 'selected' : ''}`;
+                btn.textContent = `${vol} ${unit}`;
+                btn.onclick = () => {
+                    setCardVolume(key, vol);
+                    closeModal('cardVolumeModal');
+                    updateView();
+                };
+                listEl.appendChild(btn);
+            });
+
+            const customBtn = document.createElement("button");
+            customBtn.className = `option-item ${!presets.includes(currentVol) ? 'selected' : ''}`;
+            customBtn.style.gridColumn = "span 2";
+            customBtn.innerHTML = `<span style="width: 100%; text-align: center;">CUSTOM</span>`;
+            customBtn.onclick = () => {
+                openCardVolumeKeypad();
+            };
+            listEl.appendChild(customBtn);
+
+            openModal('cardVolumeModal');
+        }
+
+        function openCardVolumeKeypad() {
+            const item = getCardItem(currentEditingCardKey);
+            const unit = item ? (item.unit || "mL") : "mL";
+            const listEl = document.getElementById("cardVolumeOptionsList");
+            if (listEl) listEl.style.setProperty('display', 'none', 'important');
+            document.getElementById("cardVolumeKeypadContainer").style.display = "flex";
+            document.getElementById("cardVolumeModalHeader").textContent = "カスタム容量を入力";
+            cardKeypadInputStr = "0";
+            updateCardVolumeKeypadPreview(unit);
+        }
+
+        function pressCardVolumeKeypad(val) {
+            const item = getCardItem(currentEditingCardKey);
+            const unit = item ? (item.unit || "mL") : "mL";
+            const maxLen = unit === "µL" ? 4 : 5;
+            if (val === 'clear') cardKeypadInputStr = "0";
+            else if (val === 'backspace') cardKeypadInputStr = cardKeypadInputStr.length > 1 ? cardKeypadInputStr.slice(0, -1) : "0";
+            else cardKeypadInputStr = cardKeypadInputStr === "0" ? val : (cardKeypadInputStr.length < maxLen ? cardKeypadInputStr + val : cardKeypadInputStr);
+            updateCardVolumeKeypadPreview(unit);
+        }
+
+        function updateCardVolumeKeypadPreview(unit) {
+            document.getElementById("cardVolumeKeypadPreview").textContent = `${cardKeypadInputStr} ${unit}`;
+        }
+
+        function applyCustomCardVolume() {
+            const num = parseInt(cardKeypadInputStr, 10);
+            if (!isNaN(num) && num > 0 && currentEditingCardKey) {
+                setCardVolume(currentEditingCardKey, num);
+                closeModal('cardVolumeModal');
+                updateView();
+            } else {
+                alert("有効な数値を入力してください。");
+            }
         }
 
         function getPreferencesCard1Html(idSuffix) {
@@ -2186,6 +2191,7 @@
         }
 
         function initApp() {
+            migrateLegacyVolumes();
             applyTheme();
             renderPreferencesCarousel();
             applyFavoriteFeatureState();
@@ -2200,55 +2206,6 @@
             buildPcrModals();
             buildGuideModals();
             buildLauncherGrid();
-
-            const volListEl = document.getElementById("volumeOptionsList");
-            volListEl.innerHTML = "";
-            mediaVolumes.forEach(vol => {
-                const btn = document.createElement("button");
-                btn.className = `option-item ${vol === currentVolume ? 'selected' : ''}`;
-                btn.textContent = `${vol} mL`;
-                btn.onclick = () => { currentVolume = vol; localStorage.setItem('lab_mediaVolume', vol); closeModal('volumeModal'); updateView(); };
-                volListEl.appendChild(btn);
-            });
-            const customBtn = document.createElement("button");
-            customBtn.className = `option-item ${!mediaVolumes.includes(currentVolume) ? 'selected' : ''}`;
-            customBtn.style.gridColumn = "span 2";
-            customBtn.innerHTML = `<span style="width: 100%; text-align: center;">CUSTOM</span>`;
-            customBtn.onclick = () => { openKeypadModal(); };
-            volListEl.appendChild(customBtn);
-
-            const solVolListEl = document.getElementById("solutionVolumeOptionsList");
-            solVolListEl.innerHTML = "";
-            const solPresetVols = [10, 20, 50, 100, 200, 500];
-            solPresetVols.forEach(vol => {
-                const btn = document.createElement("button");
-                btn.className = `option-item ${vol === currentSolutionVolume ? 'selected' : ''}`;
-                btn.textContent = `${vol} mL`;
-                btn.onclick = () => { currentSolutionVolume = vol; localStorage.setItem('lab_solutionVolume', vol); closeModal('solutionVolumeModal'); updateView(); };
-                solVolListEl.appendChild(btn);
-            });
-            const solCustomBtn = document.createElement("button");
-            solCustomBtn.className = `option-item ${!solPresetVols.includes(currentSolutionVolume) ? 'selected' : ''}`;
-            solCustomBtn.style.gridColumn = "span 2";
-            solCustomBtn.innerHTML = `<span style="width: 100%; text-align: center;">CUSTOM</span>`;
-            solCustomBtn.onclick = () => { openSolutionKeypadModal(); };
-            solVolListEl.appendChild(solCustomBtn);
-
-            const pcrVolListEl = document.getElementById("pcrVolumeOptionsList");
-            pcrVolListEl.innerHTML = "";
-            pcrVolumes.forEach(vol => {
-                const btn = document.createElement("button");
-                btn.className = `option-item ${vol === currentPcrVolume ? 'selected' : ''}`;
-                btn.textContent = `${vol} µL`;
-                btn.onclick = () => { currentPcrVolume = vol; localStorage.setItem('lab_pcrVolume', vol); closeModal('pcrVolumeModal'); updateView(); };
-                pcrVolListEl.appendChild(btn);
-            });
-            const pcrCustomBtn = document.createElement("button");
-            pcrCustomBtn.className = `option-item ${!pcrVolumes.includes(currentPcrVolume) ? 'selected' : ''}`;
-            pcrCustomBtn.style.gridColumn = "span 2";
-            pcrCustomBtn.innerHTML = `<span style="width: 100%; text-align: center;">CUSTOM</span>`;
-            pcrCustomBtn.onclick = () => { openPcrKeypadModal(); };
-            pcrVolListEl.appendChild(customBtn);
 
             jumpToPage(currentViewIndex);
             updateView(true);
@@ -2540,316 +2497,6 @@
             updateView();
         }
 
-        function openKeypadModal() {
-            const listEl = document.getElementById("volumeOptionsList");
-            if (listEl) listEl.style.setProperty('display', 'none', 'important');
-            document.getElementById("keypadContainer").style.display = "flex";
-            document.getElementById("volumeModalHeader").textContent = "カスタム容量を入力";
-            keypadInputStr = "0";
-            updateKeypadPreview();
-        }
-        function pressKeypad(val) {
-            if (val === 'clear') keypadInputStr = "0";
-            else if (val === 'backspace') keypadInputStr = keypadInputStr.length > 1 ? keypadInputStr.slice(0, -1) : "0";
-            else keypadInputStr = keypadInputStr === "0" ? val : (keypadInputStr.length < 5 ? keypadInputStr + val : keypadInputStr);
-            updateKeypadPreview();
-        }
-        function updateKeypadPreview() { document.getElementById("keypadPreview").textContent = `${keypadInputStr} mL`; }
-        function applyCustomVolume() {
-            const num = parseInt(keypadInputStr, 10);
-            if (!isNaN(num) && num > 0) { currentVolume = num; localStorage.setItem('lab_mediaVolume', num); closeModal('volumeModal'); initApp(); updateView(); }
-            else alert("有効な数値を入力してください。");
-        }
-
-        function openSolutionKeypadModal() {
-            const listEl = document.getElementById("solutionVolumeOptionsList");
-            if (listEl) listEl.style.setProperty('display', 'none', 'important');
-            document.getElementById("solutionKeypadContainer").style.display = "flex";
-            document.getElementById("solutionVolumeModalHeader").textContent = "カスタム容量を入力";
-            solutionKeypadInputStr = "0";
-            updateSolutionKeypadPreview();
-        }
-        function pressSolutionKeypad(val) {
-            if (val === 'clear') solutionKeypadInputStr = "0";
-            else if (val === 'backspace') solutionKeypadInputStr = solutionKeypadInputStr.length > 1 ? solutionKeypadInputStr.slice(0, -1) : "0";
-            else solutionKeypadInputStr = solutionKeypadInputStr === "0" ? val : (solutionKeypadInputStr.length < 5 ? solutionKeypadInputStr + val : solutionKeypadInputStr);
-            updateSolutionKeypadPreview();
-        }
-        function updateSolutionKeypadPreview() { document.getElementById("solutionKeypadPreview").textContent = `${solutionKeypadInputStr} mL`; }
-        function applyCustomSolutionVolume() {
-            const num = parseInt(solutionKeypadInputStr, 10);
-            if (!isNaN(num) && num > 0) { currentSolutionVolume = num; localStorage.setItem('lab_solutionVolume', num); closeModal('solutionVolumeModal'); initApp(); updateView(); }
-            else alert("有効な数値を入力してください。");
-        }
-
-        function openElecVolumeModal(itemKey) {
-            const elec = commonReagentDatabase[itemKey];
-            if (!elec || elec.type !== 'recipe') return;
-            const currentVol = currentElecVolumes[itemKey] || elec.baseVolume;
-            const solVolListEl = document.getElementById("elecVolumeOptionsList");
-            solVolListEl.innerHTML = ""; solVolListEl.style.removeProperty('display');
-            document.getElementById("elecKeypadContainer").style.display = "none";
-            document.getElementById("elecVolumeModalHeader").textContent = "作製容量を選択";
-
-            elecPresetVolumes.forEach(vol => {
-                const btn = document.createElement("button");
-                btn.className = `option-item ${vol === currentVol ? 'selected' : ''}`;
-                btn.textContent = `${vol} mL`;
-                btn.onclick = () => { currentElecVolumes[itemKey] = vol; localStorage.setItem('lab_elecVolumes', JSON.stringify(currentElecVolumes)); closeModal('elecVolumeModal'); updateView(); };
-                solVolListEl.appendChild(btn);
-            });
-            const customBtn = document.createElement("button");
-            customBtn.className = `option-item ${!elecPresetVolumes.includes(currentVol) ? 'selected' : ''}`;
-            customBtn.style.gridColumn = "span 2";
-            customBtn.innerHTML = `<span style="width: 100%; text-align: center;">CUSTOM</span>`;
-            customBtn.onclick = () => { openElecKeypadModal(itemKey); };
-            solVolListEl.appendChild(customBtn);
-            openModal('elecVolumeModal');
-        }
-        let currentEditingElecKey = "";
-        function openElecKeypadModal(itemKey) {
-            currentEditingElecKey = itemKey;
-            const listEl = document.getElementById("elecVolumeOptionsList");
-            if (listEl) listEl.style.setProperty('display', 'none', 'important');
-            document.getElementById("elecKeypadContainer").style.display = "flex";
-            document.getElementById("elecVolumeModalHeader").textContent = "カスタム容量を入力";
-            elecKeypadInputStr = "0";
-            updateElecKeypadPreview();
-        }
-        function pressElecKeypad(val) {
-            if (val === 'clear') elecKeypadInputStr = "0";
-            else if (val === 'backspace') elecKeypadInputStr = elecKeypadInputStr.length > 1 ? elecKeypadInputStr.slice(0, -1) : "0";
-            else elecKeypadInputStr = elecKeypadInputStr === "0" ? val : (elecKeypadInputStr.length < 5 ? elecKeypadInputStr + val : elecKeypadInputStr);
-            updateElecKeypadPreview();
-        }
-        function updateElecKeypadPreview() { document.getElementById("elecKeypadPreview").textContent = `${elecKeypadInputStr} mL`; }
-        function applyCustomElecVolume() {
-            const num = parseInt(elecKeypadInputStr, 10);
-            if (!isNaN(num) && num > 0 && currentEditingElecKey) {
-                currentElecVolumes[currentEditingElecKey] = num;
-                localStorage.setItem('lab_elecVolumes', JSON.stringify(currentElecVolumes));
-                closeModal('elecVolumeModal'); updateView();
-            } else alert("有効な数値を入力してください。");
-        }
-
-        function openAgroVolumeModal(itemKey) {
-            const agro = commonReagentDatabase[itemKey];
-            if (!agro || agro.type !== 'recipe') return;
-            const currentVol = currentAgroVolumes[itemKey] || agro.baseVolume;
-            const agroVolListEl = document.getElementById("agroVolumeOptionsList");
-            agroVolListEl.innerHTML = ""; agroVolListEl.style.removeProperty('display');
-            document.getElementById("agroKeypadContainer").style.display = "none";
-            document.getElementById("agroVolumeModalHeader").textContent = "作製容量を選択";
-            const targetPresets = (itemKey === "im") ? [50, 100, 150, 200, 250, 300, 400, 500] : agroPresetVolumes;
-            targetPresets.forEach(vol => {
-                const btn = document.createElement("button");
-                btn.className = `option-item ${vol === currentVol ? 'selected' : ''}`;
-                btn.textContent = `${vol} mL`;
-                btn.onclick = () => { currentAgroVolumes[itemKey] = vol; localStorage.setItem('lab_agroVolumes', JSON.stringify(currentAgroVolumes)); closeModal('agroVolumeModal'); updateView(); };
-                agroVolListEl.appendChild(btn);
-            });
-            const customBtn = document.createElement("button");
-            customBtn.className = `option-item ${!targetPresets.includes(currentVol) ? 'selected' : ''}`;
-            customBtn.style.gridColumn = "span 2";
-            customBtn.innerHTML = `<span style="width: 100%; text-align: center;">CUSTOM</span>`;
-            customBtn.onclick = () => { openAgroKeypadModal(itemKey); };
-            agroVolListEl.appendChild(customBtn);
-            openModal('agroVolumeModal');
-        }
-        let currentEditingAgroKey = "";
-        function openAgroKeypadModal(itemKey) {
-            currentEditingAgroKey = itemKey;
-            const listEl = document.getElementById("agroVolumeOptionsList");
-            if (listEl) listEl.style.setProperty('display', 'none', 'important');
-            document.getElementById("agroKeypadContainer").style.display = "flex";
-            document.getElementById("agroVolumeModalHeader").textContent = "カスタム容量を入力";
-            agroKeypadInputStr = "0";
-            updateAgroKeypadPreview();
-        }
-        function pressAgroKeypad(val) {
-            if (val === 'clear') agroKeypadInputStr = "0";
-            else if (val === 'backspace') agroKeypadInputStr = agroKeypadInputStr.length > 1 ? agroKeypadInputStr.slice(0, -1) : "0";
-            else agroKeypadInputStr = agroKeypadInputStr === "0" ? val : (agroKeypadInputStr.length < 5 ? agroKeypadInputStr + val : agroKeypadInputStr);
-            updateAgroKeypadPreview();
-        }
-        function updateAgroKeypadPreview() { document.getElementById("agroKeypadPreview").textContent = `${agroKeypadInputStr} mL`; }
-        function applyCustomAgroVolume() {
-            const num = parseInt(agroKeypadInputStr, 10);
-            if (!isNaN(num) && num > 0 && currentEditingAgroKey) {
-                currentAgroVolumes[currentEditingAgroKey] = num;
-                localStorage.setItem('lab_agroVolumes', JSON.stringify(currentAgroVolumes));
-                closeModal('agroVolumeModal'); updateView();
-            } else alert("有効な数値を入力してください。");
-        }
-
-        function openProtoVolumeModal(itemKey) {
-            const proto = commonReagentDatabase[itemKey];
-            if (!proto || proto.type !== 'recipe') return;
-            const currentVol = currentProtoVolumes[itemKey] || proto.baseVolume;
-            const protoVolListEl = document.getElementById("protoVolumeOptionsList");
-            protoVolListEl.innerHTML = ""; protoVolListEl.style.removeProperty('display');
-            document.getElementById("protoKeypadContainer").style.display = "none";
-            document.getElementById("protoVolumeModalHeader").textContent = "作製容量を選択";
-            protoPresetVolumes.forEach(vol => {
-                const btn = document.createElement("button");
-                btn.className = `option-item ${vol === currentVol ? 'selected' : ''}`;
-                btn.textContent = `${vol} mL`;
-                btn.onclick = () => { currentProtoVolumes[itemKey] = vol; localStorage.setItem('lab_protoVolumes', JSON.stringify(currentProtoVolumes)); closeModal('protoVolumeModal'); updateView(); };
-                protoVolListEl.appendChild(btn);
-            });
-            const customBtn = document.createElement("button");
-            customBtn.className = `option-item ${!protoPresetVolumes.includes(currentVol) ? 'selected' : ''}`;
-            customBtn.style.gridColumn = "span 2";
-            customBtn.innerHTML = `<span style="width: 100%; text-align: center;">CUSTOM</span>`;
-            customBtn.onclick = () => { openProtoKeypadModal(itemKey); };
-            protoVolListEl.appendChild(customBtn);
-            openModal('protoVolumeModal');
-        }
-        let currentEditingProtoKey = "";
-        function openProtoKeypadModal(itemKey) {
-            currentEditingProtoKey = itemKey;
-            const listEl = document.getElementById("protoVolumeOptionsList");
-            if (listEl) listEl.style.setProperty('display', 'none', 'important');
-            document.getElementById("protoKeypadContainer").style.display = "flex";
-            document.getElementById("protoVolumeModalHeader").textContent = "カスタム容量を入力";
-            protoKeypadInputStr = "0";
-            updateProtoKeypadPreview();
-        }
-        function pressProtoKeypad(val) {
-            if (val === 'clear') protoKeypadInputStr = "0";
-            else if (val === 'backspace') protoKeypadInputStr = protoKeypadInputStr.length > 1 ? protoKeypadInputStr.slice(0, -1) : "0";
-            else protoKeypadInputStr = protoKeypadInputStr === "0" ? val : (protoKeypadInputStr.length < 5 ? protoKeypadInputStr + val : protoKeypadInputStr);
-            updateProtoKeypadPreview();
-        }
-        function updateProtoKeypadPreview() { document.getElementById("protoKeypadPreview").textContent = `${protoKeypadInputStr} mL`; }
-        function applyCustomProtoVolume() {
-            const num = parseInt(protoKeypadInputStr, 10);
-            if (!isNaN(num) && num > 0 && currentEditingProtoKey) {
-                currentProtoVolumes[currentEditingProtoKey] = num;
-                localStorage.setItem('lab_protoVolumes', JSON.stringify(currentProtoVolumes));
-                closeModal('protoVolumeModal'); updateView();
-            } else alert("有効な数値を入力してください。");
-        }
-
-        function openEcoliVolumeModal(itemKey) {
-            const ec = commonReagentDatabase[itemKey];
-            if (!ec || ec.type !== 'recipe') return;
-            const currentVol = currentEcoliVolumes[itemKey] || ec.baseVolume;
-            const ecoliVolListEl = document.getElementById("ecoliVolumeOptionsList");
-            ecoliVolListEl.innerHTML = ""; ecoliVolListEl.style.removeProperty('display');
-            document.getElementById("ecoliKeypadContainer").style.display = "none";
-            document.getElementById("ecoliVolumeModalHeader").textContent = "作製容量を選択";
-            ecoliPresetVolumes.forEach(vol => {
-                const btn = document.createElement("button");
-                btn.className = `option-item ${vol === currentVol ? 'selected' : ''}`;
-                btn.textContent = `${vol} mL`;
-                btn.onclick = () => { currentEcoliVolumes[itemKey] = vol; localStorage.setItem('lab_ecoliVolumes', JSON.stringify(currentEcoliVolumes)); closeModal('ecoliVolumeModal'); updateView(); };
-                ecoliVolListEl.appendChild(btn);
-            });
-            const customBtn = document.createElement("button");
-            customBtn.className = `option-item ${!ecoliPresetVolumes.includes(currentVol) ? 'selected' : ''}`;
-            customBtn.style.gridColumn = "span 2";
-            customBtn.innerHTML = `<span style="width: 100%; text-align: center;">CUSTOM</span>`;
-            customBtn.onclick = () => { openEcoliKeypadModal(itemKey); };
-            ecoliVolListEl.appendChild(customBtn);
-            openModal('ecoliVolumeModal');
-        }
-        let currentEditingEcoliKey = "";
-        function openEcoliKeypadModal(itemKey) {
-            currentEditingEcoliKey = itemKey;
-            const listEl = document.getElementById("ecoliVolumeOptionsList");
-            if (listEl) listEl.style.setProperty('display', 'none', 'important');
-            document.getElementById("ecoliKeypadContainer").style.display = "flex";
-            document.getElementById("ecoliVolumeModalHeader").textContent = "カスタム容量を入力";
-            ecoliKeypadInputStr = "0";
-            updateEcoliKeypadPreview();
-        }
-        function pressEcoliKeypad(val) {
-            if (val === 'clear') ecoliKeypadInputStr = "0";
-            else if (val === 'backspace') ecoliKeypadInputStr = ecoliKeypadInputStr.length > 1 ? ecoliKeypadInputStr.slice(0, -1) : "0";
-            else ecoliKeypadInputStr = ecoliKeypadInputStr === "0" ? val : (ecoliKeypadInputStr.length < 5 ? ecoliKeypadInputStr + val : ecoliKeypadInputStr);
-            updateEcoliKeypadPreview();
-        }
-        function updateEcoliKeypadPreview() { document.getElementById("ecoliKeypadPreview").textContent = `${ecoliKeypadInputStr} mL`; }
-        function applyCustomEcoliVolume() {
-            const num = parseInt(ecoliKeypadInputStr, 10);
-            if (!isNaN(num) && num > 0 && currentEditingEcoliKey) {
-                currentEcoliVolumes[currentEditingEcoliKey] = num;
-                localStorage.setItem('lab_ecoliVolumes', JSON.stringify(currentEcoliVolumes));
-                closeModal('ecoliVolumeModal'); updateView();
-            } else alert("有効な数値を入力してください。");
-        }
-
-        function openAdditiveVolumeModal(itemKey) {
-            const add = commonReagentDatabase[itemKey];
-            if (!add || add.type !== 'recipe') return;
-            const currentVol = currentAdditiveVolumes[itemKey] || add.baseVolume;
-            const addVolListEl = document.getElementById("additiveVolumeOptionsList");
-            addVolListEl.innerHTML = ""; addVolListEl.style.removeProperty('display');
-            document.getElementById("additiveKeypadContainer").style.display = "none";
-            document.getElementById("additiveVolumeModalHeader").textContent = "作製容量を選択";
-            additivePresetVolumes.forEach(vol => {
-                const btn = document.createElement("button");
-                btn.className = `option-item ${vol === currentVol ? 'selected' : ''}`;
-                btn.textContent = `${vol} mL`;
-                btn.onclick = () => { currentAdditiveVolumes[itemKey] = vol; localStorage.setItem('lab_additiveVolumes', JSON.stringify(currentAdditiveVolumes)); closeModal('additiveVolumeModal'); updateView(); };
-                addVolListEl.appendChild(btn);
-            });
-            const customBtn = document.createElement("button");
-            customBtn.className = `option-item ${!additivePresetVolumes.includes(currentVol) ? 'selected' : ''}`;
-            customBtn.style.gridColumn = "span 2";
-            customBtn.innerHTML = `<span style="width: 100%; text-align: center;">CUSTOM</span>`;
-            customBtn.onclick = () => { openAdditiveKeypadModal(itemKey); };
-            addVolListEl.appendChild(customBtn);
-            openModal('additiveVolumeModal');
-        }
-        let currentEditingAdditiveKey = "";
-        function openAdditiveKeypadModal(itemKey) {
-            currentEditingAdditiveKey = itemKey;
-            const listEl = document.getElementById("additiveVolumeOptionsList");
-            if (listEl) listEl.style.setProperty('display', 'none', 'important');
-            document.getElementById("additiveKeypadContainer").style.display = "flex";
-            document.getElementById("additiveVolumeModalHeader").textContent = "カスタム容量を入力";
-            additiveKeypadInputStr = "0";
-            updateAdditiveKeypadPreview();
-        }
-        function pressAdditiveKeypad(val) {
-            if (val === 'clear') additiveKeypadInputStr = "0";
-            else if (val === 'backspace') additiveKeypadInputStr = additiveKeypadInputStr.length > 1 ? additiveKeypadInputStr.slice(0, -1) : "0";
-            else additiveKeypadInputStr = additiveKeypadInputStr === "0" ? val : (additiveKeypadInputStr.length < 5 ? additiveKeypadInputStr + val : additiveKeypadInputStr);
-            updateAdditiveKeypadPreview();
-        }
-        function updateAdditiveKeypadPreview() { document.getElementById("additiveKeypadPreview").textContent = `${additiveKeypadInputStr} mL`; }
-        function applyCustomAdditiveVolume() {
-            const num = parseInt(additiveKeypadInputStr, 10);
-            if (!isNaN(num) && num > 0 && currentEditingAdditiveKey) {
-                currentAdditiveVolumes[currentEditingAdditiveKey] = num;
-                localStorage.setItem('lab_additiveVolumes', JSON.stringify(currentAdditiveVolumes));
-                closeModal('additiveVolumeModal'); updateView();
-            } else alert("有効な数値を入力してください。");
-        }
-
-        function openPcrKeypadModal() {
-            const listEl = document.getElementById("pcrVolumeOptionsList");
-            if (listEl) listEl.style.setProperty('display', 'none', 'important');
-            document.getElementById("pcrKeypadContainer").style.display = "flex";
-            document.getElementById("pcrVolumeModalHeader").textContent = "カスタム反応液量を入力";
-            pcrKeypadInputStr = "0";
-            updatePcrKeypadPreview();
-        }
-        function pressPcrKeypad(val) {
-            if (val === 'clear') pcrKeypadInputStr = "0";
-            else if (val === 'backspace') pcrKeypadInputStr = pcrKeypadInputStr.length > 1 ? pcrKeypadInputStr.slice(0, -1) : "0";
-            else pcrKeypadInputStr = pcrKeypadInputStr === "0" ? val : (pcrKeypadInputStr.length < 4 ? pcrKeypadInputStr + val : pcrKeypadInputStr);
-            updatePcrKeypadPreview();
-        }
-        function updatePcrKeypadPreview() { document.getElementById("pcrKeypadPreview").textContent = `${pcrKeypadInputStr} µL`; }
-        function applyCustomPcrVolume() {
-            const num = parseInt(pcrKeypadInputStr, 10);
-            if (!isNaN(num) && num > 0) { currentPcrVolume = num; localStorage.setItem('lab_pcrVolume', num); closeModal('pcrVolumeModal'); initApp(); updateView(); }
-            else alert("有効な数値を入力してください。");
-        }
-
         function resetAllSettings() {
             if (confirm("すべてのカスタム設定を初期状態に戻しますか？")) { localStorage.clear(); location.reload(); }
         }
@@ -3087,7 +2734,7 @@
             }
         }
 
-        function renderGenericRecipePanel(containerEl, data, currentVol, onVolClick, resetType, loopIdx) {
+        function renderGenericRecipePanel(containerEl, data, itemKey, resetType, loopIdx) {
             const panel = document.createElement("div");
             panel.className = "card-carousel-panel";
             let targetModalName = 'solutionModal';
@@ -3097,7 +2744,12 @@
             else if (containerEl.id === 'electrophoresisCarouselContainer') targetModalName = 'electrophoresisModal';
             else if (containerEl.id === 'additiveCarouselContainer') targetModalName = 'additiveModal';
 
-            const volumeBadgeHtml = `<span class="volume-badge" onclick="${onVolClick}">${currentVol} mL</span>`;
+            const vol = getCardVolume(itemKey);
+            const unit = data.unit || "mL";
+            const volumeBadgeHtml = (data.hasVolume !== false) 
+                ? `<span class="volume-badge" onclick="openCardVolumeModal('${itemKey}')">${vol} ${unit}</span>` 
+                : "";
+
             let modeSwitchHtml = "";
             if (data.hasModes) {
                 const modeKeys = Object.keys(data.modes);
@@ -3120,8 +2772,8 @@
                         ${volumeBadgeHtml}
                     </div>
                     ${modeSwitchHtml}
-                    <div class="advice-box ${adviceFeatureEnabled ? 'visible' : ''}">${data.getAdvice(currentVol)}</div>
-                    <div class="cost-box ${costFeatureEnabled ? 'visible' : ''}">${data.calculateCost(currentVol)}</div>
+                    <div class="advice-box ${adviceFeatureEnabled ? 'visible' : ''}">${data.getAdvice ? data.getAdvice(vol) : ''}</div>
+                    <div class="cost-box ${costFeatureEnabled ? 'visible' : ''}">${data.calculateCost ? data.calculateCost(vol) : ''}</div>
                     <div class="list-container-wrapper"><ul class="ingredient-list" id="${resetType}List_${loopIdx}"></ul></div>
                     <div class="reset-banner" id="${resetType}ResetBanner_${loopIdx}">
                         <span class="reset-text">チェックが入っています</span>
@@ -3130,7 +2782,7 @@
                 </div>
             `;
             const listContainer = panel.querySelector(`#${resetType}List_${loopIdx}`);
-            const ratio = currentVol / data.baseVolume;
+            const ratio = vol / data.baseVolume;
             let currentIngredients = (data.hasModes && data.modes[currentSobMode]) ? data.modes[currentSobMode].ingredients : data.ingredients;
 
             currentIngredients.forEach(ing => {
@@ -3196,6 +2848,7 @@
                     const loopItems = [visiblePcrList[visiblePcrList.length - 1], ...visiblePcrList, visiblePcrList[0]];
                     loopItems.forEach((pObj, loopIdx) => {
                         const pKey = pObj.key; const pData = pcrDatabase[pKey]; if (!pData) return;
+                        const vol = getCardVolume(pKey);
                         const panel = document.createElement("div");
                         panel.className = "card-carousel-panel";
                         panel.innerHTML = `
@@ -3205,14 +2858,14 @@
                                         <span class="media-eyebrow">PCR Master Mix</span>
                                         <div class="media-title-row"><h1 class="media-title">${pData.fullName}</h1></div>
                                     </div>
-                                    <span class="volume-badge" onclick="openModal('pcrVolumeModal')">${currentPcrVolume} µL</span>
+                                    <span class="volume-badge" onclick="openCardVolumeModal('${pKey}')">${vol} ${pData.unit || 'µL'}</span>
                                 </div>
                                 <div class="mode-switch-container">
                                     <button class="mode-btn ${currentPcrMode === 'recipe' ? 'active' : ''}" onclick="setPcrMode('recipe')">反応液組成</button>
                                     <button class="mode-btn ${currentPcrMode === 'cycle' ? 'active' : ''}" onclick="setPcrMode('cycle')">サイクル条件</button>
                                 </div>
-                                <div class="advice-box ${adviceFeatureEnabled ? 'visible' : ''}">${pData.getAdvice(currentPcrVolume)}</div>
-                                <div class="cost-box ${costFeatureEnabled ? 'visible' : ''}">${pData.calculateCost(currentPcrVolume)}</div>
+                                <div class="advice-box ${adviceFeatureEnabled ? 'visible' : ''}">${pData.getAdvice(vol)}</div>
+                                <div class="cost-box ${costFeatureEnabled ? 'visible' : ''}">${pData.calculateCost(vol)}</div>
                                 <div class="list-container-wrapper">
                                     <ul class="ingredient-list" id="pcrList_${pKey}_${loopIdx}" style="${currentPcrMode === 'recipe' ? 'display:flex;' : 'display:none;'}"></ul>
                                     <div class="cycle-container" id="pcrCycle_${pKey}_${loopIdx}" style="${currentPcrMode === 'cycle' ? 'display:flex;' : 'display:none;'}"></div>
@@ -3225,7 +2878,7 @@
                         `;
                         pcrCarouselContainer.appendChild(panel);
                         const recipeList = panel.querySelector(`#pcrList_${pKey}_${loopIdx}`);
-                        const pcrRatio = currentPcrVolume / pData.baseVolume;
+                        const pcrRatio = vol / pData.baseVolume;
                         pData.ingredients.forEach(ing => {
                             const calcAmount = ing.amount * pcrRatio;
                             const formatted = calcAmount >= 10 ? calcAmount.toFixed(1) : calcAmount.toFixed(2).replace(/\.?0+$/, "");
@@ -3285,6 +2938,7 @@
                     const loopMediaList = [visibleMediaList[visibleMediaList.length - 1], ...visibleMediaList, visibleMediaList[0]];
                     loopMediaList.forEach((mObj, loopIdx) => {
                         const mKey = mObj.key; const mData = mediaDatabase[mKey]; if (!mData) return;
+                        const vol = getCardVolume(mKey);
                         const panel = document.createElement("div");
                         panel.className = "card-carousel-panel";
                         let modeSwitchHtml = "";
@@ -3305,17 +2959,17 @@
                                         <span class="media-eyebrow">Medium Recipe</span>
                                         <div class="media-title-row"><h1 class="media-title">${mData.name}</h1></div>
                                     </div>
-                                    <span class="volume-badge" onclick="openModal('volumeModal')">${currentVolume} mL</span>
+                                    <span class="volume-badge" onclick="openCardVolumeModal('${mKey}')">${vol} ${mData.unit || 'mL'}</span>
                                 </div>
                                 ${modeSwitchHtml}
-                                <div class="advice-box ${adviceFeatureEnabled ? 'visible' : ''}">${mData.getAdvice(currentVolume)}</div>
-                                <div class="cost-box ${costFeatureEnabled ? 'visible' : ''}">${mData.calculateCost(currentVolume)}</div>
+                                <div class="advice-box ${adviceFeatureEnabled ? 'visible' : ''}">${mData.getAdvice(vol)}</div>
+                                <div class="cost-box ${costFeatureEnabled ? 'visible' : ''}">${mData.calculateCost(vol)}</div>
                                 <div class="list-container-wrapper"><ul class="ingredient-list" id="mediaList_${mKey}_${loopIdx}"></ul></div>
                             </div>
                         `;
                         mediaCarouselContainer.appendChild(panel);
                         const listContainer = panel.querySelector(`#mediaList_${mKey}_${loopIdx}`);
-                        const ratio = currentVolume / mData.baseVolume;
+                        const ratio = vol / mData.baseVolume;
                         let currentIngredients = (mData.hasModes && mData.modes[currentMediaMode]) ? mData.modes[currentMediaMode].ingredients : mData.ingredients;
 
                         currentIngredients.forEach(ing => {
@@ -3399,8 +3053,7 @@
                             `;
                             elecCarouselContainer.appendChild(panel);
                         } else {
-                            const vol = currentElecVolumes[eKey] || eData.baseVolume;
-                            renderGenericRecipePanel(elecCarouselContainer, eData, vol, `openElecVolumeModal('${eKey}')`, 'elec', loopIdx);
+                            renderGenericRecipePanel(elecCarouselContainer, eData, eKey, 'elec', loopIdx);
                         }
                     });
                     const activeElecIndex = visibleElecList.findIndex(e => e.key === currentElecKey);
@@ -3424,8 +3077,7 @@
                     const loopEcoliList = [visibleEcoliList[visibleEcoliList.length - 1], ...visibleEcoliList, visibleEcoliList[0]];
                     loopEcoliList.forEach((ecObj, loopIdx) => {
                         const ecKey = ecObj.key; const ecData = commonReagentDatabase[ecKey]; if (!ecData) return;
-                        const vol = currentEcoliVolumes[ecKey] || ecData.baseVolume;
-                        renderGenericRecipePanel(ecoliCarouselContainer, ecData, vol, `openEcoliVolumeModal('${ecKey}')`, 'ecoli', loopIdx);
+                        renderGenericRecipePanel(ecoliCarouselContainer, ecData, ecKey, 'ecoli', loopIdx);
                     });
                     const activeEcoliIndex = visibleEcoliList.findIndex(ec => ec.key === currentEcoliKey);
                     if (activeEcoliIndex !== -1) {
@@ -3448,8 +3100,7 @@
                     const loopAgroList = [visibleAgroList[visibleAgroList.length - 1], ...visibleAgroList, visibleAgroList[0]];
                     loopAgroList.forEach((aObj, loopIdx) => {
                         const aKey = aObj.key; const aData = commonReagentDatabase[aKey]; if (!aData) return;
-                        const vol = currentAgroVolumes[aKey] || aData.baseVolume;
-                        renderGenericRecipePanel(agroCarouselContainer, aData, vol, `openAgroVolumeModal('${aKey}')`, 'agro', loopIdx);
+                        renderGenericRecipePanel(agroCarouselContainer, aData, aKey, 'agro', loopIdx);
                     });
                     const activeAgroIndex = visibleAgroList.findIndex(a => a.key === currentAgroKey);
                     if (activeAgroIndex !== -1) {
@@ -3472,8 +3123,7 @@
                     const loopProtoList = [visibleProtoList[visibleProtoList.length - 1], ...visibleProtoList, visibleProtoList[0]];
                     loopProtoList.forEach((pObj, loopIdx) => {
                         const pKey = pObj.key; const pData = commonReagentDatabase[pKey]; if (!pData) return;
-                        const vol = currentProtoVolumes[pKey] || pData.baseVolume;
-                        renderGenericRecipePanel(protoCarouselContainer, pData, vol, `openProtoVolumeModal('${pKey}')`, 'proto', loopIdx);
+                        renderGenericRecipePanel(protoCarouselContainer, pData, pKey, 'proto', loopIdx);
                     });
                     const activeProtoIndex = visibleProtoList.findIndex(p => p.key === currentProtoKey);
                     if (activeProtoIndex !== -1) {
@@ -3496,7 +3146,7 @@
                     const loopSolList = [visibleSolList[visibleSolList.length - 1], ...visibleSolList, visibleSolList[0]];
                     loopSolList.forEach((sObj, loopIdx) => {
                         const sKey = sObj.key; const sData = commonReagentDatabase[sKey]; if (!sData) return;
-                        renderGenericRecipePanel(solCarouselContainer, sData, currentSolutionVolume, "openModal('solutionVolumeModal')", 'solution', loopIdx);
+                        renderGenericRecipePanel(solCarouselContainer, sData, sKey, 'solution', loopIdx);
                     });
                     const activeSolIndex = visibleSolList.findIndex(s => s.key === currentSolutionKey);
                     if (activeSolIndex !== -1) {
@@ -3519,8 +3169,7 @@
                     const loopAddList = [visibleAddList[visibleAddList.length - 1], ...visibleAddList, visibleAddList[0]];
                     loopAddList.forEach((aObj, loopIdx) => {
                         const aKey = aObj.key; const aData = commonReagentDatabase[aKey]; if (!aData) return;
-                        const vol = currentAdditiveVolumes[aKey] || aData.baseVolume;
-                        renderGenericRecipePanel(additiveCarouselContainer, aData, vol, `openAdditiveVolumeModal('${aKey}')`, 'additive', loopIdx);
+                        renderGenericRecipePanel(additiveCarouselContainer, aData, aKey, 'additive', loopIdx);
                     });
                     const activeAddIndex = visibleAddList.findIndex(a => a.key === currentAdditiveKey);
                     if (activeAddIndex !== -1) {
@@ -3627,37 +3276,6 @@
         }
 
         function openModal(modalId) {
-            if (modalId === 'volumeModal') {
-                const volListEl = document.getElementById("volumeOptionsList");
-                if (volListEl) volListEl.style.removeProperty('display');
-                const keypadEl = document.getElementById("keypadContainer");
-                if (keypadEl) keypadEl.style.display = "none";
-                document.getElementById("volumeModalHeader").textContent = "作製容量を選択";
-                volListEl.querySelectorAll('.option-item').forEach(btn => {
-                    const val = parseInt(btn.textContent.trim(), 10);
-                    btn.classList.toggle('selected', val === currentVolume);
-                });
-            } else if (modalId === 'solutionVolumeModal') {
-                const solVolListEl = document.getElementById("solutionVolumeOptionsList");
-                if (solVolListEl) solVolListEl.style.removeProperty('display');
-                const solKeypadEl = document.getElementById("solutionKeypadContainer");
-                if (solKeypadEl) solKeypadEl.style.display = "none";
-                document.getElementById("solutionVolumeModalHeader").textContent = "作製容量を選択";
-                solVolListEl.querySelectorAll('.option-item').forEach(btn => {
-                    const val = parseInt(btn.textContent.trim(), 10);
-                    btn.classList.toggle('selected', val === currentSolutionVolume);
-                });
-            } else if (modalId === 'pcrVolumeModal') {
-                const pcrVolListEl = document.getElementById("pcrVolumeOptionsList");
-                if (pcrVolListEl) pcrVolListEl.style.removeProperty('display');
-                const pcrKeypadEl = document.getElementById("pcrKeypadContainer");
-                if (pcrKeypadEl) pcrKeypadEl.style.display = "none";
-                document.getElementById("pcrVolumeModalHeader").textContent = "反応液量を選択";
-                pcrVolListEl.querySelectorAll('.option-item').forEach(btn => {
-                    const val = parseInt(btn.textContent.trim(), 10);
-                    btn.classList.toggle('selected', val === currentPcrVolume);
-                });
-            }
             document.getElementById(modalId).classList.add("active");
         }
 
