@@ -1159,7 +1159,7 @@
     <div class="modal-overlay" id="infoModal" onclick="outsideClose(event, 'infoModal')">
         <div class="modal-content info-modal-content">
             <div class="modal-header">💡 実験ノート・解説</div>
-            <div class="modal-title" id="infoModalTitle"></div>
+            <div class="info-modal-title" id="infoModalTitle"></div>
             <div class="info-modal-body" id="infoModalBody">ここに詳細な解説が入ります。</div>
             <button class="info-close-btn" onclick="closeModal('infoModal')">閉じる</button>
         </div>
@@ -1921,6 +1921,32 @@
             panels.forEach((p, idx) => {
                 if (idx === index) {
                     p.classList.add('active');
+                    requestAnimationFrame(() => {
+                        const container = p.querySelector('.card-carousel-container');
+                        if (container && container.clientWidth > 0) {
+                            let activeRealIndex = 0;
+                            if (idx === 0) {
+                                const visiblePcrList = pcrOrderConfig.filter(p => p.visible);
+                                activeRealIndex = visiblePcrList.findIndex(p => p.key === currentPcrKey);
+                            } else if (idx === 1) {
+                                const visibleMediaList = mediaOrderConfig.filter(m => m.visible);
+                                activeRealIndex = visibleMediaList.findIndex(m => m.key === currentMediaKey);
+                            } else if (idx === 2) {
+                                const visibleSolList = solutionOrderConfig.filter(s => s.visible);
+                                activeRealIndex = visibleSolList.findIndex(s => s.key === currentSolutionKey);
+                            } else if (idx === 3) {
+                                const guideKeys = Object.keys(guideDatabase);
+                                activeRealIndex = guideKeys.indexOf(currentGuideKey);
+                            }
+                            if (activeRealIndex !== -1) {
+                                container.style.scrollBehavior = 'auto';
+                                container.scrollLeft = (activeRealIndex + 1) * container.clientWidth;
+                                requestAnimationFrame(() => {
+                                    container.style.scrollBehavior = 'smooth';
+                                });
+                            }
+                        }
+                    });
                 } else {
                     p.classList.remove('active');
                 }
@@ -2865,12 +2891,10 @@
             updateLauncherBar();
         }
 
-        // ★ 通常・ループ両方のスムーズな切り替えを実現するカルーセルスワイプ処理
+        // ★ スナップ競合（カクつき・巻き戻り）を完全解消したシームレス無限ループ
         function setupInfiniteCarouselSwipe(containerEl, listItems, callback) {
             if (containerEl._hasScrollListener) return;
             containerEl._hasScrollListener = true;
-
-            let scrollTimeout;
 
             containerEl.addEventListener('scroll', () => {
                 const scrollLeft = containerEl.scrollLeft;
@@ -2878,7 +2902,7 @@
                 const totalItems = listItems.length;
                 if (panelWidth === 0) return;
 
-                // 1. 左端のクローンに到達した場合
+                // 1. 左端のクローン（0番目）に到達した場合
                 if (scrollLeft <= 1) {
                     containerEl.style.scrollBehavior = 'auto';
                     containerEl.style.scrollSnapType = 'none';
@@ -2891,7 +2915,7 @@
                     return;
                 }
 
-                // 2. 右端のクローンに到達した場合
+                // 2. 右端のクローン（最後のクローン）に到達した場合
                 const rightCloneThreshold = (totalItems + 1) * panelWidth - 1;
                 if (scrollLeft >= rightCloneThreshold) {
                     containerEl.style.scrollBehavior = 'auto';
@@ -2905,24 +2929,21 @@
                     return;
                 }
 
-                // 3. 通常のカード切り替え時：スクロールが完全に停止・確定したタイミングでキーを保存（DOM再描画によるカクつきを完全に防止）
-                window.clearTimeout(scrollTimeout);
-                scrollTimeout = setTimeout(() => {
-                    const currentIndex = Math.round(containerEl.scrollLeft / panelWidth);
-                    const realIndex = currentIndex - 1;
-                    if (realIndex >= 0 && realIndex < totalItems) {
-                        const selectedKey = listItems[realIndex].key;
-                        let currentKey = "";
-                        if (containerEl.id === 'pcrCarouselContainer') currentKey = currentPcrKey;
-                        else if (containerEl.id === 'mediaCarouselContainer') currentKey = currentMediaKey;
-                        else if (containerEl.id === 'solutionCarouselContainer') currentKey = currentSolutionKey;
-                        else if (containerEl.id === 'guideCarouselContainer') currentKey = currentGuideKey;
+                // 通常のスクロール位置でのカード判定
+                const currentIndex = Math.round(scrollLeft / panelWidth);
+                const realIndex = currentIndex - 1;
+                if (realIndex >= 0 && realIndex < totalItems) {
+                    const selectedKey = listItems[realIndex].key;
+                    let currentKey = "";
+                    if (containerEl.id === 'pcrCarouselContainer') currentKey = currentPcrKey;
+                    else if (containerEl.id === 'mediaCarouselContainer') currentKey = currentMediaKey;
+                    else if (containerEl.id === 'solutionCarouselContainer') currentKey = currentSolutionKey;
+                    else if (containerEl.id === 'guideCarouselContainer') currentKey = currentGuideKey;
 
-                        if (selectedKey !== currentKey) {
-                            callback(selectedKey);
-                        }
+                    if (selectedKey !== currentKey) {
+                        callback(selectedKey);
                     }
-                }, 100);
+                }
             }, { passive: true });
         }
 
