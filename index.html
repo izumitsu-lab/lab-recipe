@@ -135,10 +135,14 @@
             -webkit-user-select: none;
         }
 
+        html {
+            height: 100%;
+        }
+
         body {
             background-color: var(--bg-color);
             color: var(--text-primary);
-            height: 100vh;
+            height: 100%;
             height: 100dvh;
             display: flex;
             flex-direction: column;
@@ -153,6 +157,17 @@
         }
         body.ready {
             opacity: 1;
+        }
+
+        /* iOSホーム画面追加（スタンドアロン）時のツールバー誤認バグ対策 */
+        @media all and (display-mode: standalone) {
+            html, body {
+                height: 100% !important;
+            }
+        }
+        html.standalone-mode,
+        html.standalone-mode body {
+            height: 100% !important;
         }
 
         .views-container {
@@ -1279,11 +1294,11 @@
         <div class="view-panel active" id="panel0"><div class="card-carousel-container" id="pcrCarouselContainer"></div></div>
         <div class="view-panel" id="panel1"><div class="card-carousel-container" id="mediaCarouselContainer"></div></div>
         <div class="view-panel" id="panel2"><div class="card-carousel-container" id="electrophoresisCarouselContainer"></div></div>
-        <div class="view-panel" id="panel3"><div class="card-carousel-container" id="ecoliCarouselContainer"></div></div>
-        <div class="view-panel" id="panel4"><div class="card-carousel-container" id="agroCarouselContainer"></div></div>
-        <div class="view-panel" id="panel5"><div class="card-carousel-container" id="protoplastCarouselContainer"></div></div>
-        <div class="view-panel" id="panel6"><div class="card-carousel-container" id="solutionCarouselContainer"></div></div>
-        <div class="view-panel" id="panel7"><div class="card-carousel-container" id="additiveCarouselContainer"></div></div>
+        <div class="view-panel" id="panel3"><div class="card-carousel-container" id="additiveCarouselContainer"></div></div>
+        <div class="view-panel" id="panel4"><div class="card-carousel-container" id="ecoliCarouselContainer"></div></div>
+        <div class="view-panel" id="panel5"><div class="card-carousel-container" id="agroCarouselContainer"></div></div>
+        <div class="view-panel" id="panel6"><div class="card-carousel-container" id="protoplastCarouselContainer"></div></div>
+        <div class="view-panel" id="panel7"><div class="card-carousel-container" id="solutionCarouselContainer"></div></div>
         <div class="view-panel" id="panel8"><div class="card-carousel-container" id="guideCarouselContainer"></div></div>
         <div class="view-panel" id="panel9"><div class="card-carousel-container" id="preferencesCarouselContainer"></div></div>
     </div>
@@ -1374,6 +1389,20 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="additiveModal" onclick="outsideClose(event, 'additiveModal')">
+        <div class="modal-content" style="max-width: 440px;">
+            <div class="modal-header">培地添加物を選択</div>
+            <div class="option-list grid-modal" id="additiveOptionsList"></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="ecoliModal" onclick="outsideClose(event, 'ecoliModal')">
+        <div class="modal-content" style="max-width: 440px;">
+            <div class="modal-header">大腸菌培地・試薬を選択</div>
+            <div class="option-list grid-modal" id="ecoliOptionsList"></div>
+        </div>
+    </div>
+
     <div class="modal-overlay" id="agroModal" onclick="outsideClose(event, 'agroModal')">
         <div class="modal-content" style="max-width: 440px;">
             <div class="modal-header">アグロ試薬・培地を選択</div>
@@ -1388,24 +1417,10 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="ecoliModal" onclick="outsideClose(event, 'ecoliModal')">
-        <div class="modal-content" style="max-width: 440px;">
-            <div class="modal-header">大腸菌培地・試薬を選択</div>
-            <div class="option-list grid-modal" id="ecoliOptionsList"></div>
-        </div>
-    </div>
-
     <div class="modal-overlay" id="solutionModal" onclick="outsideClose(event, 'solutionModal')">
         <div class="modal-content" style="max-width: 440px;">
             <div class="modal-header">ストック試薬を選択</div>
             <div class="option-list grid-modal" id="solutionOptionsList"></div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="additiveModal" onclick="outsideClose(event, 'additiveModal')">
-        <div class="modal-content" style="max-width: 440px;">
-            <div class="modal-header">培地添加物を選択</div>
-            <div class="option-list grid-modal" id="additiveOptionsList"></div>
         </div>
     </div>
 
@@ -1447,6 +1462,11 @@
     </div>
 
     <script>
+        // スタンドアロン起動（ホーム画面追加）の検出とクラス付与
+        if (window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches) {
+            document.documentElement.classList.add('standalone-mode');
+        }
+
         function getDishAdvice(vol) {
             const minDishes = Math.round(vol / 7);
             const maxDishes = Math.round(vol / 6);
@@ -1895,10 +1915,10 @@
             Object.keys(commonReagentDatabase).forEach(k => {
                 if (cardVolumes[k] === undefined) {
                     if (legacyElec[k] !== undefined) cardVolumes[k] = legacyElec[k];
+                    else if (legacyAdditive[k] !== undefined) cardVolumes[k] = legacyAdditive[k];
+                    else if (legacyEcoli[k] !== undefined) cardVolumes[k] = legacyEcoli[k];
                     else if (legacyAgro[k] !== undefined) cardVolumes[k] = legacyAgro[k];
                     else if (legacyProto[k] !== undefined) cardVolumes[k] = legacyProto[k];
-                    else if (legacyEcoli[k] !== undefined) cardVolumes[k] = legacyEcoli[k];
-                    else if (legacyAdditive[k] !== undefined) cardVolumes[k] = legacyAdditive[k];
                     else if (!isNaN(legacySolVol)) cardVolumes[k] = legacySolVol;
                     else cardVolumes[k] = commonReagentDatabase[k].baseVolume || 100;
                     modified = true;
@@ -1931,21 +1951,21 @@
             electrophoresisOrderConfig.splice(1, 0, { key: "ladder_100bp", visible: true });
         }
 
+        let additiveOrderConfig = JSON.parse(localStorage.getItem('lab_additiveOrderConfig')) || [
+            { key: "acetosyringone_100mm", visible: true },
+            { key: "uridine_1m", visible: true }
+        ];
+        let ecoliOrderConfig = JSON.parse(localStorage.getItem('lab_ecoliOrderConfig')) || [
+            { key: "lb", visible: true }, { key: "sob", visible: true }, { key: "soc", visible: true }, { key: "mg_sol_2m", visible: true }, { key: "glucose_2m", visible: true }
+        ];
         let agroOrderConfig = JSON.parse(localStorage.getItem('lab_agroOrderConfig')) || [
             { key: "im", visible: true }, { key: "acetosyringone_100mm", visible: true }, { key: "mm_sol_1", visible: true }, { key: "mm_sol_2", visible: true }, { key: "naoh_2n", visible: true }
         ];
         let protoplastOrderConfig = JSON.parse(localStorage.getItem('lab_protoplastOrderConfig')) || [
             { key: "isotonic", visible: true }, { key: "stc", visible: true }, { key: "peg_40", visible: true }, { key: "cell_wall_enzyme", visible: true }
         ];
-        let ecoliOrderConfig = JSON.parse(localStorage.getItem('lab_ecoliOrderConfig')) || [
-            { key: "lb", visible: true }, { key: "sob", visible: true }, { key: "soc", visible: true }, { key: "mg_sol_2m", visible: true }, { key: "glucose_2m", visible: true }
-        ];
         let solutionOrderConfig = JSON.parse(localStorage.getItem('lab_solutionOrderConfig')) || [
             { key: "acetosyringone_100mm", visible: true }, { key: "mg_sol_2m", visible: true }, { key: "glucose_2m", visible: true }, { key: "mm_sol_1", visible: true }, { key: "mm_sol_2", visible: true }, { key: "sol_a", visible: true }, { key: "sol_b", visible: true }, { key: "ammonium_acetate_10m", visible: true }, { key: "naoh_2n", visible: true }, { key: "loading_dye_6x", visible: true }, { key: "ethanol_70", visible: true }, { key: "uridine_1m", visible: true }, { key: "isotonic", visible: true }, { key: "peg_40", visible: true }, { key: "stc", visible: true }, { key: "tae_50x", visible: true }
-        ];
-        let additiveOrderConfig = JSON.parse(localStorage.getItem('lab_additiveOrderConfig')) || [
-            { key: "acetosyringone_100mm", visible: true },
-            { key: "uridine_1m", visible: true }
         ];
         let pcrOrderConfig = JSON.parse(localStorage.getItem('lab_pcrOrderConfig')) || [
             { key: "ex_premier", visible: true }, { key: "prime_star_max", visible: true }, { key: "prime_star_gxl", visible: true }, { key: "emerald_amp", visible: true }
@@ -1961,6 +1981,9 @@
         let visibleElecKeys = electrophoresisOrderConfig.filter(e => e.visible).map(e => e.key);
         let currentElecKey = localStorage.getItem('lab_elecKey') || visibleElecKeys[0] || "lambda_marker";
 
+        let visibleAdditiveKeys = additiveOrderConfig.filter(a => a.visible).map(a => a.key);
+        let currentAdditiveKey = localStorage.getItem('lab_additiveKey') || visibleAdditiveKeys[0] || "acetosyringone_100mm";
+
         let visibleEcoliKeys = ecoliOrderConfig.filter(ec => ec.visible).map(ec => ec.key);
         let currentEcoliKey = localStorage.getItem('lab_ecoliKey') || visibleEcoliKeys[0] || "lb";
 
@@ -1969,9 +1992,6 @@
 
         let visibleProtoKeys = protoplastOrderConfig.filter(p => p.visible).map(p => p.key);
         let currentProtoKey = localStorage.getItem('lab_protoKey') || visibleProtoKeys[0] || "isotonic";
-
-        let visibleAdditiveKeys = additiveOrderConfig.filter(a => a.visible).map(a => a.key);
-        let currentAdditiveKey = localStorage.getItem('lab_additiveKey') || visibleAdditiveKeys[0] || "acetosyringone_100mm";
 
         let visiblePcrKeys = pcrOrderConfig.filter(p => p.visible).map(p => p.key);
         let currentPcrKey = localStorage.getItem('lab_pcrKey') || visiblePcrKeys[0] || "ex_premier";
@@ -1990,11 +2010,11 @@
             { id: 0, eyebrow: "PCR Recipe", name: "PCRレシピ" },
             { id: 1, eyebrow: "Medium Recipe", name: "培地レシピ" },
             { id: 2, eyebrow: "Electrophoresis", name: "電気泳動" },
-            { id: 3, eyebrow: "E. coli", name: "大腸菌" },
-            { id: 4, eyebrow: "Agrobacterium", name: "アグロ" },
-            { id: 5, eyebrow: "Protoplast", name: "プロトプラスト" },
-            { id: 6, eyebrow: "SOLUTIONS", name: "ストック液" },
-            { id: 7, eyebrow: "Medium Additives", name: "培地添加物" },
+            { id: 3, eyebrow: "Medium Additives", name: "培地添加物" },
+            { id: 4, eyebrow: "E. coli", name: "大腸菌" },
+            { id: 5, eyebrow: "Agrobacterium", name: "アグロ" },
+            { id: 6, eyebrow: "Protoplast", name: "プロトプラスト" },
+            { id: 7, eyebrow: "SOLUTIONS", name: "ストック液" },
             { id: 8, eyebrow: "Selection Guide", name: "実験ガイド" },
             { id: 9, eyebrow: "Preferences", name: "オプション設定" }
         ];
@@ -2183,11 +2203,11 @@
                             <div class="option-group"><div class="option-label-wrapper"><span class="option-title">PCR酵素リストの編集</span><span class="option-desc">表示・非表示と並び替え</span></div><button class="option-action-btn" onclick="openOrderModal('pcr')">編集する</button></div>
                             <div class="option-group"><div class="option-label-wrapper"><span class="option-title">培地リストの編集</span><span class="option-desc">表示・非表示と並び替え</span></div><button class="option-action-btn" onclick="openOrderModal('media')">編集する</button></div>
                             <div class="option-group"><div class="option-label-wrapper"><span class="option-title">電気泳動リストの編集</span><span class="option-desc">表示・非表示と並び替え</span></div><button class="option-action-btn" onclick="openOrderModal('electrophoresis')">編集する</button></div>
+                            <div class="option-group"><div class="option-label-wrapper"><span class="option-title">培地添加物リストの編集</span><span class="option-desc">表示・非表示と並び替え</span></div><button class="option-action-btn" onclick="openOrderModal('additive')">編集する</button></div>
                             <div class="option-group"><div class="option-label-wrapper"><span class="option-title">大腸菌リストの編集</span><span class="option-desc">表示・非表示と並び替え</span></div><button class="option-action-btn" onclick="openOrderModal('ecoli')">編集する</button></div>
                             <div class="option-group"><div class="option-label-wrapper"><span class="option-title">アグロバクテリウムリストの編集</span><span class="option-desc">表示・非表示と並び替え</span></div><button class="option-action-btn" onclick="openOrderModal('agro')">編集する</button></div>
                             <div class="option-group"><div class="option-label-wrapper"><span class="option-title">プロトプラストリストの編集</span><span class="option-desc">表示・非表示と並び替え</span></div><button class="option-action-btn" onclick="openOrderModal('protoplast')">編集する</button></div>
                             <div class="option-group"><div class="option-label-wrapper"><span class="option-title">ストック溶液リストの編集</span><span class="option-desc">表示・非表示と並び替え</span></div><button class="option-action-btn" onclick="openOrderModal('solution')">編集する</button></div>
-                            <div class="option-group"><div class="option-label-wrapper"><span class="option-title">培地添加物リストの編集</span><span class="option-desc">表示・非表示と並び替え</span></div><button class="option-action-btn" onclick="openOrderModal('additive')">編集する</button></div>
                         </div>
                     </div>
                 </div>
@@ -2240,11 +2260,11 @@
 
             buildMediaModals();
             buildElectrophoresisModals();
+            buildAdditiveModals();
             buildEcoliModals();
             buildAgroModals();
             buildProtoplastModals();
             buildSolutionModals();
-            buildAdditiveModals();
             buildPcrModals();
             buildGuideModals();
             buildLauncherGrid();
@@ -2306,11 +2326,11 @@
                             if (idx === 0) activeRealIndex = pcrOrderConfig.filter(x => x.visible).findIndex(x => x.key === currentPcrKey);
                             else if (idx === 1) activeRealIndex = mediaOrderConfig.filter(x => x.visible).findIndex(x => x.key === currentMediaKey);
                             else if (idx === 2) activeRealIndex = electrophoresisOrderConfig.filter(x => x.visible).findIndex(x => x.key === currentElecKey);
-                            else if (idx === 3) activeRealIndex = ecoliOrderConfig.filter(x => x.visible).findIndex(x => x.key === currentEcoliKey);
-                            else if (idx === 4) activeRealIndex = agroOrderConfig.filter(x => x.visible).findIndex(x => x.key === currentAgroKey);
-                            else if (idx === 5) activeRealIndex = protoplastOrderConfig.filter(x => x.visible).findIndex(x => x.key === currentProtoKey);
-                            else if (idx === 6) activeRealIndex = solutionOrderConfig.filter(x => x.visible).findIndex(x => x.key === currentSolutionKey);
-                            else if (idx === 7) activeRealIndex = additiveOrderConfig.filter(x => x.visible).findIndex(x => x.key === currentAdditiveKey);
+                            else if (idx === 3) activeRealIndex = additiveOrderConfig.filter(x => x.visible).findIndex(x => x.key === currentAdditiveKey);
+                            else if (idx === 4) activeRealIndex = ecoliOrderConfig.filter(x => x.visible).findIndex(x => x.key === currentEcoliKey);
+                            else if (idx === 5) activeRealIndex = agroOrderConfig.filter(x => x.visible).findIndex(x => x.key === currentAgroKey);
+                            else if (idx === 6) activeRealIndex = protoplastOrderConfig.filter(x => x.visible).findIndex(x => x.key === currentProtoKey);
+                            else if (idx === 7) activeRealIndex = solutionOrderConfig.filter(x => x.visible).findIndex(x => x.key === currentSolutionKey);
                             else if (idx === 8) activeRealIndex = Object.keys(guideDatabase).indexOf(currentGuideKey);
                             else if (idx === 9) activeRealIndex = 0;
 
@@ -2338,11 +2358,11 @@
             if (currentViewIndex === 0) return { type: 'pcr', key: currentPcrKey, name: pcrDatabase[currentPcrKey]?.shortName || '' };
             if (currentViewIndex === 1) return { type: 'media', key: currentMediaKey, name: mediaDatabase[currentMediaKey]?.name || '' };
             if (currentViewIndex === 2) return { type: 'electrophoresis', key: currentElecKey, name: commonReagentDatabase[currentElecKey]?.name || '' };
-            if (currentViewIndex === 3) return { type: 'ecoli', key: currentEcoliKey, name: commonReagentDatabase[currentEcoliKey]?.name || '' };
-            if (currentViewIndex === 4) return { type: 'agro', key: currentAgroKey, name: commonReagentDatabase[currentAgroKey]?.name || '' };
-            if (currentViewIndex === 5) return { type: 'protoplast', key: currentProtoKey, name: commonReagentDatabase[currentProtoKey]?.name || '' };
-            if (currentViewIndex === 6) return { type: 'solution', key: currentSolutionKey, name: commonReagentDatabase[currentSolutionKey]?.name || '' };
-            if (currentViewIndex === 7) return { type: 'additive', key: currentAdditiveKey, name: commonReagentDatabase[currentAdditiveKey]?.name || '' };
+            if (currentViewIndex === 3) return { type: 'additive', key: currentAdditiveKey, name: commonReagentDatabase[currentAdditiveKey]?.name || '' };
+            if (currentViewIndex === 4) return { type: 'ecoli', key: currentEcoliKey, name: commonReagentDatabase[currentEcoliKey]?.name || '' };
+            if (currentViewIndex === 5) return { type: 'agro', key: currentAgroKey, name: commonReagentDatabase[currentAgroKey]?.name || '' };
+            if (currentViewIndex === 6) return { type: 'protoplast', key: currentProtoKey, name: commonReagentDatabase[currentProtoKey]?.name || '' };
+            if (currentViewIndex === 7) return { type: 'solution', key: currentSolutionKey, name: commonReagentDatabase[currentSolutionKey]?.name || '' };
             if (currentViewIndex === 8) return { type: 'guide', key: currentGuideKey, name: guideDatabase[currentGuideKey]?.name || '' };
             return null;
         }
@@ -2421,11 +2441,11 @@
                     if (fav.type === 'pcr') pageIdx = 0;
                     else if (fav.type === 'media') pageIdx = 1;
                     else if (fav.type === 'electrophoresis') pageIdx = 2;
-                    else if (fav.type === 'ecoli') pageIdx = 3;
-                    else if (fav.type === 'agro') pageIdx = 4;
-                    else if (fav.type === 'protoplast') pageIdx = 5;
-                    else if (fav.type === 'solution') pageIdx = 6;
-                    else if (fav.type === 'additive') pageIdx = 7;
+                    else if (fav.type === 'additive') pageIdx = 3;
+                    else if (fav.type === 'ecoli') pageIdx = 4;
+                    else if (fav.type === 'agro') pageIdx = 5;
+                    else if (fav.type === 'protoplast') pageIdx = 6;
+                    else if (fav.type === 'solution') pageIdx = 7;
                     else if (fav.type === 'guide') pageIdx = 8;
 
                     const btn = document.createElement("button");
@@ -2436,11 +2456,11 @@
                         if (fav.type === 'pcr') { currentPcrKey = fav.key; localStorage.setItem('lab_pcrKey', fav.key); }
                         else if (fav.type === 'media') { currentMediaKey = fav.key; localStorage.setItem('lab_mediaKey', fav.key); }
                         else if (fav.type === 'electrophoresis') { currentElecKey = fav.key; localStorage.setItem('lab_elecKey', fav.key); }
+                        else if (fav.type === 'additive') { currentAdditiveKey = fav.key; localStorage.setItem('lab_additiveKey', fav.key); }
                         else if (fav.type === 'ecoli') { currentEcoliKey = fav.key; localStorage.setItem('lab_ecoliKey', fav.key); }
                         else if (fav.type === 'agro') { currentAgroKey = fav.key; localStorage.setItem('lab_agroKey', fav.key); }
                         else if (fav.type === 'protoplast') { currentProtoKey = fav.key; localStorage.setItem('lab_protoKey', fav.key); }
                         else if (fav.type === 'solution') { currentSolutionKey = fav.key; localStorage.setItem('lab_solutionKey', fav.key); }
-                        else if (fav.type === 'additive') { currentAdditiveKey = fav.key; localStorage.setItem('lab_additiveKey', fav.key); }
                         else if (fav.type === 'guide') { currentGuideKey = fav.key; localStorage.setItem('lab_guideKey', fav.key); }
                         closeModal('favoriteModal');
                         updateView(true);
@@ -2457,10 +2477,10 @@
             if (type === 'media') title = "培地リストのカスタマイズ";
             else if (type === 'solution') title = "ストック溶液リストのカスタマイズ";
             else if (type === 'electrophoresis') title = "電気泳動リストのカスタマイズ";
+            else if (type === 'additive') title = "培地添加物リストのカスタマイズ";
             else if (type === 'ecoli') title = "大腸菌リストのカスタマイズ";
             else if (type === 'agro') title = "アグロバクテリウムリストのカスタマイズ";
             else if (type === 'protoplast') title = "プロトプラストリストのカスタマイズ";
-            else if (type === 'additive') title = "培地添加物リストのカスタマイズ";
             else if (type === 'pcr') title = "PCR酵素リストのカスタマイズ";
             document.getElementById("orderModalHeader").textContent = title;
             renderOrderList();
@@ -2500,10 +2520,10 @@
             if (type === 'media') return mediaOrderConfig;
             if (type === 'solution') return solutionOrderConfig;
             if (type === 'electrophoresis') return electrophoresisOrderConfig;
+            if (type === 'additive') return additiveOrderConfig;
             if (type === 'ecoli') return ecoliOrderConfig;
             if (type === 'agro') return agroOrderConfig;
             if (type === 'protoplast') return protoplastOrderConfig;
-            if (type === 'additive') return additiveOrderConfig;
             if (type === 'pcr') return pcrOrderConfig;
             return [];
         }
@@ -2512,10 +2532,10 @@
             if (type === 'media') { mediaOrderConfig = config; localStorage.setItem('lab_mediaOrderConfig', JSON.stringify(config)); }
             else if (type === 'solution') { solutionOrderConfig = config; localStorage.setItem('lab_solutionOrderConfig', JSON.stringify(config)); }
             else if (type === 'electrophoresis') { electrophoresisOrderConfig = config; localStorage.setItem('lab_electrophoresisOrderConfig', JSON.stringify(config)); }
+            else if (type === 'additive') { additiveOrderConfig = config; localStorage.setItem('lab_additiveOrderConfig', JSON.stringify(config)); }
             else if (type === 'ecoli') { ecoliOrderConfig = config; localStorage.setItem('lab_ecoliOrderConfig', JSON.stringify(config)); }
             else if (type === 'agro') { agroOrderConfig = config; localStorage.setItem('lab_agroOrderConfig', JSON.stringify(config)); }
             else if (type === 'protoplast') { protoplastOrderConfig = config; localStorage.setItem('lab_protoplastOrderConfig', JSON.stringify(config)); }
-            else if (type === 'additive') { additiveOrderConfig = config; localStorage.setItem('lab_additiveOrderConfig', JSON.stringify(config)); }
             else if (type === 'pcr') { pcrOrderConfig = config; localStorage.setItem('lab_pcrOrderConfig', JSON.stringify(config)); }
         }
 
@@ -2575,6 +2595,22 @@
                 btn.innerHTML = item.name;
                 btn.onclick = () => { currentElecKey = key; localStorage.setItem('lab_elecKey', key); closeModal('electrophoresisModal'); updateView(true); };
                 elecListEl.appendChild(btn);
+            });
+        }
+
+        function buildAdditiveModals() {
+            const addListEl = document.getElementById("additiveOptionsList");
+            if (!addListEl) return;
+            addListEl.innerHTML = "";
+            let visibleList = additiveOrderConfig.filter(a => a.visible);
+            if (!visibleList.map(a => a.key).includes(currentAdditiveKey) && visibleList.length > 0) currentAdditiveKey = visibleList[0].key;
+            visibleList.forEach(aObj => {
+                const key = aObj.key; const item = getCardItem(key); if (!item) return;
+                const btn = document.createElement("button");
+                btn.className = `option-item ${key === currentAdditiveKey ? 'selected' : ''}`;
+                btn.innerHTML = item.name;
+                btn.onclick = () => { currentAdditiveKey = key; localStorage.setItem('lab_additiveKey', key); closeModal('additiveModal'); updateView(true); };
+                addListEl.appendChild(btn);
             });
         }
 
@@ -2638,22 +2674,6 @@
                 btn.innerHTML = sol.name;
                 btn.onclick = () => { currentSolutionKey = key; localStorage.setItem('lab_solutionKey', key); closeModal('solutionModal'); updateView(true); };
                 solListEl.appendChild(btn);
-            });
-        }
-
-        function buildAdditiveModals() {
-            const addListEl = document.getElementById("additiveOptionsList");
-            if (!addListEl) return;
-            addListEl.innerHTML = "";
-            let visibleList = additiveOrderConfig.filter(a => a.visible);
-            if (!visibleList.map(a => a.key).includes(currentAdditiveKey) && visibleList.length > 0) currentAdditiveKey = visibleList[0].key;
-            visibleList.forEach(aObj => {
-                const key = aObj.key; const item = getCardItem(key); if (!item) return;
-                const btn = document.createElement("button");
-                btn.className = `option-item ${key === currentAdditiveKey ? 'selected' : ''}`;
-                btn.innerHTML = item.name;
-                btn.onclick = () => { currentAdditiveKey = key; localStorage.setItem('lab_additiveKey', key); closeModal('additiveModal'); updateView(true); };
-                addListEl.appendChild(btn);
             });
         }
 
@@ -2725,11 +2745,11 @@
             if (currentViewIndex === 0) infoData = pcrDatabase[currentPcrKey]?.info;
             else if (currentViewIndex === 1) infoData = mediaDatabase[currentMediaKey]?.info;
             else if (currentViewIndex === 2) infoData = getCardItem(currentElecKey)?.info;
-            else if (currentViewIndex === 3) infoData = getCardItem(currentEcoliKey)?.info;
-            else if (currentViewIndex === 4) infoData = getCardItem(currentAgroKey)?.info;
-            else if (currentViewIndex === 5) infoData = getCardItem(currentProtoKey)?.info;
-            else if (currentViewIndex === 6) infoData = getCardItem(currentSolutionKey)?.info;
-            else if (currentViewIndex === 7) infoData = getCardItem(currentAdditiveKey)?.info;
+            else if (currentViewIndex === 3) infoData = getCardItem(currentAdditiveKey)?.info;
+            else if (currentViewIndex === 4) infoData = getCardItem(currentEcoliKey)?.info;
+            else if (currentViewIndex === 5) infoData = getCardItem(currentAgroKey)?.info;
+            else if (currentViewIndex === 6) infoData = getCardItem(currentProtoKey)?.info;
+            else if (currentViewIndex === 7) infoData = getCardItem(currentSolutionKey)?.info;
 
             if (infoData) {
                 document.getElementById("infoModalTitle").innerHTML = `${infoData.title}`;
@@ -3072,7 +3092,29 @@
                 }
             }
 
-            // --- 4. 大腸菌 ---
+            // --- 4. 培地添加物 ---
+            const additiveCarouselContainer = document.getElementById("additiveCarouselContainer");
+            if (additiveCarouselContainer) {
+                additiveCarouselContainer.innerHTML = "";
+                const visibleAddList = additiveOrderConfig.filter(a => a.visible);
+                if (!visibleAddList.map(a => a.key).includes(currentAdditiveKey) && visibleAddList.length > 0) currentAdditiveKey = visibleAddList[0].key;
+                if (visibleAddList.length > 0) {
+                    const loopAddList = [visibleAddList[visibleAddList.length - 1], ...visibleAddList, visibleAddList[0]];
+                    loopAddList.forEach((aObj, loopIdx) => {
+                        const aKey = aObj.key; const aData = getCardItem(aKey); if (!aData) return;
+                        renderGenericRecipePanel(additiveCarouselContainer, aData, aKey, 'additive', loopIdx);
+                    });
+                    const activeAddIndex = visibleAddList.findIndex(a => a.key === currentAdditiveKey);
+                    if (activeAddIndex !== -1) {
+                        const targetScrollLeft = (activeAddIndex + 1) * additiveCarouselContainer.clientWidth;
+                        if (instantJump) { additiveCarouselContainer.style.scrollBehavior = 'auto'; additiveCarouselContainer.style.scrollLeft = targetScrollLeft; requestAnimationFrame(() => { requestAnimationFrame(() => { additiveCarouselContainer.style.scrollBehavior = 'smooth'; }); }); }
+                        else setTimeout(() => { additiveCarouselContainer.style.scrollBehavior = 'smooth'; }, 10);
+                    }
+                    bindInfiniteCarousel(additiveCarouselContainer, visibleAddList, (newKey) => { currentAdditiveKey = newKey; localStorage.setItem('lab_additiveKey', newKey); });
+                }
+            }
+
+            // --- 5. 大腸菌 ---
             const ecoliCarouselContainer = document.getElementById("ecoliCarouselContainer");
             if (ecoliCarouselContainer) {
                 ecoliCarouselContainer.innerHTML = "";
@@ -3088,13 +3130,13 @@
                     if (activeEcoliIndex !== -1) {
                         const targetScrollLeft = (activeEcoliIndex + 1) * ecoliCarouselContainer.clientWidth;
                         if (instantJump) { ecoliCarouselContainer.style.scrollBehavior = 'auto'; ecoliCarouselContainer.scrollLeft = targetScrollLeft; requestAnimationFrame(() => { requestAnimationFrame(() => { ecoliCarouselContainer.style.scrollBehavior = 'smooth'; }); }); }
-                        else setTimeout(() => { ecoliCarouselContainer.scrollLeft = targetScrollLeft; }, 10);
+                        else setTimeout(() => { ecoliCarouselContainer.style.scrollBehavior = 'smooth'; }, 10);
                     }
                     bindInfiniteCarousel(ecoliCarouselContainer, visibleEcoliList, (newKey) => { currentEcoliKey = newKey; localStorage.setItem('lab_ecoliKey', newKey); });
                 }
             }
 
-            // --- 5. アグロバクテリウム ---
+            // --- 6. アグロバクテリウム ---
             const agroCarouselContainer = document.getElementById("agroCarouselContainer");
             if (agroCarouselContainer) {
                 agroCarouselContainer.innerHTML = "";
@@ -3110,13 +3152,13 @@
                     if (activeAgroIndex !== -1) {
                         const targetScrollLeft = (activeAgroIndex + 1) * agroCarouselContainer.clientWidth;
                         if (instantJump) { agroCarouselContainer.style.scrollBehavior = 'auto'; agroCarouselContainer.scrollLeft = targetScrollLeft; requestAnimationFrame(() => { requestAnimationFrame(() => { agroCarouselContainer.style.scrollBehavior = 'smooth'; }); }); }
-                        else setTimeout(() => { agroCarouselContainer.scrollLeft = targetScrollLeft; }, 10);
+                        else setTimeout(() => { agroCarouselContainer.style.scrollBehavior = 'smooth'; }, 10);
                     }
                     bindInfiniteCarousel(agroCarouselContainer, visibleAgroList, (newKey) => { currentAgroKey = newKey; localStorage.setItem('lab_agroKey', newKey); });
                 }
             }
 
-            // --- 6. プロトプラスト ---
+            // --- 7. プロトプラスト ---
             const protoCarouselContainer = document.getElementById("protoplastCarouselContainer");
             if (protoCarouselContainer) {
                 protoCarouselContainer.innerHTML = "";
@@ -3132,13 +3174,13 @@
                     if (activeProtoIndex !== -1) {
                         const targetScrollLeft = (activeProtoIndex + 1) * protoCarouselContainer.clientWidth;
                         if (instantJump) { protoCarouselContainer.style.scrollBehavior = 'auto'; protoCarouselContainer.scrollLeft = targetScrollLeft; requestAnimationFrame(() => { requestAnimationFrame(() => { protoCarouselContainer.style.scrollBehavior = 'smooth'; }); }); }
-                        else setTimeout(() => { protoCarouselContainer.scrollLeft = targetScrollLeft; }, 10);
+                        else setTimeout(() => { protoCarouselContainer.style.scrollBehavior = 'smooth'; }, 10);
                     }
                     bindInfiniteCarousel(protoCarouselContainer, visibleProtoList, (newKey) => { currentProtoKey = newKey; localStorage.setItem('lab_protoKey', newKey); });
                 }
             }
 
-            // --- 7. ストック溶液 ---
+            // --- 8. ストック溶液 ---
             const solCarouselContainer = document.getElementById("solutionCarouselContainer");
             if (solCarouselContainer) {
                 solCarouselContainer.innerHTML = "";
@@ -3154,31 +3196,9 @@
                     if (activeSolIndex !== -1) {
                         const targetScrollLeft = (activeSolIndex + 1) * solCarouselContainer.clientWidth;
                         if (instantJump) { solCarouselContainer.style.scrollBehavior = 'auto'; solCarouselContainer.scrollLeft = targetScrollLeft; requestAnimationFrame(() => { requestAnimationFrame(() => { solCarouselContainer.style.scrollBehavior = 'smooth'; }); }); }
-                        else setTimeout(() => { solCarouselContainer.scrollLeft = targetScrollLeft; }, 10);
+                        else setTimeout(() => { solCarouselContainer.style.scrollBehavior = 'smooth'; }, 10);
                     }
                     bindInfiniteCarousel(solCarouselContainer, visibleSolList, (newKey) => { currentSolutionKey = newKey; localStorage.setItem('lab_solutionKey', newKey); });
-                }
-            }
-
-            // --- 8. 培地添加物 ---
-            const additiveCarouselContainer = document.getElementById("additiveCarouselContainer");
-            if (additiveCarouselContainer) {
-                additiveCarouselContainer.innerHTML = "";
-                const visibleAddList = additiveOrderConfig.filter(a => a.visible);
-                if (!visibleAddList.map(a => a.key).includes(currentAdditiveKey) && visibleAddList.length > 0) currentAdditiveKey = visibleAddList[0].key;
-                if (visibleAddList.length > 0) {
-                    const loopAddList = [visibleAddList[visibleAddList.length - 1], ...visibleAddList, visibleAddList[0]];
-                    loopAddList.forEach((aObj, loopIdx) => {
-                        const aKey = aObj.key; const aData = getCardItem(aKey); if (!aData) return;
-                        renderGenericRecipePanel(additiveCarouselContainer, aData, aKey, 'additive', loopIdx);
-                    });
-                    const activeAddIndex = visibleAddList.findIndex(a => a.key === currentAdditiveKey);
-                    if (activeAddIndex !== -1) {
-                        const targetScrollLeft = (activeAddIndex + 1) * additiveCarouselContainer.clientWidth;
-                        if (instantJump) { additiveCarouselContainer.style.scrollBehavior = 'auto'; additiveCarouselContainer.scrollLeft = targetScrollLeft; requestAnimationFrame(() => { requestAnimationFrame(() => { additiveCarouselContainer.style.scrollBehavior = 'smooth'; }); }); }
-                        else setTimeout(() => { additiveCarouselContainer.scrollLeft = targetScrollLeft; }, 10);
-                    }
-                    bindInfiniteCarousel(additiveCarouselContainer, visibleAddList, (newKey) => { currentAdditiveKey = newKey; localStorage.setItem('lab_additiveKey', newKey); });
                 }
             }
 
@@ -3211,8 +3231,8 @@
                     const activeGuideIndex = guideKeys.indexOf(currentGuideKey);
                     if (activeGuideIndex !== -1) {
                         const targetScrollLeft = (activeGuideIndex + 1) * guideCarouselContainer.clientWidth;
-                        if (instantJump) { guideCarouselContainer.style.scrollBehavior = 'auto'; guideCarouselContainer.scrollLeft = targetScrollLeft; requestAnimationFrame(() => { requestAnimationFrame(() => { guideCarouselContainer.style.scrollBehavior = 'smooth'; }); }); }
-                        else setTimeout(() => { guideCarouselContainer.scrollLeft = targetScrollLeft; }, 10);
+                        if (instantJump) { guideCarouselContainer.style.scrollBehavior = 'auto'; guideCarouselContainer.style.scrollLeft = targetScrollLeft; requestAnimationFrame(() => { requestAnimationFrame(() => { guideCarouselContainer.style.scrollBehavior = 'smooth'; }); }); }
+                        else setTimeout(() => { guideCarouselContainer.style.scrollBehavior = 'smooth'; }, 10);
                     }
                     const guideObjList = guideKeys.map(k => ({ key: k }));
                     bindInfiniteCarousel(guideCarouselContainer, guideObjList, (newKey) => { currentGuideKey = newKey; localStorage.setItem('lab_guideKey', newKey); });
@@ -3222,11 +3242,11 @@
             syncPreferenceToggleStates();
             buildMediaModals();
             buildElectrophoresisModals();
+            buildAdditiveModals();
             buildEcoliModals();
             buildAgroModals();
             buildProtoplastModals();
             buildSolutionModals();
-            buildAdditiveModals();
             buildPcrModals();
             buildGuideModals();
             updateLauncherBar();
