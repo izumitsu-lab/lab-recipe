@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <!-- iOS / iPadOS ホーム画面アプリ化・ステータスバー連動設定 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#08080a">
     <title>Lab Recipe</title>
     <style>
         :root {
@@ -138,7 +142,7 @@
             height: 100dvh;
             display: flex;
             flex-direction: column;
-            padding: 12px 16px env(safe-area-inset-bottom, 16px) 16px;
+            padding: calc(12px + env(safe-area-inset-top, 0px)) 16px env(safe-area-inset-bottom, 16px) 16px;
             width: 100%;
             max-width: 760px;
             margin: 0 auto;
@@ -1229,7 +1233,7 @@
         }
 
         @media screen and (min-width: 600px) {
-            body { padding: 18px 24px env(safe-area-inset-bottom, 20px) 24px !important; }
+            body { padding: calc(18px + env(safe-area-inset-top, 0px)) 24px env(safe-area-inset-bottom, 20px) 24px !important; }
             .main-display { padding: 24px 30px !important; border-radius: 30px !important; }
             .media-eyebrow { font-size: 13px !important; letter-spacing: 1px !important; }
             .media-title { font-size: 25px !important; }
@@ -2052,8 +2056,18 @@
         ];
 
         function applyTheme() {
-            if (lightThemeEnabled) document.body.classList.add('light-theme');
-            else document.body.classList.remove('light-theme');
+            const statusBarMeta = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
+            const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+
+            if (lightThemeEnabled) {
+                document.body.classList.add('light-theme');
+                if (statusBarMeta) statusBarMeta.setAttribute('content', 'default');
+                if (themeColorMeta) themeColorMeta.setAttribute('content', '#f2f2f7');
+            } else {
+                document.body.classList.remove('light-theme');
+                if (statusBarMeta) statusBarMeta.setAttribute('content', 'black-translucent');
+                if (themeColorMeta) themeColorMeta.setAttribute('content', '#08080a');
+            }
         }
 
         function toggleThemeFeature(el) {
@@ -2234,7 +2248,7 @@
             pcrCustomBtn.style.gridColumn = "span 2";
             pcrCustomBtn.innerHTML = `<span style="width: 100%; text-align: center;">CUSTOM</span>`;
             pcrCustomBtn.onclick = () => { openPcrKeypadModal(); };
-            pcrVolListEl.appendChild(pcrCustomBtn);
+            pcrVolListEl.appendChild(customBtn);
 
             jumpToPage(currentViewIndex);
             updateView(true);
