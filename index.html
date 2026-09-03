@@ -1135,7 +1135,7 @@
     <div class="bottom-launcher-bar" onclick="openLauncherModal()">
         <div class="launcher-left">
             <span class="launcher-icon">❖</span>
-            <span class="launcher-label" id="currentLauncherLabel">PCR Master Mix</span>
+            <span class="launcher-label" id="currentLauncherLabel">PCRレシピ</span>
         </div>
         <div class="launcher-right" id="currentLauncherIndex">1 / 5</div>
     </div>
@@ -1430,7 +1430,7 @@
                 getAdvice: (vol) => `💡 10mLずつ分注して使用（計 ${(vol / 10).toFixed(0)} 本分）`,
                 calculateCost: (vol) => {
                     const ratio = vol / 100;
-                    const cost = (0.1 * 16 + 0.1 * 26 + 102.7 * 1 + 4.5 * 42) * ratio;
+                    const cost = (0.1 * 16 + 0.1 * 26 + 102.7 * 1 + 1.5 * 42) * ratio;
                     return `💰 概算コスト: 約 ${Math.round(cost)} 円 (${vol} mLあたり)`;
                 },
                 info: {
@@ -1441,7 +1441,7 @@
                     { name: "Yeast extract", amount: 0.1, unit: "g" },
                     { name: "Tryptone", amount: 0.1, unit: "g" },
                     { name: "スクロース", amount: 102.7, unit: "g" },
-                    { name: "寒天", amount: 4.5, unit: "g" },
+                    { name: "寒天", amount: 1.5, unit: "g" },
                     { name: "蒸留水", amount: 100.0, unit: "mL" }
                 ],
                 postIngredients: []
@@ -1452,7 +1452,7 @@
                 getAdvice: (vol) => `💡 10mLずつ分注・重層用（計 ${(vol / 10).toFixed(0)} 本分）`,
                 calculateCost: (vol) => {
                     const ratio = vol / 100;
-                    const cost = (0.1 * 16 + 0.1 * 26 + 4.5 * 42) * ratio;
+                    const cost = (0.1 * 16 + 0.1 * 26 + 1.5 * 42) * ratio;
                     return `💰 概算コスト: 約 ${Math.round(cost)} 円 (${vol} mLあたり)`;
                 },
                 info: {
@@ -1462,7 +1462,7 @@
                 ingredients: [
                     { name: "Yeast extract", amount: 0.1, unit: "g" },
                     { name: "Tryptone", amount: 0.1, unit: "g" },
-                    { name: "寒天", amount: 4.5, unit: "g" },
+                    { name: "寒天", amount: 1.5, unit: "g" },
                     { name: "蒸留水", amount: 100.0, unit: "mL" }
                 ],
                 postIngredients: []
@@ -1587,8 +1587,8 @@
                     { name: "PEG", amount: 40.0, unit: "g" },
                     { name: "ソルビトール", amount: 21.8, unit: "g" },
                     { name: "CaCl<sub>2</sub>・2H<sub>2</sub>O", amount: 0.736, unit: "g" },
-                    { name: "1M Tris-HCl (pH7.5)", amount: 1000.0, unit: "µL" },
-                    { name: "2N NaOH", amount: 300.0, unit: "µL" },
+                    { name: "1M Tris-HCl (pH7.5)", amount: 1000, unit: "µL" },
+                    { name: "2N NaOH", amount: 300, unit: "µL" },
                     { name: "Water (メスアップ)", amount: 100.0, unit: "mLまで" }
                 ]
             },
@@ -1605,7 +1605,7 @@
                 ingredients: [
                     { name: "ソルビトール", amount: 21.8, unit: "g" },
                     { name: "CaCl<sub>2</sub>・2H<sub>2</sub>O", amount: 0.147, unit: "g" },
-                    { name: "1M Tris-HCl (pH7.5)", amount: 1000.0, unit: "µL" },
+                    { name: "1M Tris-HCl (pH7.5)", amount: 1000, unit: "µL" },
                     { name: "Water (メスアップ)", amount: 100.0, unit: "mLまで" }
                 ]
             }
@@ -1793,10 +1793,10 @@
         let currentOrderType = "";
 
         const appPages = [
-            { id: 0, eyebrow: "PCR Recipe", name: "PCR Master Mix" },
+            { id: 0, eyebrow: "PCR Recipe", name: "PCRレシピ" },
             { id: 1, eyebrow: "Medium Recipe", name: "培地レシピ" },
-            { id: 2, eyebrow: "Stock Solutions", name: "ストック溶液" },
-            { id: 3, eyebrow: "Selection Guide", name: "実験・選択ガイド" },
+            { id: 2, eyebrow: "Stock Solutions", name: "SOLUTIONS" },
+            { id: 3, eyebrow: "Selection Guide", name: "実験ガイド" },
             { id: 4, eyebrow: "Preferences", name: "オプション設定" }
         ];
 
@@ -2399,7 +2399,6 @@
                 }
 
                 if (visiblePcrList.length > 0) {
-                    // 番兵（先頭に最後のクローン、末尾に最初のクローンを配置）
                     const loopItems = [visiblePcrList[visiblePcrList.length - 1], ...visiblePcrList, visiblePcrList[0]];
 
                     loopItems.forEach((pObj, loopIdx) => {
@@ -2891,7 +2890,6 @@
             updateLauncherBar();
         }
 
-        // ★ スナップ競合（カクつき・巻き戻り）を完全解消したシームレス無限ループ
         function setupInfiniteCarouselSwipe(containerEl, listItems, callback) {
             if (containerEl._hasScrollListener) return;
             containerEl._hasScrollListener = true;
@@ -2902,7 +2900,6 @@
                 const totalItems = listItems.length;
                 if (panelWidth === 0) return;
 
-                // 1. 左端のクローン（0番目）に到達した場合
                 if (scrollLeft <= 1) {
                     containerEl.style.scrollBehavior = 'auto';
                     containerEl.style.scrollSnapType = 'none';
@@ -2915,7 +2912,6 @@
                     return;
                 }
 
-                // 2. 右端のクローン（最後のクローン）に到達した場合
                 const rightCloneThreshold = (totalItems + 1) * panelWidth - 1;
                 if (scrollLeft >= rightCloneThreshold) {
                     containerEl.style.scrollBehavior = 'auto';
@@ -2929,7 +2925,6 @@
                     return;
                 }
 
-                // 通常のスクロール位置でのカード判定
                 const currentIndex = Math.round(scrollLeft / panelWidth);
                 const realIndex = currentIndex - 1;
                 if (realIndex >= 0 && realIndex < totalItems) {
