@@ -40,6 +40,10 @@
             margin: 0 auto;
             justify-content: space-between;
             overflow: hidden;
+            opacity: 0;
+        }
+        body.ready {
+            opacity: 1;
         }
 
         .views-container {
@@ -1872,7 +1876,8 @@
             pcrVolListEl.appendChild(pcrCustomBtn);
 
             jumpToPage(currentViewIndex);
-            updateView();
+            updateView(true);
+            document.body.classList.add('ready');
         }
 
         function openLauncherModal() {
@@ -2188,7 +2193,7 @@
                         currentMediaMode = Object.keys(m.modes)[0];
                     }
                     closeModal('mediaModal');
-                    updateView();
+                    updateView(true);
                 };
                 mediaListEl.appendChild(btn);
             });
@@ -2214,7 +2219,7 @@
                     currentSolutionKey = key;
                     localStorage.setItem('lab_solutionKey', key);
                     closeModal('solutionModal');
-                    updateView();
+                    updateView(true);
                 };
                 solListEl.appendChild(btn);
             });
@@ -2240,7 +2245,7 @@
                     currentPcrKey = key;
                     localStorage.setItem('lab_pcrKey', key);
                     closeModal('pcrModal');
-                    updateView();
+                    updateView(true);
                 };
                 pcrListEl.appendChild(btn);
             });
@@ -2258,7 +2263,7 @@
                     currentGuideKey = key;
                     localStorage.setItem('lab_guideKey', key);
                     closeModal('guideModal');
-                    updateView();
+                    updateView(true);
                 };
                 guideListEl.appendChild(btn);
             });
@@ -2355,7 +2360,7 @@
             }
         }
 
-        function updateView() {
+        function updateView(instantJump = false) {
             // --- 1. PCR カードカルーセルの更新（無限ループ対応） ---
             const pcr = pcrDatabase[currentPcrKey];
             if (pcr) {
@@ -2484,10 +2489,20 @@
 
                     const activeRealIndex = visiblePcrList.findIndex(p => p.key === currentPcrKey);
                     if (activeRealIndex !== -1) {
-                        setTimeout(() => {
-                            // クローン分（+1）オフセットした位置にスクロール
-                            pcrCarouselContainer.scrollLeft = (activeRealIndex + 1) * pcrCarouselContainer.clientWidth;
-                        }, 10);
+                        const targetScrollLeft = (activeRealIndex + 1) * pcrCarouselContainer.clientWidth;
+                        if (instantJump) {
+                            pcrCarouselContainer.style.scrollBehavior = 'auto';
+                            pcrCarouselContainer.scrollLeft = targetScrollLeft;
+                            requestAnimationFrame(() => {
+                                requestAnimationFrame(() => {
+                                    pcrCarouselContainer.style.scrollBehavior = 'smooth';
+                                });
+                            });
+                        } else {
+                            setTimeout(() => {
+                                pcrCarouselContainer.scrollLeft = targetScrollLeft;
+                            }, 10);
+                        }
                     }
 
                     setupInfiniteCarouselSwipe(pcrCarouselContainer, visiblePcrList, (newKey) => {
@@ -2636,9 +2651,20 @@
 
                     const activeMediaIndex = visibleMediaList.findIndex(m => m.key === currentMediaKey);
                     if (activeMediaIndex !== -1) {
-                        setTimeout(() => {
-                            mediaCarouselContainer.scrollLeft = (activeMediaIndex + 1) * mediaCarouselContainer.clientWidth;
-                        }, 10);
+                        const targetScrollLeft = (activeMediaIndex + 1) * mediaCarouselContainer.clientWidth;
+                        if (instantJump) {
+                            mediaCarouselContainer.style.scrollBehavior = 'auto';
+                            mediaCarouselContainer.scrollLeft = targetScrollLeft;
+                            requestAnimationFrame(() => {
+                                requestAnimationFrame(() => {
+                                    mediaCarouselContainer.style.scrollBehavior = 'smooth';
+                                });
+                            });
+                        } else {
+                            setTimeout(() => {
+                                mediaCarouselContainer.scrollLeft = targetScrollLeft;
+                            }, 10);
+                        }
                     }
 
                     setupInfiniteCarouselSwipe(mediaCarouselContainer, visibleMediaList, (newKey) => {
@@ -2734,9 +2760,20 @@
 
                     const activeSolIndex = visibleSolList.findIndex(s => s.key === currentSolutionKey);
                     if (activeSolIndex !== -1) {
-                        setTimeout(() => {
-                            solutionCarouselContainer.scrollLeft = (activeSolIndex + 1) * solutionCarouselContainer.clientWidth;
-                        }, 10);
+                        const targetScrollLeft = (activeSolIndex + 1) * solutionCarouselContainer.clientWidth;
+                        if (instantJump) {
+                            solutionCarouselContainer.style.scrollBehavior = 'auto';
+                            solutionCarouselContainer.scrollLeft = targetScrollLeft;
+                            requestAnimationFrame(() => {
+                                requestAnimationFrame(() => {
+                                    solutionCarouselContainer.style.scrollBehavior = 'smooth';
+                                });
+                            });
+                        } else {
+                            setTimeout(() => {
+                                solutionCarouselContainer.scrollLeft = targetScrollLeft;
+                            }, 10);
+                        }
                     }
 
                     setupInfiniteCarouselSwipe(solutionCarouselContainer, visibleSolList, (newKey) => {
@@ -2800,9 +2837,20 @@
 
                     const activeGuideIndex = guideKeys.indexOf(currentGuideKey);
                     if (activeGuideIndex !== -1) {
-                        setTimeout(() => {
-                            guideCarouselContainer.scrollLeft = (activeGuideIndex + 1) * guideCarouselContainer.clientWidth;
-                        }, 10);
+                        const targetScrollLeft = (activeGuideIndex + 1) * guideCarouselContainer.clientWidth;
+                        if (instantJump) {
+                            guideCarouselContainer.style.scrollBehavior = 'auto';
+                            guideCarouselContainer.scrollLeft = targetScrollLeft;
+                            requestAnimationFrame(() => {
+                                requestAnimationFrame(() => {
+                                    guideCarouselContainer.style.scrollBehavior = 'smooth';
+                                });
+                            });
+                        } else {
+                            setTimeout(() => {
+                                guideCarouselContainer.scrollLeft = targetScrollLeft;
+                            }, 10);
+                        }
                     }
 
                     const guideObjList = guideKeys.map(k => ({ key: k }));
