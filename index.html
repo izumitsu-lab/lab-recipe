@@ -1713,6 +1713,24 @@
                     { name: "蒸留水", amount: 100.0, unit: "mL" }
                 ]
             },
+            "uridine_1m": {
+                name: "1M ウリジン",
+                fullName: "1M ウリジン溶液",
+                eyebrow: "Stock Solutions",
+                type: "recipe",
+                hideVolumeBadge: true,
+                baseVolume: 10,
+                getAdvice: (vol) => `💡 フィルター滅菌して使用`,
+                calculateCost: (vol) => `💰 概算コスト: -`,
+                info: {
+                    title: "1M ウリジン溶液についての解説",
+                    body: "ウラシル要求性変異株の選抜や培地添加用ストック溶液です。<br><br>💡 <b>調製法:</b> 10 mLの蒸留水に2.4 gのウリジンを溶解し、<b>シリンジフィルターを用いてフィルター滅菌</b>して保存します。"
+                },
+                ingredients: [
+                    { name: "蒸留水", amount: 10.0, unit: "mL" },
+                    { name: "ウリジン", amount: 2.4, unit: "g" }
+                ]
+            },
             "sol_a": {
                 name: "sol. A (CM)",
                 fullName: "Solution A (CM用)",
@@ -1983,7 +2001,7 @@
         ];
 
         let solutionOrderConfig = JSON.parse(localStorage.getItem('lab_solutionOrderConfig')) || [
-            { key: "mm_sol_1", visible: true }, { key: "mm_sol_2", visible: true }, { key: "sol_a", visible: true }, { key: "sol_b", visible: true }, { key: "isotonic", visible: true }, { key: "peg_40", visible: true }, { key: "stc", visible: true }, { key: "tae_50x", visible: true }
+            { key: "mm_sol_1", visible: true }, { key: "mm_sol_2", visible: true }, { key: "sol_a", visible: true }, { key: "sol_b", visible: true }, { key: "uridine_1m", visible: true }, { key: "isotonic", visible: true }, { key: "peg_40", visible: true }, { key: "stc", visible: true }, { key: "tae_50x", visible: true }
         ];
 
         let pcrOrderConfig = JSON.parse(localStorage.getItem('lab_pcrOrderConfig')) || [
@@ -2049,7 +2067,7 @@
             { id: 0, eyebrow: "PCR Recipe", name: "PCRレシピ" },
             { id: 1, eyebrow: "Medium Recipe", name: "培地レシピ" },
             { id: 2, eyebrow: "Electrophoresis", name: "電気泳動" },
-            { id: 3, eyebrow: "Agrobacterium", name: "アグロバクテリウム" },
+            { id: 3, eyebrow: "Agrobacterium", name: "アグロ" },
             { id: 4, eyebrow: "Protoplast", name: "プロトプラスト" },
             { id: 5, eyebrow: "SOLUTIONS", name: "ストック液" },
             { id: 6, eyebrow: "Selection Guide", name: "実験ガイド" },
@@ -3404,6 +3422,10 @@
             else if (containerEl.id === 'protoplastCarouselContainer') targetModalName = 'protoplastModal';
             else if (containerEl.id === 'electrophoresisCarouselContainer') targetModalName = 'electrophoresisModal';
 
+            const volumeBadgeHtml = data.hideVolumeBadge 
+                ? '' 
+                : `<span class="volume-badge" onclick="${onVolClick}">${currentVol} mL</span>`;
+
             panel.innerHTML = `
                 <div class="main-display">
                     <div class="display-header">
@@ -3413,7 +3435,7 @@
                                 <h1 class="media-title">${data.fullName || data.name}</h1>
                             </div>
                         </div>
-                        <span class="volume-badge" onclick="${onVolClick}">${currentVol} mL</span>
+                        ${volumeBadgeHtml}
                     </div>
                     <div class="advice-box ${adviceFeatureEnabled ? 'visible' : ''}">${data.getAdvice(currentVol)}</div>
                     <div class="cost-box ${costFeatureEnabled ? 'visible' : ''}">${data.calculateCost(currentVol)}</div>
@@ -3429,7 +3451,7 @@
                 </div>
             `;
             const listContainer = panel.querySelector(`#${resetType}List_${loopIdx}`);
-            const ratio = currentVol / data.baseVolume;
+            const ratio = data.hideVolumeBadge ? 1 : (currentVol / data.baseVolume);
 
             data.ingredients.forEach(ing => {
                 let formatted = ing.amount;
@@ -3790,7 +3812,7 @@
                         const targetScrollLeft = (activeMediaIndex + 1) * mediaCarouselContainer.clientWidth;
                         if (instantJump) {
                             mediaCarouselContainer.style.scrollBehavior = 'auto';
-                            mediaCarouselContainer.scrollLeft = targetScrollLeft;
+                            mediaCarouselContainer.style.scrollLeft = targetScrollLeft;
                             requestAnimationFrame(() => {
                                 requestAnimationFrame(() => {
                                     mediaCarouselContainer.style.scrollBehavior = 'smooth';
@@ -3896,7 +3918,7 @@
                 }
             }
 
-            // --- 4. アグロバクテリウムビュー（新設） ---
+            // --- 4. アグロバクテリウムビュー ---
             const agroCarouselContainer = document.getElementById("agroCarouselContainer");
             if (agroCarouselContainer) {
                 agroCarouselContainer.innerHTML = "";
@@ -3970,7 +3992,7 @@
                         const targetScrollLeft = (activeProtoIndex + 1) * protoCarouselContainer.clientWidth;
                         if (instantJump) {
                             protoCarouselContainer.style.scrollBehavior = 'auto';
-                            protoCarouselContainer.scrollLeft = targetScrollLeft;
+                            protoCarouselContainer.style.scrollLeft = targetScrollLeft;
                             requestAnimationFrame(() => {
                                 requestAnimationFrame(() => {
                                     protoCarouselContainer.style.scrollBehavior = 'smooth';
@@ -4093,7 +4115,7 @@
                         const targetScrollLeft = (activeGuideIndex + 1) * guideCarouselContainer.clientWidth;
                         if (instantJump) {
                             guideCarouselContainer.style.scrollBehavior = 'auto';
-                            guideCarouselContainer.scrollLeft = targetScrollLeft;
+                            guideCarouselContainer.style.scrollLeft = targetScrollLeft;
                             requestAnimationFrame(() => {
                                 requestAnimationFrame(() => {
                                     guideCarouselContainer.style.scrollBehavior = 'smooth';
