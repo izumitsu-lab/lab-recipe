@@ -1100,119 +1100,7 @@
 
         <!-- 6ページ目：オプションビュー -->
         <div class="view-panel" id="panel5">
-            <div class="card-carousel-container" id="preferencesCarouselContainer">
-                
-                <!-- オプションカード1枚目：基本設定 -->
-                <div class="card-carousel-panel">
-                    <div class="main-display">
-                        <div class="display-header" style="cursor: default;">
-                            <div class="media-title-wrapper" style="cursor: default; background: none; border: none;">
-                                <span class="media-eyebrow">Preferences (1/2)</span>
-                                <div class="media-title-row">
-                                    <h1 class="media-title">オプション設定</h1>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="list-container-wrapper" style="display: flex; flex-direction: column; gap: 12px; padding-bottom: 20px;">
-                            <div class="option-group">
-                                <div class="option-label-wrapper">
-                                    <span class="option-title">チェック機能</span>
-                                    <span class="option-desc">項目タップで消込線を表示</span>
-                                </div>
-                                <label class="switch">
-                                    <input type="checkbox" id="checkFeatureToggle" onchange="toggleCheckFeature()">
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                            <div class="option-group">
-                                <div class="option-label-wrapper">
-                                    <span class="option-title">インフォメーション（上部）</span>
-                                    <span class="option-desc">シャーレ換算や実験メモを表示</span>
-                                </div>
-                                <label class="switch">
-                                    <input type="checkbox" id="adviceFeatureToggle" onchange="toggleAdviceFeature()">
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                            <div class="option-group">
-                                <div class="option-label-wrapper">
-                                    <span class="option-title">解説リンク（下部）</span>
-                                    <span class="option-desc">各ページ詳細の解説リンクを表示</span>
-                                </div>
-                                <label class="switch">
-                                    <input type="checkbox" id="infoButtonToggle" onchange="toggleInfoButtonFeature()">
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                            <div class="option-group">
-                                <div class="option-label-wrapper">
-                                    <span class="option-title">コスト（費用）表示</span>
-                                    <span class="option-desc">試薬や酵素の概算費用を表示</span>
-                                </div>
-                                <label class="switch">
-                                    <input type="checkbox" id="costFeatureToggle" onchange="toggleCostFeature()">
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                            <div class="option-group">
-                                <div class="option-label-wrapper">
-                                    <span class="option-title">お気に入り機能の表示</span>
-                                    <span class="option-desc">お気に入りボタンやリスト機能を有効化</span>
-                                </div>
-                                <label class="switch">
-                                    <input type="checkbox" id="favoriteFeatureToggle" onchange="toggleFavoriteFeature()">
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                            <div class="option-group">
-                                <div class="option-label-wrapper">
-                                    <span class="option-title">設定の初期化</span>
-                                    <span class="option-desc">保存データをすべて消去してリセット</span>
-                                </div>
-                                <button class="option-danger-btn" onclick="resetAllSettings()">初期に戻す</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- オプションカード2枚目：各リストの編集 -->
-                <div class="card-carousel-panel">
-                    <div class="main-display">
-                        <div class="display-header" style="cursor: default;">
-                            <div class="media-title-wrapper" style="cursor: default; background: none; border: none;">
-                                <span class="media-eyebrow">List Customization (2/2)</span>
-                                <div class="media-title-row">
-                                    <h1 class="media-title">リストの編集</h1>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="list-container-wrapper" style="display: flex; flex-direction: column; gap: 12px; padding-bottom: 20px;">
-                            <div class="option-group">
-                                <div class="option-label-wrapper">
-                                    <span class="option-title">PCR酵素リストの編集</span>
-                                    <span class="option-desc">表示・非表示と並び替え</span>
-                                </div>
-                                <button class="option-action-btn" onclick="openOrderModal('pcr')">編集する</button>
-                            </div>
-                            <div class="option-group">
-                                <div class="option-label-wrapper">
-                                    <span class="option-title">培地リストの編集</span>
-                                    <span class="option-desc">表示・非表示と並び替え</span>
-                                </div>
-                                <button class="option-action-btn" onclick="openOrderModal('media')">編集する</button>
-                            </div>
-                            <div class="option-group">
-                                <div class="option-label-wrapper">
-                                    <span class="option-title">ストック溶液リストの編集</span>
-                                    <span class="option-desc">表示・非表示と並び替え</span>
-                                </div>
-                                <button class="option-action-btn" onclick="openOrderModal('solution')">編集する</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
+            <div class="card-carousel-container" id="preferencesCarouselContainer"></div>
         </div>
 
     </div>
@@ -1942,12 +1830,176 @@
             { id: 5, eyebrow: "Preferences", name: "オプション設定" }
         ];
 
+        function getPreferencesCard1Html(idSuffix) {
+            return `
+                <div class="card-carousel-panel">
+                    <div class="main-display">
+                        <div class="display-header" style="cursor: default;">
+                            <div class="media-title-wrapper" style="cursor: default; background: none; border: none;">
+                                <span class="media-eyebrow">Preferences (1/2)</span>
+                                <div class="media-title-row">
+                                    <h1 class="media-title">オプション設定</h1>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="list-container-wrapper" style="display: flex; flex-direction: column; gap: 12px; padding-bottom: 20px;">
+                            <div class="option-group">
+                                <div class="option-label-wrapper">
+                                    <span class="option-title">チェック機能</span>
+                                    <span class="option-desc">項目タップで消込線を表示</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" class="pref-check-toggle" id="checkFeatureToggle_${idSuffix}" onchange="toggleCheckFeature(this)">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="option-group">
+                                <div class="option-label-wrapper">
+                                    <span class="option-title">インフォメーション（上部）</span>
+                                    <span class="option-desc">シャーレ換算や実験メモを表示</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" class="pref-advice-toggle" id="adviceFeatureToggle_${idSuffix}" onchange="toggleAdviceFeature(this)">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="option-group">
+                                <div class="option-label-wrapper">
+                                    <span class="option-title">解説リンク（下部）</span>
+                                    <span class="option-desc">各ページ詳細の解説リンクを表示</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" class="pref-info-toggle" id="infoButtonToggle_${idSuffix}" onchange="toggleInfoButtonFeature(this)">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="option-group">
+                                <div class="option-label-wrapper">
+                                    <span class="option-title">コスト（費用）表示</span>
+                                    <span class="option-desc">試薬や酵素の概算費用を表示</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" class="pref-cost-toggle" id="costFeatureToggle_${idSuffix}" onchange="toggleCostFeature(this)">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="option-group">
+                                <div class="option-label-wrapper">
+                                    <span class="option-title">お気に入り機能の表示</span>
+                                    <span class="option-desc">お気に入りボタンやリスト機能を有効化</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" class="pref-fav-toggle" id="favoriteFeatureToggle_${idSuffix}" onchange="toggleFavoriteFeature(this)">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="option-group">
+                                <div class="option-label-wrapper">
+                                    <span class="option-title">設定の初期化</span>
+                                    <span class="option-desc">保存データをすべて消去してリセット</span>
+                                </div>
+                                <button class="option-danger-btn" onclick="resetAllSettings()">初期に戻す</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getPreferencesCard2Html() {
+            return `
+                <div class="card-carousel-panel">
+                    <div class="main-display">
+                        <div class="display-header" style="cursor: default;">
+                            <div class="media-title-wrapper" style="cursor: default; background: none; border: none;">
+                                <span class="media-eyebrow">List Customization (2/2)</span>
+                                <div class="media-title-row">
+                                    <h1 class="media-title">リストの編集</h1>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="list-container-wrapper" style="display: flex; flex-direction: column; gap: 12px; padding-bottom: 20px;">
+                            <div class="option-group">
+                                <div class="option-label-wrapper">
+                                    <span class="option-title">PCR酵素リストの編集</span>
+                                    <span class="option-desc">表示・非表示と並び替え</span>
+                                </div>
+                                <button class="option-action-btn" onclick="openOrderModal('pcr')">編集する</button>
+                            </div>
+                            <div class="option-group">
+                                <div class="option-label-wrapper">
+                                    <span class="option-title">培地リストの編集</span>
+                                    <span class="option-desc">表示・非表示と並び替え</span>
+                                </div>
+                                <button class="option-action-btn" onclick="openOrderModal('media')">編集する</button>
+                            </div>
+                            <div class="option-group">
+                                <div class="option-label-wrapper">
+                                    <span class="option-title">ストック溶液リストの編集</span>
+                                    <span class="option-desc">表示・非表示と並び替え</span>
+                                </div>
+                                <button class="option-action-btn" onclick="openOrderModal('solution')">編集する</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderPreferencesCarousel() {
+            const container = document.getElementById("preferencesCarouselContainer");
+            if (!container) return;
+            // 無限ループ構造: [Card 2 (clone), Card 1 (real), Card 2 (real), Card 1 (clone)]
+            container.innerHTML = getPreferencesCard2Html() + getPreferencesCard1Html("real") + getPreferencesCard2Html() + getPreferencesCard1Html("clone");
+            syncPreferenceToggleStates();
+            setupPreferencesCarousel(container);
+        }
+
+        function syncPreferenceToggleStates() {
+            document.querySelectorAll(".pref-check-toggle").forEach(el => el.checked = checkFeatureEnabled);
+            document.querySelectorAll(".pref-advice-toggle").forEach(el => el.checked = adviceFeatureEnabled);
+            document.querySelectorAll(".pref-info-toggle").forEach(el => el.checked = infoButtonFeatureEnabled);
+            document.querySelectorAll(".pref-cost-toggle").forEach(el => el.checked = costFeatureEnabled);
+            document.querySelectorAll(".pref-fav-toggle").forEach(el => el.checked = favoriteFeatureEnabled);
+        }
+
+        function setupPreferencesCarousel(container) {
+            if (container._hasPrefScrollListener) return;
+            container._hasPrefScrollListener = true;
+
+            container.addEventListener('scroll', () => {
+                const scrollLeft = container.scrollLeft;
+                const panelWidth = container.clientWidth;
+                if (panelWidth === 0) return;
+
+                // 左端（Card 2 clone）に達したら Card 2 real (インデックス 2) にワープ
+                if (scrollLeft <= 1) {
+                    container.style.scrollBehavior = 'auto';
+                    container.style.scrollSnapType = 'none';
+                    container.scrollLeft = 2 * panelWidth;
+                    requestAnimationFrame(() => {
+                        container.style.scrollSnapType = 'x mandatory';
+                        container.style.scrollBehavior = 'smooth';
+                    });
+                    return;
+                }
+
+                // 右端（Card 1 clone）に達したら Card 1 real (インデックス 1) にワープ
+                const rightThreshold = 3 * panelWidth - 1;
+                if (scrollLeft >= rightThreshold) {
+                    container.style.scrollBehavior = 'auto';
+                    container.style.scrollSnapType = 'none';
+                    container.scrollLeft = 1 * panelWidth;
+                    requestAnimationFrame(() => {
+                        container.style.scrollSnapType = 'x mandatory';
+                        container.style.scrollBehavior = 'smooth';
+                    });
+                }
+            }, { passive: true });
+        }
+
         function initApp() {
-            document.getElementById("checkFeatureToggle").checked = checkFeatureEnabled;
-            document.getElementById("adviceFeatureToggle").checked = adviceFeatureEnabled;
-            document.getElementById("infoButtonToggle").checked = infoButtonFeatureEnabled;
-            document.getElementById("costFeatureToggle").checked = costFeatureEnabled;
-            document.getElementById("favoriteFeatureToggle").checked = favoriteFeatureEnabled;
+            renderPreferencesCarousel();
 
             applyFavoriteFeatureState();
 
@@ -2042,9 +2094,10 @@
             }
         }
 
-        function toggleFavoriteFeature() {
-            favoriteFeatureEnabled = document.getElementById("favoriteFeatureToggle").checked;
+        function toggleFavoriteFeature(el) {
+            favoriteFeatureEnabled = el ? el.checked : !favoriteFeatureEnabled;
             localStorage.setItem('lab_favoriteFeature', favoriteFeatureEnabled);
+            syncPreferenceToggleStates();
             applyFavoriteFeatureState();
             updateView();
         }
@@ -2109,7 +2162,7 @@
                                 const guideKeys = Object.keys(guideDatabase);
                                 activeRealIndex = guideKeys.indexOf(currentGuideKey);
                             } else if (idx === 5) {
-                                activeRealIndex = 0;
+                                activeRealIndex = 0; // オプション設定の1枚目 (インデックス 1)
                             }
                             if (activeRealIndex !== -1) {
                                 container.style.scrollBehavior = 'auto';
@@ -2613,32 +2666,36 @@
             updateView();
         }
 
-        function toggleCheckFeature() {
-            checkFeatureEnabled = document.getElementById("checkFeatureToggle").checked;
+        function toggleCheckFeature(el) {
+            checkFeatureEnabled = el ? el.checked : !checkFeatureEnabled;
             localStorage.setItem('lab_checkFeature', checkFeatureEnabled);
+            syncPreferenceToggleStates();
             if (!checkFeatureEnabled) {
-                document.querySelectorAll('.ingredient-item.checked').forEach(el => el.classList.remove('checked'));
+                document.querySelectorAll('.ingredient-item.checked').forEach(item => item.classList.remove('checked'));
                 checkResetButtonState('media');
                 checkResetButtonState('solution');
                 checkResetButtonState('pcr');
             }
         }
 
-        function toggleAdviceFeature() {
-            adviceFeatureEnabled = document.getElementById("adviceFeatureToggle").checked;
+        function toggleAdviceFeature(el) {
+            adviceFeatureEnabled = el ? el.checked : !adviceFeatureEnabled;
             localStorage.setItem('lab_adviceFeature', adviceFeatureEnabled);
+            syncPreferenceToggleStates();
             updateView();
         }
 
-        function toggleInfoButtonFeature() {
-            infoButtonFeatureEnabled = document.getElementById("infoButtonToggle").checked;
+        function toggleInfoButtonFeature(el) {
+            infoButtonFeatureEnabled = el ? el.checked : !infoButtonFeatureEnabled;
             localStorage.setItem('lab_infoButtonFeature', infoButtonFeatureEnabled);
+            syncPreferenceToggleStates();
             updateView();
         }
 
-        function toggleCostFeature() {
-            costFeatureEnabled = document.getElementById("costFeatureToggle").checked;
+        function toggleCostFeature(el) {
+            costFeatureEnabled = el ? el.checked : !costFeatureEnabled;
             localStorage.setItem('lab_costFeature', costFeatureEnabled);
+            syncPreferenceToggleStates();
             updateView();
         }
 
@@ -3231,6 +3288,7 @@
                 }
             }
 
+            syncPreferenceToggleStates();
             buildMediaModals();
             buildSolutionModals();
             buildPcrModals();
