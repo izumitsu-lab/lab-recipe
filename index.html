@@ -1159,7 +1159,7 @@
     <div class="modal-overlay" id="infoModal" onclick="outsideClose(event, 'infoModal')">
         <div class="modal-content info-modal-content">
             <div class="modal-header">💡 実験ノート・解説</div>
-            <div class="info-modal-title" id="infoModalTitle"></div>
+            <div class="modal-title" id="infoModalTitle"></div>
             <div class="info-modal-body" id="infoModalBody">ここに詳細な解説が入ります。</div>
             <button class="info-close-btn" onclick="closeModal('infoModal')">閉じる</button>
         </div>
@@ -2508,7 +2508,6 @@
                     setupInfiniteCarouselSwipe(pcrCarouselContainer, visiblePcrList, (newKey) => {
                         currentPcrKey = newKey;
                         localStorage.setItem('lab_pcrKey', newKey);
-                        updateView();
                     });
 
                     checkResetButtonState('pcr');
@@ -2672,7 +2671,6 @@
                         localStorage.setItem('lab_mediaKey', newKey);
                         const m = mediaDatabase[newKey];
                         if (m && m.hasModes) currentMediaMode = Object.keys(m.modes)[0];
-                        updateView();
                     });
 
                     checkResetButtonState('media');
@@ -2779,7 +2777,6 @@
                     setupInfiniteCarouselSwipe(solutionCarouselContainer, visibleSolList, (newKey) => {
                         currentSolutionKey = newKey;
                         localStorage.setItem('lab_solutionKey', newKey);
-                        updateView();
                     });
 
                     checkResetButtonState('solution');
@@ -2857,7 +2854,6 @@
                     setupInfiniteCarouselSwipe(guideCarouselContainer, guideObjList, (newKey) => {
                         currentGuideKey = newKey;
                         localStorage.setItem('lab_guideKey', newKey);
-                        updateView();
                     });
                 }
             }
@@ -2869,40 +2865,50 @@
             updateLauncherBar();
         }
 
-        // ★ 完全なシームレス無限ループ（番兵クローンリセット方式）
+        // ★ 通常・ループ両方のスムーズな切り替えを実現するカルーセルスワイプ処理
         function setupInfiniteCarouselSwipe(containerEl, listItems, callback) {
             if (containerEl._hasScrollListener) return;
             containerEl._hasScrollListener = true;
 
-            let isScrolling;
+            let scrollTimeout;
 
             containerEl.addEventListener('scroll', () => {
-                window.clearTimeout(isScrolling);
-                isScrolling = setTimeout(() => {
-                    const scrollLeft = containerEl.scrollLeft;
-                    const panelWidth = containerEl.clientWidth;
-                    const totalItems = listItems.length;
-                    const currentIndex = Math.round(scrollLeft / panelWidth);
+                const scrollLeft = containerEl.scrollLeft;
+                const panelWidth = containerEl.clientWidth;
+                const totalItems = listItems.length;
+                if (panelWidth === 0) return;
 
-                    // 1. 右端のクローン（インデックス：totalItems + 1）に到達した場合 -> 本物の最初のカードへ瞬間移動
-                    if (currentIndex === totalItems + 1) {
-                        containerEl.style.scrollBehavior = 'auto'; // アニメーションを無効化
-                        containerEl.scrollLeft = panelWidth;       // 本物の1枚目の位置へ瞬間ジャンプ
-                        containerEl.style.scrollBehavior = 'smooth'; // アニメーションを復元
-                        callback(listItems[0].key);
-                        return;
-                    }
-
-                    // 2. 左端のクローン（インデックス：0）に到達した場合 -> 本物の最後のカードへ瞬間移動
-                    if (currentIndex === 0) {
-                        containerEl.style.scrollBehavior = 'auto';
-                        containerEl.scrollLeft = totalItems * panelWidth; // 本物の最後の位置へ瞬間ジャンプ
+                // 1. 左端のクローンに到達した場合
+                if (scrollLeft <= 1) {
+                    containerEl.style.scrollBehavior = 'auto';
+                    containerEl.style.scrollSnapType = 'none';
+                    containerEl.scrollLeft = totalItems * panelWidth;
+                    requestAnimationFrame(() => {
+                        containerEl.style.scrollSnapType = 'x mandatory';
                         containerEl.style.scrollBehavior = 'smooth';
-                        callback(listItems[totalItems - 1].key);
-                        return;
-                    }
+                    });
+                    callback(listItems[totalItems - 1].key);
+                    return;
+                }
 
-                    // 通常のカード位置の場合
+                // 2. 右端のクローンに到達した場合
+                const rightCloneThreshold = (totalItems + 1) * panelWidth - 1;
+                if (scrollLeft >= rightCloneThreshold) {
+                    containerEl.style.scrollBehavior = 'auto';
+                    containerEl.style.scrollSnapType = 'none';
+                    containerEl.scrollLeft = panelWidth;
+                    requestAnimationFrame(() => {
+                        containerEl.style.scrollSnapType = 'x mandatory';
+                        containerEl.style.scrollBehavior = 'smooth';
+                    });
+                    callback(listItems[0].key);
+                    return;
+                }
+
+                // 3. 通常のカード切り替え時：スクロールが完全に停止・確定したタイミングでキーを保存（DOM再描画によるカクつきを完全に防止）
+                window.clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    const currentIndex = Math.round(containerEl.scrollLeft / panelWidth);
                     const realIndex = currentIndex - 1;
                     if (realIndex >= 0 && realIndex < totalItems) {
                         const selectedKey = listItems[realIndex].key;
@@ -2916,7 +2922,7 @@
                             callback(selectedKey);
                         }
                     }
-                }, 50);
+                }, 100);
             }, { passive: true });
         }
 
