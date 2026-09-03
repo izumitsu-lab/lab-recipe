@@ -648,7 +648,7 @@
             transform: translateX(20px);
         }
 
-        /* 下部ランチャーバー（左右とも背景なしで完全に一体化） */
+        /* 下部ランチャーバー */
         .bottom-launcher-bar {
             display: grid;
             grid-template-columns: 22% 1fr 18%;
@@ -1093,7 +1093,7 @@
             <div class="card-carousel-container" id="guideCarouselContainer"></div>
         </div>
 
-        <!-- 5ページ目：オプションビュー（2枚のカルーセルカードに分割） -->
+        <!-- 5ページ目：オプションビュー（2枚のカードに分割） -->
         <div class="view-panel" id="panel4">
             <div class="card-carousel-container" id="preferencesCarouselContainer">
                 
@@ -1229,7 +1229,7 @@
         </div>
     </div>
 
-    <!-- お気に入りリスト選択用モーダル（元仕様のシンプルなリスト） -->
+    <!-- お気に入りリスト選択用モーダル -->
     <div class="modal-overlay" id="favoriteModal" onclick="outsideClose(event, 'favoriteModal')">
         <div class="modal-content" style="max-width: 440px;">
             <div class="modal-header">お気に入りレシピを選択</div>
@@ -2091,7 +2091,7 @@
                             }
                             if (activeRealIndex !== -1) {
                                 container.style.scrollBehavior = 'auto';
-                                container.scrollLeft = activeRealIndex * container.clientWidth;
+                                container.scrollLeft = (activeRealIndex + 1) * container.clientWidth;
                                 requestAnimationFrame(() => {
                                     container.style.scrollBehavior = 'smooth';
                                 });
@@ -2670,7 +2670,7 @@
         }
 
         function updateView(instantJump = false) {
-            // --- 1. PCR カードカルーセルの更新（無限ループ対応） ---
+            // --- 1. PCR カードカルーセルの更新（無限ループ対応・インデックス完全一致） ---
             const pcr = pcrDatabase[currentPcrKey];
             if (pcr) {
                 const pcrCarouselContainer = document.getElementById("pcrCarouselContainer");
