@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <!-- iOS / iPadOS ホーム画面アプリ化・ステータスバー連動設定 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#08080a">
@@ -1612,6 +1613,21 @@
                 ingredients: [{ name: "SOB培地", amount: 99.0, unit: "mL" }],
                 postIngredients: [{ name: "2M グルコース（フィルター滅菌済）", amount: 1.0, unit: "mL" }]
             },
+            "im": {
+                name: "IM培地", fullName: "IM培地 (Agrobacterium)", eyebrow: "Agrobacterium Medium", type: "recipe", baseVolume: 100, unit: "mL", presets: [50, 100, 150, 200, 250, 300, 400, 500], hasVolume: true,
+                getAdvice: (vol) => getDishAdvice(vol),
+                calculateCost: (vol) => `💰 概算コスト: 約 ${Math.round((400 + 0.4 + 4 + (1.5 * 42))*(vol/100))} 円 (${vol} mLあたり)`,
+                info: {
+                    title: "IM培地についての解説",
+                    body: "アグロバクテリウムを介した形質転換に特化した培地です。アセトシリンゴンは熱に非常に弱いため、必ずオートクレーブ滅菌・冷却後に無菌的に添加してください。"
+                },
+                ingredients: [
+                    { name: "MM salt sol. 1", amount: 10.0, unit: "mL" }, { name: "MM salt sol. 2", amount: 10.0, unit: "mL" }, { name: "400mM MES", amount: 10.0, unit: "mL" }, { name: "グルコース", amount: 0.1, unit: "g" }, { name: "グリセロール", amount: 1.0, unit: "mL" }, { name: "蒸留水", amount: 70.0, unit: "mL" }, { name: "寒天", amount: 1.5, unit: "g" }
+                ],
+                postIngredients: [
+                    { name: "アセトシリンゴン", amount: "適量", unit: "" }
+                ]
+            },
             "mg_sol_2m": {
                 name: "2M Mg<sup>2+</sup>溶液", fullName: "2M Mg<sup>2+</sup>溶液 (1M MgSO<sub>4</sub> + 1M MgCl<sub>2</sub>)", eyebrow: "Stock Solutions", type: "recipe", baseVolume: 100, unit: "mL", presets: [10, 20, 50, 100, 200, 500], hasVolume: true,
                 getAdvice: (vol) => `💡 フィルター滅菌して使用`, calculateCost: (vol) => `💰 概算コスト: -`,
@@ -1848,7 +1864,7 @@
         };
 
         function getCardItem(key) {
-            return mediaDatabase[key] || pcrDatabase[key] || commonReagentDatabase[key] || guideDatabase[key] || null;
+            return mediaDatabase[key] || commonReagentDatabase[key] || pcrDatabase[key] || guideDatabase[key] || null;
         }
 
         let cardVolumes = JSON.parse(localStorage.getItem('lab_cardVolumes')) || {};
@@ -2003,6 +2019,32 @@
             localStorage.setItem('lab_lightTheme', lightThemeEnabled);
             applyTheme();
             syncPreferenceToggleStates();
+        }
+
+        // --- チェック機能・リセットバナー制御 ---
+        function toggleIngredientCheck(itemEl) {
+            if (!checkFeatureEnabled) return;
+            itemEl.classList.toggle('checked');
+            updateCardResetBanner(itemEl.closest('.main-display'));
+        }
+
+        function updateCardResetBanner(cardEl) {
+            if (!cardEl) return;
+            const banner = cardEl.querySelector('.reset-banner');
+            if (!banner) return;
+            const checkedCount = cardEl.querySelectorAll('.ingredient-item.checked').length;
+            if (checkedCount > 0 && checkFeatureEnabled) {
+                banner.classList.add('visible');
+            } else {
+                banner.classList.remove('visible');
+            }
+        }
+
+        function resetCardChecks(btnEl) {
+            const cardEl = btnEl.closest('.main-display');
+            if (!cardEl) return;
+            cardEl.querySelectorAll('.ingredient-item.checked').forEach(el => el.classList.remove('checked'));
+            updateCardResetBanner(cardEl);
         }
 
         let currentEditingCardKey = "";
@@ -2431,9 +2473,9 @@
             let config = getTargetConfig(currentOrderType);
             config.forEach((item, index) => {
                 let name = "";
-                if (currentOrderType === 'media') name = mediaDatabase[item.key]?.name || item.key;
-                else if (['solution', 'electrophoresis', 'agro', 'protoplast', 'ecoli', 'additive'].includes(currentOrderType)) name = commonReagentDatabase[item.key]?.name || item.key;
-                else if (currentOrderType === 'pcr') name = pcrDatabase[item.key]?.shortName || item.key;
+                const dbItem = getCardItem(item.key);
+                if (dbItem) name = dbItem.shortName || dbItem.name || item.key;
+                else name = item.key;
 
                 const row = document.createElement("div");
                 row.style.cssText = "display: flex; justify-content: space-between; align-items: center; background-color: #222228; border: 1px solid rgba(255,255,255,0.04); border-radius: 14px; padding: 12px 14px;";
@@ -2507,7 +2549,7 @@
             let visibleList = mediaOrderConfig.filter(m => m.visible);
             if (!visibleList.map(m => m.key).includes(currentMediaKey) && visibleList.length > 0) currentMediaKey = visibleList[0].key;
             visibleList.forEach(mObj => {
-                const key = mObj.key; const media = mediaDatabase[key]; if (!media) return;
+                const key = mObj.key; const media = getCardItem(key); if (!media) return;
                 const btn = document.createElement("button");
                 btn.className = `option-item ${key === currentMediaKey ? 'selected' : ''}`;
                 btn.innerHTML = media.name;
@@ -2527,7 +2569,7 @@
             let visibleList = electrophoresisOrderConfig.filter(e => e.visible);
             if (!visibleList.map(e => e.key).includes(currentElecKey) && visibleList.length > 0) currentElecKey = visibleList[0].key;
             visibleList.forEach(eObj => {
-                const key = eObj.key; const item = commonReagentDatabase[key]; if (!item) return;
+                const key = eObj.key; const item = getCardItem(key); if (!item) return;
                 const btn = document.createElement("button");
                 btn.className = `option-item ${key === currentElecKey ? 'selected' : ''}`;
                 btn.innerHTML = item.name;
@@ -2543,7 +2585,7 @@
             let visibleList = ecoliOrderConfig.filter(ec => ec.visible);
             if (!visibleList.map(ec => ec.key).includes(currentEcoliKey) && visibleList.length > 0) currentEcoliKey = visibleList[0].key;
             visibleList.forEach(ecObj => {
-                const key = ecObj.key; const item = commonReagentDatabase[key]; if (!item) return;
+                const key = ecObj.key; const item = getCardItem(key); if (!item) return;
                 const btn = document.createElement("button");
                 btn.className = `option-item ${key === currentEcoliKey ? 'selected' : ''}`;
                 btn.innerHTML = item.name;
@@ -2559,7 +2601,7 @@
             let visibleList = agroOrderConfig.filter(a => a.visible);
             if (!visibleList.map(a => a.key).includes(currentAgroKey) && visibleList.length > 0) currentAgroKey = visibleList[0].key;
             visibleList.forEach(aObj => {
-                const key = aObj.key; const item = commonReagentDatabase[key]; if (!item) return;
+                const key = aObj.key; const item = getCardItem(key); if (!item) return;
                 const btn = document.createElement("button");
                 btn.className = `option-item ${key === currentAgroKey ? 'selected' : ''}`;
                 btn.innerHTML = item.name;
@@ -2575,7 +2617,7 @@
             let visibleList = protoplastOrderConfig.filter(p => p.visible);
             if (!visibleList.map(p => p.key).includes(currentProtoKey) && visibleList.length > 0) currentProtoKey = visibleList[0].key;
             visibleList.forEach(pObj => {
-                const key = pObj.key; const item = commonReagentDatabase[key]; if (!item) return;
+                const key = pObj.key; const item = getCardItem(key); if (!item) return;
                 const btn = document.createElement("button");
                 btn.className = `option-item ${key === currentProtoKey ? 'selected' : ''}`;
                 btn.innerHTML = item.name;
@@ -2590,7 +2632,7 @@
             let visibleSolList = solutionOrderConfig.filter(s => s.visible);
             if (!visibleSolList.map(s => s.key).includes(currentSolutionKey) && visibleSolList.length > 0) currentSolutionKey = visibleSolList[0].key;
             visibleSolList.forEach(sObj => {
-                const key = sObj.key; const sol = commonReagentDatabase[key]; if (!sol) return;
+                const key = sObj.key; const sol = getCardItem(key); if (!sol) return;
                 const btn = document.createElement("button");
                 btn.className = `option-item ${key === currentSolutionKey ? 'selected' : ''}`;
                 btn.innerHTML = sol.name;
@@ -2606,7 +2648,7 @@
             let visibleList = additiveOrderConfig.filter(a => a.visible);
             if (!visibleList.map(a => a.key).includes(currentAdditiveKey) && visibleList.length > 0) currentAdditiveKey = visibleList[0].key;
             visibleList.forEach(aObj => {
-                const key = aObj.key; const item = commonReagentDatabase[key]; if (!item) return;
+                const key = aObj.key; const item = getCardItem(key); if (!item) return;
                 const btn = document.createElement("button");
                 btn.className = `option-item ${key === currentAdditiveKey ? 'selected' : ''}`;
                 btn.innerHTML = item.name;
@@ -2621,7 +2663,7 @@
             let visibleList = pcrOrderConfig.filter(p => p.visible);
             if (!visibleList.map(p => p.key).includes(currentPcrKey) && visibleList.length > 0) currentPcrKey = visibleList[0].key;
             visibleList.forEach(pObj => {
-                const key = pObj.key; const pcr = pcrDatabase[key]; if (!pcr) return;
+                const key = pObj.key; const pcr = getCardItem(key); if (!pcr) return;
                 const btn = document.createElement("button");
                 btn.className = `option-item ${key === currentPcrKey ? 'selected' : ''}`;
                 btn.innerHTML = pcr.shortName;
@@ -2653,7 +2695,7 @@
             syncPreferenceToggleStates();
             if (!checkFeatureEnabled) {
                 document.querySelectorAll('.ingredient-item.checked').forEach(item => item.classList.remove('checked'));
-                ['media','solution','additive','pcr','elec','ecoli','agro','proto'].forEach(checkResetButtonState);
+                document.querySelectorAll('.reset-banner.visible').forEach(b => b.classList.remove('visible'));
             }
         }
 
@@ -2678,54 +2720,16 @@
             updateView();
         }
 
-        function checkResetButtonState(type) {
-            let containerId = 'pcrCarouselContainer';
-            if (type === 'media') containerId = 'mediaCarouselContainer';
-            else if (type === 'solution') containerId = 'solutionCarouselContainer';
-            else if (type === 'additive') containerId = 'additiveCarouselContainer';
-            else if (type === 'elec') containerId = 'electrophoresisCarouselContainer';
-            else if (type === 'ecoli') containerId = 'ecoliCarouselContainer';
-            else if (type === 'agro') containerId = 'agroCarouselContainer';
-            else if (type === 'proto') containerId = 'protoplastCarouselContainer';
-            
-            const container = document.getElementById(containerId);
-            if (!container) return;
-            const activePanel = container.querySelector('.card-carousel-panel:not([style*="display: none"])');
-            const checkedCount = activePanel ? activePanel.querySelectorAll('.ingredient-item.checked').length : 0;
-            container.querySelectorAll('.reset-banner').forEach(b => {
-                if (checkedCount > 0 && checkFeatureEnabled) b.classList.add('visible');
-                else b.classList.remove('visible');
-            });
-        }
-
-        function resetChecks(type) {
-            let containerId = 'pcrCarouselContainer';
-            if (type === 'media') containerId = 'mediaCarouselContainer';
-            else if (type === 'solution') containerId = 'solutionCarouselContainer';
-            else if (type === 'additive') containerId = 'additiveCarouselContainer';
-            else if (type === 'elec') containerId = 'electrophoresisCarouselContainer';
-            else if (type === 'ecoli') containerId = 'ecoliCarouselContainer';
-            else if (type === 'agro') containerId = 'agroCarouselContainer';
-            else if (type === 'proto') containerId = 'protoplastCarouselContainer';
-
-            const container = document.getElementById(containerId);
-            if (container) {
-                const activePanel = container.querySelector('.card-carousel-panel:not([style*="display: none"])');
-                if (activePanel) activePanel.querySelectorAll('.ingredient-item.checked').forEach(el => el.classList.remove('checked'));
-            }
-            checkResetButtonState(type);
-        }
-
         function openInfoModal() {
             let infoData = null;
             if (currentViewIndex === 0) infoData = pcrDatabase[currentPcrKey]?.info;
             else if (currentViewIndex === 1) infoData = mediaDatabase[currentMediaKey]?.info;
-            else if (currentViewIndex === 2) infoData = commonReagentDatabase[currentElecKey]?.info;
-            else if (currentViewIndex === 3) infoData = commonReagentDatabase[currentEcoliKey]?.info;
-            else if (currentViewIndex === 4) infoData = commonReagentDatabase[currentAgroKey]?.info;
-            else if (currentViewIndex === 5) infoData = commonReagentDatabase[currentProtoKey]?.info;
-            else if (currentViewIndex === 6) infoData = commonReagentDatabase[currentSolutionKey]?.info;
-            else if (currentViewIndex === 7) infoData = commonReagentDatabase[currentAdditiveKey]?.info;
+            else if (currentViewIndex === 2) infoData = getCardItem(currentElecKey)?.info;
+            else if (currentViewIndex === 3) infoData = getCardItem(currentEcoliKey)?.info;
+            else if (currentViewIndex === 4) infoData = getCardItem(currentAgroKey)?.info;
+            else if (currentViewIndex === 5) infoData = getCardItem(currentProtoKey)?.info;
+            else if (currentViewIndex === 6) infoData = getCardItem(currentSolutionKey)?.info;
+            else if (currentViewIndex === 7) infoData = getCardItem(currentAdditiveKey)?.info;
 
             if (infoData) {
                 document.getElementById("infoModalTitle").innerHTML = `${infoData.title}`;
@@ -2775,9 +2779,9 @@
                     <div class="advice-box ${adviceFeatureEnabled ? 'visible' : ''}">${data.getAdvice ? data.getAdvice(vol) : ''}</div>
                     <div class="cost-box ${costFeatureEnabled ? 'visible' : ''}">${data.calculateCost ? data.calculateCost(vol) : ''}</div>
                     <div class="list-container-wrapper"><ul class="ingredient-list" id="${resetType}List_${loopIdx}"></ul></div>
-                    <div class="reset-banner" id="${resetType}ResetBanner_${loopIdx}">
+                    <div class="reset-banner">
                         <span class="reset-text">チェックが入っています</span>
-                        <button class="reset-btn" onclick="resetChecks('${resetType}')">すべて外す</button>
+                        <button class="reset-btn" onclick="resetCardChecks(this)">すべて外す</button>
                     </div>
                 </div>
             `;
@@ -2793,7 +2797,7 @@
                 }
                 const li = document.createElement("li");
                 li.className = "ingredient-item";
-                li.onclick = () => { if (checkFeatureEnabled) { li.classList.toggle('checked'); checkResetButtonState(resetType); } };
+                li.onclick = function() { toggleIngredientCheck(this); };
                 li.innerHTML = `
                     <span class="ing-name">${ing.name}</span>
                     <div class="ing-amount-wrapper"><span class="ing-amount">${formatted}</span><span class="ing-unit">${ing.unit}</span></div>
@@ -2816,7 +2820,7 @@
                     }
                     const li = document.createElement("li");
                     li.className = "ingredient-item";
-                    li.onclick = () => { if (checkFeatureEnabled) { li.classList.toggle('checked'); checkResetButtonState(resetType); } };
+                    li.onclick = function() { toggleIngredientCheck(this); };
                     li.innerHTML = `
                         <span class="ing-name">${ing.name}</span>
                         <div class="ing-amount-wrapper"><span class="ing-amount">${formatted}</span><span class="ing-unit">${ing.unit}</span></div>
@@ -2847,7 +2851,7 @@
                 if (visiblePcrList.length > 0) {
                     const loopItems = [visiblePcrList[visiblePcrList.length - 1], ...visiblePcrList, visiblePcrList[0]];
                     loopItems.forEach((pObj, loopIdx) => {
-                        const pKey = pObj.key; const pData = pcrDatabase[pKey]; if (!pData) return;
+                        const pKey = pObj.key; const pData = getCardItem(pKey); if (!pData) return;
                         const vol = getCardVolume(pKey);
                         const panel = document.createElement("div");
                         panel.className = "card-carousel-panel";
@@ -2870,9 +2874,9 @@
                                     <ul class="ingredient-list" id="pcrList_${pKey}_${loopIdx}" style="${currentPcrMode === 'recipe' ? 'display:flex;' : 'display:none;'}"></ul>
                                     <div class="cycle-container" id="pcrCycle_${pKey}_${loopIdx}" style="${currentPcrMode === 'cycle' ? 'display:flex;' : 'display:none;'}"></div>
                                 </div>
-                                <div class="reset-banner" id="pcrResetBanner_${pKey}_${loopIdx}">
+                                <div class="reset-banner">
                                     <span class="reset-text">チェックが入っています</span>
-                                    <button class="reset-btn" onclick="resetChecks('pcr')">すべて外す</button>
+                                    <button class="reset-btn" onclick="resetCardChecks(this)">すべて外す</button>
                                 </div>
                             </div>
                         `;
@@ -2884,7 +2888,7 @@
                             const formatted = calcAmount >= 10 ? calcAmount.toFixed(1) : calcAmount.toFixed(2).replace(/\.?0+$/, "");
                             const li = document.createElement("li");
                             li.className = "ingredient-item";
-                            li.onclick = () => { if (checkFeatureEnabled) { li.classList.toggle('checked'); checkResetButtonState('pcr'); } };
+                            li.onclick = function() { toggleIngredientCheck(this); };
                             li.innerHTML = `<span class="ing-name">${ing.name}</span><div class="ing-amount-wrapper"><span class="ing-amount">${formatted}</span><span class="ing-unit">${ing.unit}</span></div>`;
                             recipeList.appendChild(li);
                         });
@@ -2921,8 +2925,7 @@
                         if (instantJump) { pcrCarouselContainer.style.scrollBehavior = 'auto'; pcrCarouselContainer.scrollLeft = targetScrollLeft; requestAnimationFrame(() => { requestAnimationFrame(() => { pcrCarouselContainer.style.scrollBehavior = 'smooth'; }); }); }
                         else setTimeout(() => { pcrCarouselContainer.scrollLeft = targetScrollLeft; }, 10);
                     }
-                    setupInfiniteCarouselSwipe(pcrCarouselContainer, visiblePcrList, (newKey) => { currentPcrKey = newKey; localStorage.setItem('lab_pcrKey', newKey); });
-                    checkResetButtonState('pcr');
+                    bindInfiniteCarousel(pcrCarouselContainer, visiblePcrList, (newKey) => { currentPcrKey = newKey; localStorage.setItem('lab_pcrKey', newKey); });
                 }
             }
 
@@ -2937,7 +2940,7 @@
                 if (visibleMediaList.length > 0) {
                     const loopMediaList = [visibleMediaList[visibleMediaList.length - 1], ...visibleMediaList, visibleMediaList[0]];
                     loopMediaList.forEach((mObj, loopIdx) => {
-                        const mKey = mObj.key; const mData = mediaDatabase[mKey]; if (!mData) return;
+                        const mKey = mObj.key; const mData = getCardItem(mKey); if (!mData) return;
                         const vol = getCardVolume(mKey);
                         const panel = document.createElement("div");
                         panel.className = "card-carousel-panel";
@@ -2965,6 +2968,10 @@
                                 <div class="advice-box ${adviceFeatureEnabled ? 'visible' : ''}">${mData.getAdvice(vol)}</div>
                                 <div class="cost-box ${costFeatureEnabled ? 'visible' : ''}">${mData.calculateCost(vol)}</div>
                                 <div class="list-container-wrapper"><ul class="ingredient-list" id="mediaList_${mKey}_${loopIdx}"></ul></div>
+                                <div class="reset-banner">
+                                    <span class="reset-text">チェックが入っています</span>
+                                    <button class="reset-btn" onclick="resetCardChecks(this)">すべて外す</button>
+                                </div>
                             </div>
                         `;
                         mediaCarouselContainer.appendChild(panel);
@@ -2976,7 +2983,7 @@
                             const calcAmount = typeof ing.amount === 'number' ? ing.amount * ratio : ing.amount;
                             const formatted = typeof calcAmount === 'number' ? (calcAmount >= 10 ? calcAmount.toFixed(1) : calcAmount.toFixed(3).replace(/\.?0+$/, "")) : ing.amount;
                             const li = document.createElement("li"); li.className = "ingredient-item";
-                            li.onclick = () => { if (checkFeatureEnabled) { li.classList.toggle('checked'); checkResetButtonState('media'); } };
+                            li.onclick = function() { toggleIngredientCheck(this); };
                             li.innerHTML = `<span class="ing-name">${ing.name}</span><div class="ing-amount-wrapper"><span class="ing-amount">${formatted}</span><span class="ing-unit">${ing.unit}</span></div>`;
                             listContainer.appendChild(li);
                         });
@@ -2988,7 +2995,7 @@
                                 let formatted = ing.amount;
                                 if (typeof ing.amount === 'number') { const calcAmount = ing.amount * ratio; formatted = calcAmount >= 10 ? calcAmount.toFixed(1) : calcAmount.toFixed(3).replace(/\.?0+$/, ""); }
                                 const li = document.createElement("li"); li.className = "ingredient-item";
-                                li.onclick = () => { if (checkFeatureEnabled) { li.classList.toggle('checked'); checkResetButtonState('media'); } };
+                                li.onclick = function() { toggleIngredientCheck(this); };
                                 li.innerHTML = `<span class="ing-name">${ing.name}</span><div class="ing-amount-wrapper"><span class="ing-amount">${formatted}</span><span class="ing-unit">${ing.unit}</span></div>`;
                                 listContainer.appendChild(li);
                             });
@@ -3004,11 +3011,10 @@
                         if (instantJump) { mediaCarouselContainer.style.scrollBehavior = 'auto'; mediaCarouselContainer.scrollLeft = targetScrollLeft; requestAnimationFrame(() => { requestAnimationFrame(() => { mediaCarouselContainer.style.scrollBehavior = 'smooth'; }); }); }
                         else setTimeout(() => { mediaCarouselContainer.scrollLeft = targetScrollLeft; }, 10);
                     }
-                    setupInfiniteCarouselSwipe(mediaCarouselContainer, visibleMediaList, (newKey) => {
+                    bindInfiniteCarousel(mediaCarouselContainer, visibleMediaList, (newKey) => {
                         currentMediaKey = newKey; localStorage.setItem('lab_mediaKey', newKey);
                         if (mediaDatabase[newKey]?.hasModes) currentMediaMode = Object.keys(mediaDatabase[newKey].modes)[0];
                     });
-                    checkResetButtonState('media');
                 }
             }
 
@@ -3021,7 +3027,7 @@
                 if (visibleElecList.length > 0) {
                     const loopElecList = [visibleElecList[visibleElecList.length - 1], ...visibleElecList, visibleElecList[0]];
                     loopElecList.forEach((eObj, loopIdx) => {
-                        const eKey = eObj.key; const eData = commonReagentDatabase[eKey]; if (!eData) return;
+                        const eKey = eObj.key; const eData = getCardItem(eKey); if (!eData) return;
                         if (eData.type === 'pseudo_ladder') {
                             const panel = document.createElement("div"); panel.className = "card-carousel-panel";
                             let bandsHtml = eData.bands.map(b => `
@@ -3062,8 +3068,7 @@
                         if (instantJump) { elecCarouselContainer.style.scrollBehavior = 'auto'; elecCarouselContainer.scrollLeft = targetScrollLeft; requestAnimationFrame(() => { requestAnimationFrame(() => { elecCarouselContainer.style.scrollBehavior = 'smooth'; }); }); }
                         else setTimeout(() => { elecCarouselContainer.scrollLeft = targetScrollLeft; }, 10);
                     }
-                    setupInfiniteCarouselSwipe(elecCarouselContainer, visibleElecList, (newKey) => { currentElecKey = newKey; localStorage.setItem('lab_elecKey', newKey); });
-                    checkResetButtonState('elec');
+                    bindInfiniteCarousel(elecCarouselContainer, visibleElecList, (newKey) => { currentElecKey = newKey; localStorage.setItem('lab_elecKey', newKey); });
                 }
             }
 
@@ -3076,7 +3081,7 @@
                 if (visibleEcoliList.length > 0) {
                     const loopEcoliList = [visibleEcoliList[visibleEcoliList.length - 1], ...visibleEcoliList, visibleEcoliList[0]];
                     loopEcoliList.forEach((ecObj, loopIdx) => {
-                        const ecKey = ecObj.key; const ecData = commonReagentDatabase[ecKey]; if (!ecData) return;
+                        const ecKey = ecObj.key; const ecData = getCardItem(ecKey); if (!ecData) return;
                         renderGenericRecipePanel(ecoliCarouselContainer, ecData, ecKey, 'ecoli', loopIdx);
                     });
                     const activeEcoliIndex = visibleEcoliList.findIndex(ec => ec.key === currentEcoliKey);
@@ -3085,8 +3090,7 @@
                         if (instantJump) { ecoliCarouselContainer.style.scrollBehavior = 'auto'; ecoliCarouselContainer.scrollLeft = targetScrollLeft; requestAnimationFrame(() => { requestAnimationFrame(() => { ecoliCarouselContainer.style.scrollBehavior = 'smooth'; }); }); }
                         else setTimeout(() => { ecoliCarouselContainer.scrollLeft = targetScrollLeft; }, 10);
                     }
-                    setupInfiniteCarouselSwipe(ecoliCarouselContainer, visibleEcoliList, (newKey) => { currentEcoliKey = newKey; localStorage.setItem('lab_ecoliKey', newKey); });
-                    checkResetButtonState('ecoli');
+                    bindInfiniteCarousel(ecoliCarouselContainer, visibleEcoliList, (newKey) => { currentEcoliKey = newKey; localStorage.setItem('lab_ecoliKey', newKey); });
                 }
             }
 
@@ -3099,7 +3103,7 @@
                 if (visibleAgroList.length > 0) {
                     const loopAgroList = [visibleAgroList[visibleAgroList.length - 1], ...visibleAgroList, visibleAgroList[0]];
                     loopAgroList.forEach((aObj, loopIdx) => {
-                        const aKey = aObj.key; const aData = commonReagentDatabase[aKey]; if (!aData) return;
+                        const aKey = aObj.key; const aData = getCardItem(aKey); if (!aData) return;
                         renderGenericRecipePanel(agroCarouselContainer, aData, aKey, 'agro', loopIdx);
                     });
                     const activeAgroIndex = visibleAgroList.findIndex(a => a.key === currentAgroKey);
@@ -3108,8 +3112,7 @@
                         if (instantJump) { agroCarouselContainer.style.scrollBehavior = 'auto'; agroCarouselContainer.scrollLeft = targetScrollLeft; requestAnimationFrame(() => { requestAnimationFrame(() => { agroCarouselContainer.style.scrollBehavior = 'smooth'; }); }); }
                         else setTimeout(() => { agroCarouselContainer.scrollLeft = targetScrollLeft; }, 10);
                     }
-                    setupInfiniteCarouselSwipe(agroCarouselContainer, visibleAgroList, (newKey) => { currentAgroKey = newKey; localStorage.setItem('lab_agroKey', newKey); });
-                    checkResetButtonState('agro');
+                    bindInfiniteCarousel(agroCarouselContainer, visibleAgroList, (newKey) => { currentAgroKey = newKey; localStorage.setItem('lab_agroKey', newKey); });
                 }
             }
 
@@ -3122,7 +3125,7 @@
                 if (visibleProtoList.length > 0) {
                     const loopProtoList = [visibleProtoList[visibleProtoList.length - 1], ...visibleProtoList, visibleProtoList[0]];
                     loopProtoList.forEach((pObj, loopIdx) => {
-                        const pKey = pObj.key; const pData = commonReagentDatabase[pKey]; if (!pData) return;
+                        const pKey = pObj.key; const pData = getCardItem(pKey); if (!pData) return;
                         renderGenericRecipePanel(protoCarouselContainer, pData, pKey, 'proto', loopIdx);
                     });
                     const activeProtoIndex = visibleProtoList.findIndex(p => p.key === currentProtoKey);
@@ -3131,8 +3134,7 @@
                         if (instantJump) { protoCarouselContainer.style.scrollBehavior = 'auto'; protoCarouselContainer.scrollLeft = targetScrollLeft; requestAnimationFrame(() => { requestAnimationFrame(() => { protoCarouselContainer.style.scrollBehavior = 'smooth'; }); }); }
                         else setTimeout(() => { protoCarouselContainer.scrollLeft = targetScrollLeft; }, 10);
                     }
-                    setupInfiniteCarouselSwipe(protoCarouselContainer, visibleProtoList, (newKey) => { currentProtoKey = newKey; localStorage.setItem('lab_protoKey', newKey); });
-                    checkResetButtonState('proto');
+                    bindInfiniteCarousel(protoCarouselContainer, visibleProtoList, (newKey) => { currentProtoKey = newKey; localStorage.setItem('lab_protoKey', newKey); });
                 }
             }
 
@@ -3145,7 +3147,7 @@
                 if (visibleSolList.length > 0) {
                     const loopSolList = [visibleSolList[visibleSolList.length - 1], ...visibleSolList, visibleSolList[0]];
                     loopSolList.forEach((sObj, loopIdx) => {
-                        const sKey = sObj.key; const sData = commonReagentDatabase[sKey]; if (!sData) return;
+                        const sKey = sObj.key; const sData = getCardItem(sKey); if (!sData) return;
                         renderGenericRecipePanel(solCarouselContainer, sData, sKey, 'solution', loopIdx);
                     });
                     const activeSolIndex = visibleSolList.findIndex(s => s.key === currentSolutionKey);
@@ -3154,8 +3156,7 @@
                         if (instantJump) { solCarouselContainer.style.scrollBehavior = 'auto'; solCarouselContainer.scrollLeft = targetScrollLeft; requestAnimationFrame(() => { requestAnimationFrame(() => { solCarouselContainer.style.scrollBehavior = 'smooth'; }); }); }
                         else setTimeout(() => { solCarouselContainer.scrollLeft = targetScrollLeft; }, 10);
                     }
-                    setupInfiniteCarouselSwipe(solCarouselContainer, visibleSolList, (newKey) => { currentSolutionKey = newKey; localStorage.setItem('lab_solutionKey', newKey); });
-                    checkResetButtonState('solution');
+                    bindInfiniteCarousel(solCarouselContainer, visibleSolList, (newKey) => { currentSolutionKey = newKey; localStorage.setItem('lab_solutionKey', newKey); });
                 }
             }
 
@@ -3168,7 +3169,7 @@
                 if (visibleAddList.length > 0) {
                     const loopAddList = [visibleAddList[visibleAddList.length - 1], ...visibleAddList, visibleAddList[0]];
                     loopAddList.forEach((aObj, loopIdx) => {
-                        const aKey = aObj.key; const aData = commonReagentDatabase[aKey]; if (!aData) return;
+                        const aKey = aObj.key; const aData = getCardItem(aKey); if (!aData) return;
                         renderGenericRecipePanel(additiveCarouselContainer, aData, aKey, 'additive', loopIdx);
                     });
                     const activeAddIndex = visibleAddList.findIndex(a => a.key === currentAdditiveKey);
@@ -3177,8 +3178,7 @@
                         if (instantJump) { additiveCarouselContainer.style.scrollBehavior = 'auto'; additiveCarouselContainer.scrollLeft = targetScrollLeft; requestAnimationFrame(() => { requestAnimationFrame(() => { additiveCarouselContainer.style.scrollBehavior = 'smooth'; }); }); }
                         else setTimeout(() => { additiveCarouselContainer.scrollLeft = targetScrollLeft; }, 10);
                     }
-                    setupInfiniteCarouselSwipe(additiveCarouselContainer, visibleAddList, (newKey) => { currentAdditiveKey = newKey; localStorage.setItem('lab_additiveKey', newKey); });
-                    checkResetButtonState('additive');
+                    bindInfiniteCarousel(additiveCarouselContainer, visibleAddList, (newKey) => { currentAdditiveKey = newKey; localStorage.setItem('lab_additiveKey', newKey); });
                 }
             }
 
@@ -3192,7 +3192,7 @@
                 if (guideKeys.length > 0) {
                     const loopGuideList = [guideKeys[guideKeys.length - 1], ...guideKeys, guideKeys[0]];
                     loopGuideList.forEach((gKey, loopIdx) => {
-                        const gData = guideDatabase[gKey]; if (!gData) return;
+                        const gData = getCardItem(gKey); if (!gData) return;
                         const panel = document.createElement("div"); panel.className = "card-carousel-panel";
                         panel.innerHTML = `
                             <div class="main-display">
@@ -3215,7 +3215,7 @@
                         else setTimeout(() => { guideCarouselContainer.scrollLeft = targetScrollLeft; }, 10);
                     }
                     const guideObjList = guideKeys.map(k => ({ key: k }));
-                    setupInfiniteCarouselSwipe(guideCarouselContainer, guideObjList, (newKey) => { currentGuideKey = newKey; localStorage.setItem('lab_guideKey', newKey); });
+                    bindInfiniteCarousel(guideCarouselContainer, guideObjList, (newKey) => { currentGuideKey = newKey; localStorage.setItem('lab_guideKey', newKey); });
                 }
             }
 
@@ -3232,47 +3232,80 @@
             updateLauncherBar();
         }
 
-        function setupInfiniteCarouselSwipe(containerEl, listItems, callback) {
-            if (containerEl._hasScrollListener) return;
-            containerEl._hasScrollListener = true;
-            containerEl.addEventListener('scroll', () => {
+        // --- 全カテゴリー統一の無限ループカルーセル処理 ---
+        function bindInfiniteCarousel(containerEl, listItems, onKeyChange) {
+            containerEl._currentListItems = listItems;
+            containerEl._onKeyChange = onKeyChange;
+
+            if (containerEl._hasCarouselBound) return;
+            containerEl._hasCarouselBound = true;
+
+            let isJumping = false;
+            let scrollEndTimer = null;
+
+            function handleScrollEnd() {
+                if (isJumping) return;
+                const items = containerEl._currentListItems;
+                if (!items || items.length <= 1) return;
+                const width = containerEl.clientWidth;
+                if (width <= 0) return;
+
                 const scrollLeft = containerEl.scrollLeft;
-                const panelWidth = containerEl.clientWidth;
-                const totalItems = listItems.length;
-                if (panelWidth === 0) return;
+                const currentIdx = Math.round(scrollLeft / width);
+                const totalItems = items.length;
 
-                if (scrollLeft <= 1) {
-                    containerEl.style.scrollBehavior = 'auto'; containerEl.style.scrollSnapType = 'none';
-                    containerEl.scrollLeft = totalItems * panelWidth;
-                    requestAnimationFrame(() => { containerEl.style.scrollSnapType = 'x mandatory'; containerEl.style.scrollBehavior = 'smooth'; });
-                    callback(listItems[totalItems - 1].key); return;
-                }
-                const rightCloneThreshold = (totalItems + 1) * panelWidth - 1;
-                if (scrollLeft >= rightCloneThreshold) {
-                    containerEl.style.scrollBehavior = 'auto'; containerEl.style.scrollSnapType = 'none';
-                    containerEl.scrollLeft = panelWidth;
-                    requestAnimationFrame(() => { containerEl.style.scrollSnapType = 'x mandatory'; containerEl.style.scrollBehavior = 'smooth'; });
-                    callback(listItems[0].key); return;
+                if (currentIdx === 0) {
+                    isJumping = true;
+                    containerEl.style.scrollBehavior = 'auto';
+                    containerEl.style.scrollSnapType = 'none';
+                    containerEl.scrollLeft = totalItems * width;
+                    requestAnimationFrame(() => {
+                        containerEl.style.scrollSnapType = 'x mandatory';
+                        containerEl.style.scrollBehavior = 'smooth';
+                        setTimeout(() => { isJumping = false; }, 40);
+                    });
+                    if (containerEl._onKeyChange) containerEl._onKeyChange(items[totalItems - 1].key);
+                    return;
                 }
 
-                const currentIndex = Math.round(scrollLeft / panelWidth);
-                const realIndex = currentIndex - 1;
-                if (realIndex >= 0 && realIndex < totalItems) {
-                    const selectedKey = listItems[realIndex].key;
-                    let currentKey = "";
-                    if (containerEl.id === 'pcrCarouselContainer') currentKey = currentPcrKey;
-                    else if (containerEl.id === 'mediaCarouselContainer') currentKey = currentMediaKey;
-                    else if (containerEl.id === 'electrophoresisCarouselContainer') currentKey = currentElecKey;
-                    else if (containerEl.id === 'ecoliCarouselContainer') currentKey = currentEcoliKey;
-                    else if (containerEl.id === 'agroCarouselContainer') currentKey = currentAgroKey;
-                    else if (containerEl.id === 'protoplastCarouselContainer') currentKey = currentProtoKey;
-                    else if (containerEl.id === 'solutionCarouselContainer') currentKey = currentSolutionKey;
-                    else if (containerEl.id === 'additiveCarouselContainer') currentKey = currentAdditiveKey;
-                    else if (containerEl.id === 'guideCarouselContainer') currentKey = currentGuideKey;
-
-                    if (selectedKey !== currentKey) callback(selectedKey);
+                if (currentIdx === totalItems + 1) {
+                    isJumping = true;
+                    containerEl.style.scrollBehavior = 'auto';
+                    containerEl.style.scrollSnapType = 'none';
+                    containerEl.scrollLeft = 1 * width;
+                    requestAnimationFrame(() => {
+                        containerEl.style.scrollSnapType = 'x mandatory';
+                        containerEl.style.scrollBehavior = 'smooth';
+                        setTimeout(() => { isJumping = false; }, 40);
+                    });
+                    if (containerEl._onKeyChange) containerEl._onKeyChange(items[0].key);
+                    return;
                 }
+
+                const realIdx = currentIdx - 1;
+                if (realIdx >= 0 && realIdx < totalItems) {
+                    if (containerEl._onKeyChange) containerEl._onKeyChange(items[realIdx].key);
+                }
+            }
+
+            containerEl.addEventListener('scroll', () => {
+                if (isJumping) return;
+                const items = containerEl._currentListItems;
+                const width = containerEl.clientWidth;
+                if (items && items.length > 0 && width > 0) {
+                    const currentIdx = Math.round(containerEl.scrollLeft / width);
+                    const realIdx = currentIdx - 1;
+                    if (realIdx >= 0 && realIdx < items.length) {
+                        if (containerEl._onKeyChange) containerEl._onKeyChange(items[realIdx].key);
+                    }
+                }
+                clearTimeout(scrollEndTimer);
+                scrollEndTimer = setTimeout(handleScrollEnd, 60);
             }, { passive: true });
+
+            if ('onscrollend' in window) {
+                containerEl.addEventListener('scrollend', handleScrollEnd, { passive: true });
+            }
         }
 
         function openModal(modalId) {
