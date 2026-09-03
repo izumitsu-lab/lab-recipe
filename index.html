@@ -1554,7 +1554,7 @@
             },
             "gel_red": {
                 name: "ゲルレッド染色液",
-                fullName: "ゲルレッド染色液 (後染め用)",
+                fullName: "ゲルレッド染色液",
                 eyebrow: "Staining Solution",
                 type: "recipe",
                 baseVolume: 100,
@@ -1858,6 +1858,10 @@
             { key: "mm_sol_1", visible: true }, { key: "mm_sol_2", visible: true }, { key: "sol_a", visible: true }, { key: "sol_b", visible: true }, { key: "isotonic", visible: true }, { key: "peg_40", visible: true }, { key: "stc", visible: true }
         ];
 
+        let electrophoresisOrderConfig = JSON.parse(localStorage.getItem('lab_electrophoresisOrderConfig')) || [
+            { key: "lambda_marker", visible: true }, { key: "gel_red", visible: true }, { key: "tae_50x", visible: true }
+        ];
+
         let pcrOrderConfig = JSON.parse(localStorage.getItem('lab_pcrOrderConfig')) || [
             { key: "ex_premier", visible: true }, { key: "prime_star_max", visible: true }, { key: "prime_star_gxl", visible: true }, { key: "emerald_amp", visible: true }
         ];
@@ -1873,7 +1877,10 @@
         let currentSolutionKey = localStorage.getItem('lab_solutionKey') || "mm_sol_1";
         let currentSolutionVolume = parseInt(localStorage.getItem('lab_solutionVolume')) || 100;
 
-        let currentElecKey = localStorage.getItem('lab_elecKey') || "lambda_marker";
+        let storedElecKey = localStorage.getItem('lab_elecKey');
+        let visibleElecKeys = electrophoresisOrderConfig.filter(e => e.visible).map(e => e.key);
+        let currentElecKey = (storedElecKey && visibleElecKeys.includes(storedElecKey)) ? storedElecKey : (visibleElecKeys[0] || "lambda_marker");
+
         let currentElecVolumes = JSON.parse(localStorage.getItem('lab_elecVolumes')) || { "gel_red": 100, "tae_50x": 1000 };
         const elecPresetVolumes = [50, 100, 200, 500, 1000];
 
@@ -1904,7 +1911,7 @@
             { id: 0, eyebrow: "PCR Recipe", name: "PCRレシピ" },
             { id: 1, eyebrow: "Medium Recipe", name: "培地レシピ" },
             { id: 2, eyebrow: "Electrophoresis", name: "電気泳動" },
-            { id: 3, eyebrow: "Stock Solutions", name: "SOLUTIONS" },
+            { id: 3, eyebrow: "SOLUTIONS", name: "ストック液" },
             { id: 4, eyebrow: "Selection Guide", name: "実験ガイド" },
             { id: 5, eyebrow: "Preferences", name: "オプション設定" }
         ];
@@ -2011,6 +2018,13 @@
                                     <span class="option-desc">表示・非表示と並び替え</span>
                                 </div>
                                 <button class="option-action-btn" onclick="openOrderModal('media')">編集する</button>
+                            </div>
+                            <div class="option-group">
+                                <div class="option-label-wrapper">
+                                    <span class="option-title">電気泳動リストの編集</span>
+                                    <span class="option-desc">表示・非表示と並び替え</span>
+                                </div>
+                                <button class="option-action-btn" onclick="openOrderModal('electrophoresis')">編集する</button>
                             </div>
                             <div class="option-group">
                                 <div class="option-label-wrapper">
@@ -2231,8 +2245,8 @@
                                 const visibleMediaList = mediaOrderConfig.filter(m => m.visible);
                                 activeRealIndex = visibleMediaList.findIndex(m => m.key === currentMediaKey);
                             } else if (idx === 2) {
-                                const elecKeys = Object.keys(electrophoresisDatabase);
-                                activeRealIndex = elecKeys.indexOf(currentElecKey);
+                                const visibleElecList = electrophoresisOrderConfig.filter(e => e.visible);
+                                activeRealIndex = visibleElecList.findIndex(e => e.key === currentElecKey);
                             } else if (idx === 3) {
                                 const visibleSolList = solutionOrderConfig.filter(s => s.visible);
                                 activeRealIndex = visibleSolList.findIndex(s => s.key === currentSolutionKey);
@@ -2408,6 +2422,7 @@
             let title = "";
             if (type === 'media') title = "培地リストのカスタマイズ";
             else if (type === 'solution') title = "ストック溶液リストのカスタマイズ";
+            else if (type === 'electrophoresis') title = "電気泳動リストのカスタマイズ";
             else if (type === 'pcr') title = "PCR酵素リストのカスタマイズ";
             
             document.getElementById("orderModalHeader").textContent = title;
@@ -2425,6 +2440,7 @@
                 let name = "";
                 if (currentOrderType === 'media') name = mediaDatabase[item.key] ? mediaDatabase[item.key].name : item.key;
                 else if (currentOrderType === 'solution') name = solutionDatabase[item.key] ? solutionDatabase[item.key].name : item.key;
+                else if (currentOrderType === 'electrophoresis') name = electrophoresisDatabase[item.key] ? electrophoresisDatabase[item.key].name : item.key;
                 else if (currentOrderType === 'pcr') name = pcrDatabase[item.key] ? pcrDatabase[item.key].shortName : item.key;
 
                 const row = document.createElement("div");
@@ -2451,6 +2467,7 @@
         function getTargetConfig(type) {
             if (type === 'media') return mediaOrderConfig;
             if (type === 'solution') return solutionOrderConfig;
+            if (type === 'electrophoresis') return electrophoresisOrderConfig;
             if (type === 'pcr') return pcrOrderConfig;
             return [];
         }
@@ -2462,6 +2479,9 @@
             } else if (type === 'solution') {
                 solutionOrderConfig = config;
                 localStorage.setItem('lab_solutionOrderConfig', JSON.stringify(config));
+            } else if (type === 'electrophoresis') {
+                electrophoresisOrderConfig = config;
+                localStorage.setItem('lab_electrophoresisOrderConfig', JSON.stringify(config));
             } else if (type === 'pcr') {
                 pcrOrderConfig = config;
                 localStorage.setItem('lab_pcrOrderConfig', JSON.stringify(config));
@@ -2754,12 +2774,16 @@
             const elecListEl = document.getElementById("electrophoresisOptionsList");
             if (!elecListEl) return;
             elecListEl.innerHTML = "";
-            const keys = Object.keys(electrophoresisDatabase);
-            if (!keys.includes(currentElecKey)) {
-                currentElecKey = keys[0];
+            let visibleList = electrophoresisOrderConfig.filter(e => e.visible);
+
+            if (!visibleList.map(e => e.key).includes(currentElecKey) && visibleList.length > 0) {
+                currentElecKey = visibleList[0].key;
             }
-            keys.forEach(key => {
+
+            visibleList.forEach(eObj => {
+                const key = eObj.key;
                 const item = electrophoresisDatabase[key];
+                if (!item) return;
                 const btn = document.createElement("button");
                 btn.className = `option-item ${key === currentElecKey ? 'selected' : ''}`;
                 btn.textContent = item.name;
@@ -3262,15 +3286,16 @@
             const elecCarouselContainer = document.getElementById("electrophoresisCarouselContainer");
             if (elecCarouselContainer) {
                 elecCarouselContainer.innerHTML = "";
-                const elecKeys = Object.keys(electrophoresisDatabase);
-                if (!elecKeys.includes(currentElecKey)) {
-                    currentElecKey = elecKeys[0];
+                const visibleElecList = electrophoresisOrderConfig.filter(e => e.visible);
+                if (!visibleElecList.map(e => e.key).includes(currentElecKey) && visibleElecList.length > 0) {
+                    currentElecKey = visibleElecList[0].key;
                 }
 
-                if (elecKeys.length > 0) {
-                    const loopElecList = [elecKeys[elecKeys.length - 1], ...elecKeys, elecKeys[0]];
+                if (visibleElecList.length > 0) {
+                    const loopElecList = [visibleElecList[visibleElecList.length - 1], ...visibleElecList, visibleElecList[0]];
 
-                    loopElecList.forEach((eKey, loopIdx) => {
+                    loopElecList.forEach((eObj, loopIdx) => {
+                        const eKey = eObj.key;
                         const eData = electrophoresisDatabase[eKey];
                         if (!eData) return;
 
@@ -3326,7 +3351,7 @@
                                         <ul class="ingredient-list" id="elecList_${eKey}_${loopIdx}"></ul>
                                     </div>
 
-                                    <div class="reset-banner" id="elecResetBanner">
+                                    <div class="reset-banner" id="elecResetBanner_${eKey}_${loopIdx}">
                                         <span class="reset-text">チェックが入っています</span>
                                         <button class="reset-btn" onclick="resetChecks('elec')">すべて外す</button>
                                     </div>
@@ -3372,7 +3397,7 @@
                         elecCarouselContainer.appendChild(panel);
                     });
 
-                    const activeElecIndex = elecKeys.indexOf(currentElecKey);
+                    const activeElecIndex = visibleElecList.findIndex(e => e.key === currentElecKey);
                     if (activeElecIndex !== -1) {
                         const targetScrollLeft = (activeElecIndex + 1) * elecCarouselContainer.clientWidth;
                         if (instantJump) {
@@ -3390,8 +3415,7 @@
                         }
                     }
 
-                    const elecObjList = elecKeys.map(k => ({ key: k }));
-                    setupInfiniteCarouselSwipe(elecCarouselContainer, elecObjList, (newKey) => {
+                    setupInfiniteCarouselSwipe(elecCarouselContainer, visibleElecList, (newKey) => {
                         currentElecKey = newKey;
                         localStorage.setItem('lab_elecKey', newKey);
                     });
@@ -3425,7 +3449,7 @@
                             <div class="main-display">
                                 <div class="display-header">
                                     <div class="media-title-wrapper" onclick="openModal('solutionModal')">
-                                        <span class="media-eyebrow">Stock Solutions</span>
+                                        <span class="media-eyebrow">SOLUTIONS</span>
                                         <div class="media-title-row">
                                             <h1 class="media-title">${sData.fullName || sData.name}</h1>
                                         </div>
