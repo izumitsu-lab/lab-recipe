@@ -17,6 +17,110 @@
             --border-radius: 24px;
         }
 
+        /* ライトテーマ用の配色定義 */
+        body.light-theme {
+            --bg-color: #f2f2f7;
+            --card-bg: #ffffff;
+            --card-border: rgba(0, 0, 0, 0.08);
+            --text-primary: #1c1c1e;
+            --text-secondary: #8e8e93;
+            --accent-color: #007aff;
+            --accent-soft: rgba(0, 122, 255, 0.12);
+            --reset-btn-bg: #ff3b30;
+        }
+
+        body.light-theme .main-display {
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+        }
+
+        body.light-theme .mode-btn {
+            background-color: #e5e5ea;
+            color: #636366;
+            border-color: rgba(0, 0, 0, 0.05);
+        }
+        body.light-theme .mode-btn.active {
+            background-color: var(--accent-soft);
+            color: var(--accent-color);
+            border-color: rgba(0, 122, 255, 0.35);
+        }
+
+        body.light-theme .option-group,
+        body.light-theme .option-item,
+        body.light-theme .launcher-card,
+        body.light-theme .cycle-step,
+        body.light-theme .cycle-single-step,
+        body.light-theme .guide-card,
+        body.light-theme .keypad-btn {
+            background-color: #f2f2f7;
+            border-color: rgba(0, 0, 0, 0.06);
+            color: var(--text-primary);
+        }
+
+        body.light-theme .ing-name {
+            color: #2c2c2e;
+        }
+
+        body.light-theme .modal-content,
+        body.light-theme .launcher-modal-content,
+        body.light-theme .info-modal-content {
+            background: #ffffff;
+            border-color: rgba(0, 0, 0, 0.12);
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.18);
+        }
+
+        body.light-theme .info-modal-body,
+        body.light-theme .guide-desc {
+            color: #3a3a3c;
+        }
+        body.light-theme .guide-desc b,
+        body.light-theme .guide-desc strong,
+        body.light-theme .info-modal-body b {
+            color: #000000;
+        }
+
+        body.light-theme .info-close-btn {
+            background: #e5e5ea;
+            color: #1c1c1e;
+            border-color: rgba(0, 0, 0, 0.08);
+        }
+
+        body.light-theme .keypad-btn.action-btn {
+            background-color: #e5e5ea;
+            color: #636366;
+        }
+
+        body.light-theme .keypad-divider-line {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-theme .bottom-launcher-bar {
+            background-color: #ffffff;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            border-color: rgba(0, 0, 0, 0.08);
+        }
+
+        body.light-theme .launcher-fav-part,
+        body.light-theme .launcher-main-part {
+            border-right-color: rgba(0, 0, 0, 0.06);
+        }
+
+        body.light-theme .launcher-main-part:active {
+            background-color: #f2f2f7;
+        }
+
+        body.light-theme .reset-banner {
+            background: rgba(255, 255, 255, 0.95);
+            border-color: rgba(255, 59, 48, 0.35);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+        }
+        body.light-theme .reset-text {
+            color: #d70015;
+        }
+
+        body.light-theme .slider {
+            background-color: #e5e5ea;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -41,6 +145,7 @@
             justify-content: space-between;
             overflow: hidden;
             opacity: 0;
+            transition: background-color 0.25s, color 0.25s;
         }
         body.ready {
             opacity: 1;
@@ -112,6 +217,7 @@
             min-height: 0;
             position: relative;
             overflow: hidden;
+            transition: background-color 0.25s, border-color 0.25s;
         }
 
         .display-header {
@@ -237,6 +343,11 @@
         .advice-box.visible {
             display: block;
         }
+        body.light-theme .advice-box {
+            background-color: rgba(0, 122, 255, 0.08);
+            border-color: rgba(0, 122, 255, 0.25);
+            color: #0066cc;
+        }
 
         .cost-box {
             background-color: rgba(52, 199, 89, 0.08);
@@ -253,6 +364,11 @@
         }
         .cost-box.visible {
             display: block;
+        }
+        body.light-theme .cost-box {
+            background-color: rgba(52, 199, 89, 0.12);
+            border-color: rgba(52, 199, 89, 0.3);
+            color: #248a3d;
         }
 
         .mode-switch-container {
@@ -299,6 +415,9 @@
             background: rgba(255, 255, 255, 0.1);
             border-radius: 4px;
         }
+        body.light-theme .list-container-wrapper::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.15);
+        }
 
         .ingredient-list {
             list-style: none;
@@ -335,7 +454,7 @@
         .ingredient-item.checked .ing-name,
         .ingredient-item.checked .ing-amount,
         .ingredient-item.checked .ing-unit {
-            color: #48484a !important;
+            color: #8e8e93 !important;
             text-decoration: line-through;
         }
         .ingredient-item.checked {
@@ -390,6 +509,10 @@
             flex-direction: column;
             gap: 8px;
         }
+        body.light-theme .cycle-loop-group {
+            background: rgba(0, 122, 255, 0.04);
+            border-color: rgba(0, 122, 255, 0.25);
+        }
 
         .cycle-loop-badge {
             position: absolute;
@@ -431,7 +554,7 @@
         .cycle-main-val {
             font-size: 18px;
             font-weight: 700;
-            color: #ffffff;
+            color: var(--text-primary);
             font-variant-numeric: tabular-nums;
             letter-spacing: -0.5px;
             display: flex;
@@ -942,6 +1065,9 @@
             background: rgba(255, 255, 255, 0.15);
             border-radius: 4px;
         }
+        body.light-theme .info-modal-body::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.15);
+        }
         
         .info-close-btn {
             background: #25252b;
@@ -1088,7 +1214,7 @@
             <div class="card-carousel-container" id="electrophoresisCarouselContainer"></div>
         </div>
 
-        <!-- 4ページ目：アグロバクテリウムビュー（新設） -->
+        <!-- 4ページ目：アグロバクテリウムビュー -->
         <div class="view-panel" id="panel3">
             <div class="card-carousel-container" id="agroCarouselContainer"></div>
         </div>
@@ -1263,7 +1389,7 @@
     <!-- アグロバクテリウム用アイテム選択モーダル -->
     <div class="modal-overlay" id="agroModal" onclick="outsideClose(event, 'agroModal')">
         <div class="modal-content" style="max-width: 440px;">
-            <div class="modal-header">アグロバクテリウム試薬・培地を選択</div>
+            <div class="modal-header">アグロ試薬・培地を選択</div>
             <div class="option-list grid-modal" id="agroOptionsList"></div>
         </div>
     </div>
@@ -2055,6 +2181,7 @@
 
         let currentGuideKey = localStorage.getItem('lab_guideKey') || "pcr_enzyme_guide";
 
+        let lightThemeEnabled = localStorage.getItem('lab_lightTheme') !== null ? localStorage.getItem('lab_lightTheme') === 'true' : false;
         let checkFeatureEnabled = localStorage.getItem('lab_checkFeature') !== null ? localStorage.getItem('lab_checkFeature') === 'true' : true;
         let adviceFeatureEnabled = localStorage.getItem('lab_adviceFeature') !== null ? localStorage.getItem('lab_adviceFeature') === 'true' : true;
         let infoButtonFeatureEnabled = localStorage.getItem('lab_infoButtonFeature') !== null ? localStorage.getItem('lab_infoButtonFeature') === 'true' : true;
@@ -2074,6 +2201,21 @@
             { id: 7, eyebrow: "Preferences", name: "オプション設定" }
         ];
 
+        function applyTheme() {
+            if (lightThemeEnabled) {
+                document.body.classList.add('light-theme');
+            } else {
+                document.body.classList.remove('light-theme');
+            }
+        }
+
+        function toggleThemeFeature(el) {
+            lightThemeEnabled = el ? el.checked : !lightThemeEnabled;
+            localStorage.setItem('lab_lightTheme', lightThemeEnabled);
+            applyTheme();
+            syncPreferenceToggleStates();
+        }
+
         function getPreferencesCard1Html(idSuffix) {
             return `
                 <div class="card-carousel-panel">
@@ -2087,6 +2229,16 @@
                             </div>
                         </div>
                         <div class="list-container-wrapper" style="display: flex; flex-direction: column; gap: 12px; padding-bottom: 20px;">
+                            <div class="option-group">
+                                <div class="option-label-wrapper">
+                                    <span class="option-title">ライトテーマ</span>
+                                    <span class="option-desc">明るい配色に切り替え（デフォルト: オフ）</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" class="pref-theme-toggle" id="themeToggle_${idSuffix}" onchange="toggleThemeFeature(this)">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
                             <div class="option-group">
                                 <div class="option-label-wrapper">
                                     <span class="option-title">チェック機能</span>
@@ -2220,6 +2372,7 @@
         }
 
         function syncPreferenceToggleStates() {
+            document.querySelectorAll(".pref-theme-toggle").forEach(el => el.checked = lightThemeEnabled);
             document.querySelectorAll(".pref-check-toggle").forEach(el => el.checked = checkFeatureEnabled);
             document.querySelectorAll(".pref-advice-toggle").forEach(el => el.checked = adviceFeatureEnabled);
             document.querySelectorAll(".pref-info-toggle").forEach(el => el.checked = infoButtonFeatureEnabled);
@@ -2261,6 +2414,7 @@
         }
 
         function initApp() {
+            applyTheme();
             renderPreferencesCarousel();
 
             applyFavoriteFeatureState();
@@ -3812,7 +3966,7 @@
                         const targetScrollLeft = (activeMediaIndex + 1) * mediaCarouselContainer.clientWidth;
                         if (instantJump) {
                             mediaCarouselContainer.style.scrollBehavior = 'auto';
-                            mediaCarouselContainer.style.scrollLeft = targetScrollLeft;
+                            mediaCarouselContainer.scrollLeft = targetScrollLeft;
                             requestAnimationFrame(() => {
                                 requestAnimationFrame(() => {
                                     mediaCarouselContainer.style.scrollBehavior = 'smooth';
@@ -3872,8 +4026,8 @@
                                         <div style="background: #000; border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; padding: 16px; display: flex; justify-content: center; align-items: center; box-shadow: inset 0 2px 10px rgba(0,0,0,0.8); width: 100%; flex: 1; max-height: 280px;">
                                             <img src="${eData.image}" alt="${eData.name}" style="max-height: 100%; max-width: 100%; object-fit: contain; filter: drop-shadow(0 0 8px rgba(255,255,255,0.1));">
                                         </div>
-                                        <div style="font-size: 14px; color: #d1d1d6; text-align: center; line-height: 1.5; padding: 0 8px;">
-                                            <b>EcoT14i切断ラムダDNAマーカー</b><br>500bp以上（通常1500bp以上）のバンド識別向け
+                                        <div style="font-size: 14px; color: var(--text-secondary); text-align: center; line-height: 1.5; padding: 0 8px;">
+                                            <b style="color: var(--text-primary);">EcoT14i切断ラムダDNAマーカー</b><br>500bp以上（通常1500bp以上）のバンド識別向け
                                         </div>
                                     </div>
 
@@ -3992,7 +4146,7 @@
                         const targetScrollLeft = (activeProtoIndex + 1) * protoCarouselContainer.clientWidth;
                         if (instantJump) {
                             protoCarouselContainer.style.scrollBehavior = 'auto';
-                            protoCarouselContainer.style.scrollLeft = targetScrollLeft;
+                            protoCarouselContainer.scrollLeft = targetScrollLeft;
                             requestAnimationFrame(() => {
                                 requestAnimationFrame(() => {
                                     protoCarouselContainer.style.scrollBehavior = 'smooth';
@@ -4115,7 +4269,7 @@
                         const targetScrollLeft = (activeGuideIndex + 1) * guideCarouselContainer.clientWidth;
                         if (instantJump) {
                             guideCarouselContainer.style.scrollBehavior = 'auto';
-                            guideCarouselContainer.style.scrollLeft = targetScrollLeft;
+                            guideCarouselContainer.scrollLeft = targetScrollLeft;
                             requestAnimationFrame(() => {
                                 requestAnimationFrame(() => {
                                     guideCarouselContainer.style.scrollBehavior = 'smooth';
