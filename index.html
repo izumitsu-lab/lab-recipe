@@ -19,7 +19,6 @@
             --accent-soft: rgba(41, 151, 255, 0.15);
             --reset-btn-bg: #ff453a;
             --border-radius: 24px;
-            --app-height: 100vh;
         }
 
         body.light-theme {
@@ -412,6 +411,25 @@
             border-color: rgba(41, 151, 255, 0.4);
         }
 
+        .pcr-cycle-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(41, 151, 255, 0.06);
+            border: 1px solid rgba(41, 151, 255, 0.2);
+            border-radius: 12px;
+            padding: 10px 14px;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent-color);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .pcr-cycle-header:active {
+            background: rgba(41, 151, 255, 0.15);
+        }
+
         .list-container-wrapper {
             flex: 1;
             overflow-y: auto;
@@ -585,7 +603,7 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
-            padding-top: 14px;
+            padding-top: 4px;
             padding-bottom: 16px;
         }
 
@@ -1456,8 +1474,36 @@
         </div>
     </div>
 
+    <!-- PCRサイズ選択モーダル -->
+    <div class="modal-overlay" id="pcrSizeModal" onclick="outsideClose(event, 'pcrSizeModal')">
+        <div class="modal-content" style="max-width: 420px;">
+            <div class="modal-header">増幅サイズを選択</div>
+            <div class="option-list grid-modal" id="pcrSizeOptionsList"></div>
+            <div class="keypad-container" id="pcrSizeKeypadContainer" style="display: none;">
+                <div class="keypad-display-area">
+                    <div class="keypad-preview-value" id="pcrSizeKeypadPreview">0 bp</div>
+                    <div class="keypad-divider-line"></div>
+                </div>
+                <div class="keypad-grid">
+                    <button class="keypad-btn" onclick="pressPcrSizeKeypad('1')">1</button>
+                    <button class="keypad-btn" onclick="pressPcrSizeKeypad('2')">2</button>
+                    <button class="keypad-btn" onclick="pressPcrSizeKeypad('3')">3</button>
+                    <button class="keypad-btn" onclick="pressPcrSizeKeypad('4')">4</button>
+                    <button class="keypad-btn" onclick="pressPcrSizeKeypad('5')">5</button>
+                    <button class="keypad-btn" onclick="pressPcrSizeKeypad('6')">6</button>
+                    <button class="keypad-btn" onclick="pressPcrSizeKeypad('7')">7</button>
+                    <button class="keypad-btn" onclick="pressPcrSizeKeypad('8')">8</button>
+                    <button class="keypad-btn" onclick="pressPcrSizeKeypad('9')">9</button>
+                    <button class="keypad-btn action-btn" onclick="pressPcrSizeKeypad('clear')">C</button>
+                    <button class="keypad-btn" onclick="pressPcrSizeKeypad('0')">0</button>
+                    <button class="keypad-btn action-btn" onclick="pressPcrSizeKeypad('backspace')">⌫</button>
+                    <button class="keypad-btn set-btn" onclick="applyCustomPcrSize()">SET</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // 画面の本当の高さ（実際の物理描画領域）を動的取得してCSSに同期
         function updateAppHeight() {
             const doc = document.documentElement;
             doc.style.setProperty('--app-height', `${window.innerHeight}px`);
@@ -1465,6 +1511,10 @@
         window.addEventListener('resize', updateAppHeight);
         window.addEventListener('orientationchange', () => { setTimeout(updateAppHeight, 150); });
         updateAppHeight();
+
+        if (window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches) {
+            document.documentElement.classList.add('standalone-mode');
+        }
 
         function getDishAdvice(vol) {
             const minDishes = Math.round(vol / 7);
@@ -1804,34 +1854,75 @@
                 getAdvice: (vol) => `💡 タカラバイオが推す1stチョイス・高成功率酵素`,
                 calculateCost: (vol) => `💰 概算コスト: 約 ${Math.round((21.4 / 10) * vol)} 円 (${vol} µLあたり)`,
                 info: { title: "ExPremierについての解説", body: "圧倒的な成功率の高さを誇るプレミックス。遺伝子破壊チェックなど電気泳動確認にベスト。" },
-                cycles: [
-                    { type: 'single', name: "初期変性", temp: "94 °C", time: "1 min" },
-                    { type: 'loop_start', name: "30 Cycles" },
-                    { type: 'loop_step', name: "変性", temp: "98 °C", time: "10 sec" },
-                    { type: 'loop_step', name: "アニーリング", temp: "55–60 °C", time: "15 sec" },
-                    { type: 'loop_step', name: "伸長", temp: "68 °C", time: "30 sec / kb" },
-                    { type: 'loop_end' }
-                ],
+                getCycles: function(sizeBp) {
+                    if (sizeBp === null) {
+                        return [
+                            { type: 'single', name: "初期変性", temp: "94 °C", time: "1 min" },
+                            { type: 'loop_start', name: "30 Cycles" },
+                            { type: 'loop_step', name: "変性", temp: "98 °C", time: "10 sec" },
+                            { type: 'loop_step', name: "アニーリング", temp: "55–60 °C", time: "15 sec" },
+                            { type: 'loop_step', name: "伸長", temp: "68 °C", time: "30 sec / kb" },
+                            { type: 'loop_end' }
+                        ];
+                    }
+                    let extSec = sizeBp < 1000 ? 30 : Math.round((sizeBp / 1000) * 30);
+                    let extMin = Math.floor(extSec / 60);
+                    let remSec = extSec % 60;
+                    let extStr = extMin > 0 ? (remSec > 0 ? `${extMin}分 ${remSec}秒` : `${extMin}分`) : `${extSec}秒`;
+                    return [
+                        { type: 'single', name: "初期変性", temp: "94 °C", time: "1 min" },
+                        { type: 'loop_start', name: "30 Cycles" },
+                        { type: 'loop_step', name: "変性", temp: "98 °C", time: "10 sec" },
+                        { type: 'loop_step', name: "アニーリング", temp: "55 °C", time: "15 sec" },
+                        { type: 'loop_step', name: "伸長", temp: "68 °C", time: extStr },
+                        { type: 'loop_end' }
+                    ];
+                },
+                calcDurationSec: function(sizeBp) {
+                    if (sizeBp === null) return null;
+                    let extSec = sizeBp < 1000 ? 30 : Math.round((sizeBp / 1000) * 30);
+                    return 60 + (10 + 15 + extSec + 9) * 30;
+                },
                 ingredients: [{ name: "Ex Premier DNA Polymerase (2x)", amount: 25.0, unit: "µL" }, { name: "Forward Primer (10 µM)", amount: 1.0, unit: "µL" }, { name: "Reverse Primer (10 µM)", amount: 1.0, unit: "µL" }, { name: "滅菌水 (dH<sub>2</sub>O)", amount: 23.0, unit: "µL" }]
             },
             "prime_star_max": {
                 shortName: "PrimeSTAR MAX", fullName: "PrimeSTAR MAX (Premix)", baseVolume: 50, unit: "µL", presets: [50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200], hasVolume: true,
                 getAdvice: (vol) => `💡 クローニングの高正確性において最強の酵素`,
                 calculateCost: (vol) => `💰 概算コスト: 約 ${Math.round((56.0 / 10) * vol)} 円 (${vol} µLあたり)`,
-                info: { title: "PrimeSTAR MAXについての解説", body: "クローニングにおいて最高峰の正確性。伸長反応は60sec/kbでじっくり行うと増幅が安定します。" },
-                cycles: [
-                    { type: 'loop_start', name: "30–35 Cycles (通常条件: >200ng)" },
-                    { type: 'loop_step', name: "変性", temp: "98 °C", time: "10 sec" },
-                    { type: 'loop_step', name: "アニーリング", temp: "55 °C", time: "5 or 15 sec" },
-                    { type: 'loop_step', name: "伸長", temp: "72 °C", time: "30–60 sec/kb" },
-                    { type: 'loop_end' },
-                    { type: 'divider', text: "もしくは" },
-                    { type: 'loop_start', name: "30–35 Cycles (≦200ng)" },
-                    { type: 'loop_step', name: "変性", temp: "98 °C", time: "10 sec" },
-                    { type: 'loop_step', name: "アニーリング", temp: "55 °C", time: "5 or 15 sec" },
-                    { type: 'loop_step', name: "伸長", temp: "72 °C", time: "5 sec/kb" },
-                    { type: 'loop_end' }
-                ],
+                info: { title: "PrimeSTAR MAXについての解説", body: "クローニングにおいて最高峰の正確性。伸長反応はじっくり行うと増幅が安定します。" },
+                getCycles: function(sizeBp) {
+                    if (sizeBp === null) {
+                        return [
+                            { type: 'loop_start', name: "30–35 Cycles (通常条件: >200ng)" },
+                            { type: 'loop_step', name: "変性", temp: "98 °C", time: "10 sec" },
+                            { type: 'loop_step', name: "アニーリング", temp: "55 °C", time: "5 or 15 sec" },
+                            { type: 'loop_step', name: "伸長", temp: "72 °C", time: "30–60 sec/kb" },
+                            { type: 'loop_end' },
+                            { type: 'divider', text: "もしくは" },
+                            { type: 'loop_start', name: "30–35 Cycles (≦200ng)" },
+                            { type: 'loop_step', name: "変性", temp: "98 °C", time: "10 sec" },
+                            { type: 'loop_step', name: "アニーリング", temp: "55 °C", time: "5 or 15 sec" },
+                            { type: 'loop_step', name: "伸長", temp: "72 °C", time: "5 sec/kb" },
+                            { type: 'loop_end' }
+                        ];
+                    }
+                    let extSec = sizeBp < 1000 ? 60 : Math.round((sizeBp / 1000) * 60);
+                    let extMin = Math.floor(extSec / 60);
+                    let remSec = extSec % 60;
+                    let extStr = extMin > 0 ? (remSec > 0 ? `${extMin}分 ${remSec}秒` : `${extMin}分`) : `${extSec}秒`;
+                    return [
+                        { type: 'loop_start', name: "30 Cycles" },
+                        { type: 'loop_step', name: "変性", temp: "98 °C", time: "10 sec" },
+                        { type: 'loop_step', name: "アニーリング", temp: "55 °C", time: "15 sec" },
+                        { type: 'loop_step', name: "伸長", temp: "72 °C", time: extStr },
+                        { type: 'loop_end' }
+                    ];
+                },
+                calcDurationSec: function(sizeBp) {
+                    if (sizeBp === null) return null;
+                    let extSec = sizeBp < 1000 ? 60 : Math.round((sizeBp / 1000) * 60);
+                    return (10 + 15 + extSec + 10) * 30;
+                },
                 ingredients: [{ name: "PrimeSTAR Max Premix (2x)", amount: 25.0, unit: "µL" }, { name: "Forward Primer (10 µM)", amount: 1.0, unit: "µL" }, { name: "Reverse Primer (10 µM)", amount: 1.0, unit: "µL" }, { name: "滅菌水 (dH<sub>2</sub>O)", amount: 23.0, unit: "µL" }]
             },
             "prime_star_gxl": {
@@ -1839,13 +1930,33 @@
                 getAdvice: (vol) => `💡 MAXが予算外や増えにくい時の強力な2ndチョイス`,
                 calculateCost: (vol) => `💰 概算コスト: 約 ${Math.round((26.6 / 10) * vol)} 円 (${vol} µLあたり)`,
                 info: { title: "PrimeSTAR GXLについての解説", body: "GCリッチやロングレンジに強い高正確性酵素。MAXで増えない場合の代替に最適。" },
-                cycles: [
-                    { type: 'loop_start', name: "30 Cycles" },
-                    { type: 'loop_step', name: "変性", temp: "98 °C", time: "10 sec" },
-                    { type: 'loop_step', name: "アニーリング", temp: "55 or 60 °C", time: "15 sec" },
-                    { type: 'loop_step', name: "伸長", temp: "68 °C", time: "1 min / kb" },
-                    { type: 'loop_end' }
-                ],
+                getCycles: function(sizeBp) {
+                    if (sizeBp === null) {
+                        return [
+                            { type: 'loop_start', name: "30 Cycles" },
+                            { type: 'loop_step', name: "変性", temp: "98 °C", time: "10 sec" },
+                            { type: 'loop_step', name: "アニーリング", temp: "55 or 60 °C", time: "15 sec" },
+                            { type: 'loop_step', name: "伸長", temp: "68 °C", time: "1 min / kb" },
+                            { type: 'loop_end' }
+                        ];
+                    }
+                    let extSec = sizeBp < 1000 ? 60 : Math.round((sizeBp / 1000) * 60);
+                    let extMin = Math.floor(extSec / 60);
+                    let remSec = extSec % 60;
+                    let extStr = extMin > 0 ? (remSec > 0 ? `${extMin}分 ${remSec}秒` : `${extMin}分`) : `${extSec}秒`;
+                    return [
+                        { type: 'loop_start', name: "30 Cycles" },
+                        { type: 'loop_step', name: "変性", temp: "98 °C", time: "10 sec" },
+                        { type: 'loop_step', name: "アニーリング", temp: "55 °C", time: "15 sec" },
+                        { type: 'loop_step', name: "伸長", temp: "68 °C", time: extStr },
+                        { type: 'loop_end' }
+                    ];
+                },
+                calcDurationSec: function(sizeBp) {
+                    if (sizeBp === null) return null;
+                    let extSec = sizeBp < 1000 ? 60 : Math.round((sizeBp / 1000) * 60);
+                    return (10 + 15 + extSec + 10) * 30;
+                },
                 ingredients: [{ name: "PrimeSTAR GXL Premix (2x)", amount: 25.0, unit: "µL" }, { name: "Forward Primer (10 µM)", amount: 1.0, unit: "µL" }, { name: "Reverse Primer (10 µM)", amount: 1.0, unit: "µL" }, { name: "滅菌水 (dH<sub>2</sub>O)", amount: 23.0, unit: "µL" }]
             },
             "emerald_amp": {
@@ -1853,13 +1964,33 @@
                 getAdvice: (vol) => `💡 コスパ最強。コロニーPCR、ルーチンPCRに。`,
                 calculateCost: (vol) => `💰 概算コスト: 約 ${Math.round((16.7 / 10) * vol)} 円 (${vol} µLあたり)`,
                 info: { title: "EmeraldAmpについての解説", body: "色素入りでPCR後にそのままゲルにロード可能。大腸菌コロニーPCRなど大量スクリーニングに。" },
-                cycles: [
-                    { type: 'loop_start', name: "30 Cycles" },
-                    { type: 'loop_step', name: "変性", temp: "98 °C", time: "10 sec" },
-                    { type: 'loop_step', name: "アニーリング", temp: "55 or 60 °C", time: "30 sec" },
-                    { type: 'loop_step', name: "伸長", temp: "72 °C", time: "1 min / kb" },
-                    { type: 'loop_end' }
-                ],
+                getCycles: function(sizeBp) {
+                    if (sizeBp === null) {
+                        return [
+                            { type: 'loop_start', name: "30 Cycles" },
+                            { type: 'loop_step', name: "変性", temp: "98 °C", time: "10 sec" },
+                            { type: 'loop_step', name: "アニーリング", temp: "55 or 60 °C", time: "30 sec" },
+                            { type: 'loop_step', name: "伸長", temp: "72 °C", time: "1 min / kb" },
+                            { type: 'loop_end' }
+                        ];
+                    }
+                    let extSec = sizeBp < 1000 ? 60 : Math.round((sizeBp / 1000) * 60);
+                    let extMin = Math.floor(extSec / 60);
+                    let remSec = extSec % 60;
+                    let extStr = extMin > 0 ? (remSec > 0 ? `${extMin}分 ${remSec}秒` : `${extMin}分`) : `${extSec}秒`;
+                    return [
+                        { type: 'loop_start', name: "30 Cycles" },
+                        { type: 'loop_step', name: "変性", temp: "98 °C", time: "10 sec" },
+                        { type: 'loop_step', name: "アニーリング", temp: "55 °C", time: "30 sec" },
+                        { type: 'loop_step', name: "伸長", temp: "72 °C", time: extStr },
+                        { type: 'loop_end' }
+                    ];
+                },
+                calcDurationSec: function(sizeBp) {
+                    if (sizeBp === null) return null;
+                    let extSec = sizeBp < 1000 ? 60 : Math.round((sizeBp / 1000) * 60);
+                    return (10 + 30 + extSec + 10) * 30;
+                },
                 ingredients: [{ name: "EmeraldAmp PCR Master Mix (2x)", amount: 25.0, unit: "µL" }, { name: "Forward Primer (10 µM)", amount: 1.0, unit: "µL" }, { name: "Reverse Primer (10 µM)", amount: 1.0, unit: "µL" }, { name: "滅菌水 (dH<sub>2</sub>O)", amount: 23.0, unit: "µL" }]
             }
         };
@@ -1887,6 +2018,7 @@
         }
 
         let cardVolumes = JSON.parse(localStorage.getItem('lab_cardVolumes')) || {};
+        let pcrSizes = JSON.parse(localStorage.getItem('lab_pcrSizes')) || {};
 
         function migrateLegacyVolumes() {
             const legacyMediaVol = parseInt(localStorage.getItem('lab_mediaVolume'), 10);
@@ -1910,6 +2042,10 @@
                     cardVolumes[k] = !isNaN(legacyPcrVol) ? legacyPcrVol : pcrDatabase[k].baseVolume;
                     modified = true;
                 }
+                if (pcrSizes[k] === undefined) {
+                    pcrSizes[k] = null;
+                    modified = true;
+                }
             });
             Object.keys(commonReagentDatabase).forEach(k => {
                 if (cardVolumes[k] === undefined) {
@@ -1925,6 +2061,7 @@
             });
             if (modified) {
                 localStorage.setItem('lab_cardVolumes', JSON.stringify(cardVolumes));
+                localStorage.setItem('lab_pcrSizes', JSON.stringify(pcrSizes));
             }
         }
 
@@ -1937,6 +2074,16 @@
         function setCardVolume(key, vol) {
             cardVolumes[key] = vol;
             localStorage.setItem('lab_cardVolumes', JSON.stringify(cardVolumes));
+        }
+
+        function getPcrSize(key) {
+            if (pcrSizes[key] !== undefined) return pcrSizes[key];
+            return null;
+        }
+
+        function setPcrSize(key, size) {
+            pcrSizes[key] = size;
+            localStorage.setItem('lab_pcrSizes', JSON.stringify(pcrSizes));
         }
 
         let mediaOrderConfig = JSON.parse(localStorage.getItem('lab_mediaOrderConfig')) || [
@@ -2040,7 +2187,6 @@
             syncPreferenceToggleStates();
         }
 
-        // --- チェック機能・リセットバナー制御 ---
         function toggleIngredientCheck(itemEl) {
             if (!checkFeatureEnabled) return;
             itemEl.classList.toggle('checked');
@@ -2141,6 +2287,97 @@
             } else {
                 alert("有効な数値を入力してください。");
             }
+        }
+
+        // --- PCRサイズ選択用モーダル ---
+        let currentEditingPcrSizeKey = "";
+        let pcrSizeKeypadInputStr = "0";
+
+        function openPcrSizeModal(key) {
+            currentEditingPcrSizeKey = key;
+            const currentSize = getPcrSize(key);
+            const sizePresets = [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000];
+
+            const listEl = document.getElementById("pcrSizeOptionsList");
+            listEl.innerHTML = "";
+            listEl.style.removeProperty('display');
+            document.getElementById("pcrSizeKeypadContainer").style.display = "none";
+            
+            const defaultBtn = document.createElement("button");
+            defaultBtn.className = `option-item ${currentSize === null ? 'selected' : ''}`;
+            defaultBtn.style.gridColumn = "span 2";
+            defaultBtn.innerHTML = `<span style="width: 100%; text-align: center;">メーカー推奨条件</span>`;
+            defaultBtn.onclick = () => {
+                setPcrSize(key, null);
+                closeModal('pcrSizeModal');
+                updateView();
+            };
+            listEl.appendChild(defaultBtn);
+
+            sizePresets.forEach(bp => {
+                const label = bp < 1000 ? `${bp} bp未満` : `${bp / 1000} kb`;
+                const btn = document.createElement("button");
+                btn.className = `option-item ${bp === currentSize ? 'selected' : ''}`;
+                btn.textContent = label;
+                btn.onclick = () => {
+                    setPcrSize(key, bp);
+                    closeModal('pcrSizeModal');
+                    updateView();
+                };
+                listEl.appendChild(btn);
+            });
+
+            const customBtn = document.createElement("button");
+            customBtn.className = `option-item ${currentSize !== null && !sizePresets.includes(currentSize) ? 'selected' : ''}`;
+            customBtn.style.gridColumn = "span 2";
+            customBtn.innerHTML = `<span style="width: 100%; text-align: center;">CUSTOM (bp)</span>`;
+            customBtn.onclick = () => {
+                openPcrSizeKeypad();
+            };
+            listEl.appendChild(customBtn);
+
+            openModal('pcrSizeModal');
+        }
+
+        function openPcrSizeKeypad() {
+            const listEl = document.getElementById("pcrSizeOptionsList");
+            if (listEl) listEl.style.setProperty('display', 'none', 'important');
+            document.getElementById("pcrSizeKeypadContainer").style.display = "flex";
+            pcrSizeKeypadInputStr = "0";
+            updatePcrSizeKeypadPreview();
+        }
+
+        function pressPcrSizeKeypad(val) {
+            if (val === 'clear') pcrSizeKeypadInputStr = "0";
+            else if (val === 'backspace') pcrSizeKeypadInputStr = pcrSizeKeypadInputStr.length > 1 ? pcrSizeKeypadInputStr.slice(0, -1) : "0";
+            else pcrSizeKeypadInputStr = pcrSizeKeypadInputStr === "0" ? val : (pcrSizeKeypadInputStr.length < 6 ? pcrSizeKeypadInputStr + val : pcrSizeKeypadInputStr);
+            updatePcrSizeKeypadPreview();
+        }
+
+        function updatePcrSizeKeypadPreview() {
+            document.getElementById("pcrSizeKeypadPreview").textContent = `${pcrSizeKeypadInputStr} bp`;
+        }
+
+        function applyCustomPcrSize() {
+            const num = parseInt(pcrSizeKeypadInputStr, 10);
+            if (!isNaN(num) && num > 0 && currentEditingPcrSizeKey) {
+                setPcrSize(currentEditingPcrSizeKey, num);
+                closeModal('pcrSizeModal');
+                updateView();
+            } else {
+                alert("有効な数値を入力してください。");
+            }
+        }
+
+        function formatDurationHMS(totalSeconds) {
+            const h = Math.floor(totalSeconds / 3600);
+            const m = Math.floor((totalSeconds % 3600) / 60);
+            const s = totalSeconds % 60;
+            let parts = [];
+            if (h > 0) parts.push(`${h}時間`);
+            if (m > 0 || h > 0) parts.push(`${m}分`);
+            parts.push(`${s}秒`);
+            return parts.join(' ');
         }
 
         function getPreferencesCard1Html(idSuffix) {
@@ -2872,6 +3109,17 @@
                     loopItems.forEach((pObj, loopIdx) => {
                         const pKey = pObj.key; const pData = getCardItem(pKey); if (!pData) return;
                         const vol = getCardVolume(pKey);
+                        const pcrSize = getPcrSize(pKey);
+                        const isRecommended = (pcrSize === null);
+                        const sizeLabel = isRecommended ? "メーカー推奨条件" : (pcrSize < 1000 ? `${pcrSize} bp未満` : `${(pcrSize/1000).toFixed(pcrSize%1000===0?0:1)} kb`);
+                        
+                        let headerRightHtml = ``;
+                        if (!isRecommended) {
+                            const totalSec = pdataCalcDuration(pData, pcrSize);
+                            const durationStr = formatDurationHMS(totalSec);
+                            headerRightHtml = `<span style="background: var(--accent-soft); padding: 2px 8px; border-radius: 8px;">⏱️ ${durationStr}</span>`;
+                        }
+
                         const panel = document.createElement("div");
                         panel.className = "card-carousel-panel";
                         panel.innerHTML = `
@@ -2889,6 +3137,12 @@
                                 </div>
                                 <div class="advice-box ${adviceFeatureEnabled ? 'visible' : ''}">${pData.getAdvice(vol)}</div>
                                 <div class="cost-box ${costFeatureEnabled ? 'visible' : ''}">${pData.calculateCost(vol)}</div>
+                                
+                                <div class="pcr-cycle-header" onclick="openPcrSizeModal('${pKey}')" style="${currentPcrMode === 'cycle' ? 'display:flex;' : 'display:none;'}">
+                                    <span>🎯 条件: <b>${sizeLabel}</b></span>
+                                    ${headerRightHtml}
+                                </div>
+
                                 <div class="list-container-wrapper">
                                     <ul class="ingredient-list" id="pcrList_${pKey}_${loopIdx}" style="${currentPcrMode === 'recipe' ? 'display:flex;' : 'display:none;'}"></ul>
                                     <div class="cycle-container" id="pcrCycle_${pKey}_${loopIdx}" style="${currentPcrMode === 'cycle' ? 'display:flex;' : 'display:none;'}"></div>
@@ -2917,17 +3171,22 @@
                             pcrInfoBtn.innerHTML = "<span>このレシピの解説を見る</span>"; recipeList.appendChild(pcrInfoBtn);
                         }
                         const cycleContainer = panel.querySelector(`#pcrCycle_${pKey}_${loopIdx}`);
+                        const cycles = pData.getCycles(pcrSize);
                         let currentGroup = null;
-                        pData.cycles.forEach(cyc => {
+                        cycles.forEach(cyc => {
                             if (cyc.type === 'single') {
                                 const div = document.createElement("div"); div.className = "cycle-single-step";
                                 div.innerHTML = `<div class="cycle-step-left"><span class="cycle-step-name">${cyc.name}</span></div><div class="cycle-main-val"><span>${cyc.temp}</span><span class="cycle-time">${cyc.time}</span></div>`;
+                                div.onclick = () => openPcrSizeModal(pKey);
+                                div.style.cursor = "pointer";
                                 cycleContainer.appendChild(div);
                             } else if (cyc.type === 'divider') {
                                 const div = document.createElement("div"); div.className = "cycle-divider"; div.textContent = cyc.text; cycleContainer.appendChild(div);
                             } else if (cyc.type === 'loop_start') {
                                 currentGroup = document.createElement("div"); currentGroup.className = "cycle-loop-group";
                                 const badge = document.createElement("div"); badge.className = "cycle-loop-badge"; badge.textContent = cyc.name; currentGroup.appendChild(badge);
+                                currentGroup.onclick = () => openPcrSizeModal(pKey);
+                                currentGroup.style.cursor = "pointer";
                                 cycleContainer.appendChild(currentGroup);
                             } else if (cyc.type === 'loop_step') {
                                 if (currentGroup) {
@@ -3128,7 +3387,7 @@
                     const activeEcoliIndex = visibleEcoliList.findIndex(ec => ec.key === currentEcoliKey);
                     if (activeEcoliIndex !== -1) {
                         const targetScrollLeft = (activeEcoliIndex + 1) * ecoliCarouselContainer.clientWidth;
-                        if (instantJump) { ecoliCarouselContainer.style.scrollBehavior = 'auto'; ecoliCarouselContainer.style.scrollLeft = targetScrollLeft; requestAnimationFrame(() => { requestAnimationFrame(() => { ecoliCarouselContainer.style.scrollBehavior = 'smooth'; }); }); }
+                        if (instantJump) { ecoliCarouselContainer.style.scrollBehavior = 'auto'; ecoliCarouselContainer.scrollLeft = targetScrollLeft; requestAnimationFrame(() => { requestAnimationFrame(() => { ecoliCarouselContainer.style.scrollBehavior = 'smooth'; }); }); }
                         else setTimeout(() => { ecoliCarouselContainer.scrollLeft = targetScrollLeft; }, 10);
                     }
                     bindInfiniteCarousel(ecoliCarouselContainer, visibleEcoliList, (newKey) => { currentEcoliKey = newKey; localStorage.setItem('lab_ecoliKey', newKey); });
@@ -3150,8 +3409,8 @@
                     const activeAgroIndex = visibleAgroList.findIndex(a => a.key === currentAgroKey);
                     if (activeAgroIndex !== -1) {
                         const targetScrollLeft = (activeAgroIndex + 1) * agroCarouselContainer.clientWidth;
-                        if (instantJump) { agroCarouselContainer.style.scrollBehavior = 'auto'; agroCarouselContainer.style.scrollLeft = targetScrollLeft; requestAnimationFrame(() => { requestAnimationFrame(() => { agroCarouselContainer.style.scrollBehavior = 'smooth'; }); }); }
-                        else setTimeout(() => { agroCarouselContainer.style.scrollBehavior = 'smooth'; }, 10);
+                        if (instantJump) { agroCarouselContainer.style.scrollBehavior = 'auto'; agroCarouselContainer.scrollLeft = targetScrollLeft; requestAnimationFrame(() => { requestAnimationFrame(() => { agroCarouselContainer.style.scrollBehavior = 'smooth'; }); }); }
+                        else setTimeout(() => { agroCarouselContainer.scrollLeft = targetScrollLeft; }, 10);
                     }
                     bindInfiniteCarousel(agroCarouselContainer, visibleAgroList, (newKey) => { currentAgroKey = newKey; localStorage.setItem('lab_agroKey', newKey); });
                 }
@@ -3172,7 +3431,7 @@
                     const activeProtoIndex = visibleProtoList.findIndex(p => p.key === currentProtoKey);
                     if (activeProtoIndex !== -1) {
                         const targetScrollLeft = (activeProtoIndex + 1) * protoCarouselContainer.clientWidth;
-                        if (instantJump) { protoCarouselContainer.style.scrollBehavior = 'auto'; protoCarouselContainer.style.scrollLeft = targetScrollLeft; requestAnimationFrame(() => { requestAnimationFrame(() => { protoCarouselContainer.style.scrollBehavior = 'smooth'; }); }); }
+                        if (instantJump) { protoCarouselContainer.style.scrollBehavior = 'auto'; protoCarouselContainer.scrollLeft = targetScrollLeft; requestAnimationFrame(() => { requestAnimationFrame(() => { protoCarouselContainer.style.scrollBehavior = 'smooth'; }); }); }
                         else setTimeout(() => { protoCarouselContainer.scrollLeft = targetScrollLeft; }, 10);
                     }
                     bindInfiniteCarousel(protoCarouselContainer, visibleProtoList, (newKey) => { currentProtoKey = newKey; localStorage.setItem('lab_protoKey', newKey); });
@@ -3249,6 +3508,14 @@
             buildPcrModals();
             buildGuideModals();
             updateLauncherBar();
+        }
+
+        function pdataCalcDuration(pData, sizeBp) {
+            if (sizeBp === null) return null;
+            if (typeof pData.calcDurationSec === 'function') {
+                return pData.calcDurationSec(sizeBp);
+            }
+            return null;
         }
 
         // --- 全カテゴリー統一の無限ループカルーセル処理 ---
