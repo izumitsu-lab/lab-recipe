@@ -19,6 +19,7 @@
             --accent-soft: rgba(41, 151, 255, 0.15);
             --reset-btn-bg: #ff453a;
             --border-radius: 24px;
+            --app-height: 100vh;
         }
 
         body.light-theme {
@@ -136,25 +137,25 @@
         }
 
         html {
-            height: 100%;
             width: 100%;
+            height: 100%;
             overflow: hidden;
+            background-color: var(--bg-color);
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-primary);
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
             width: 100%;
             max-width: 760px;
             margin: 0 auto;
+            height: var(--app-height);
             display: flex;
             flex-direction: column;
-            padding: calc(12px + env(safe-area-inset-top, 0px)) 16px calc(10px + env(safe-area-inset-bottom, 0px)) 16px;
+            padding-top: calc(8px + env(safe-area-inset-top, 0px));
+            padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+            padding-left: 16px;
+            padding-right: 16px;
             justify-content: space-between;
             overflow: hidden;
             opacity: 0;
@@ -1242,7 +1243,7 @@
         }
 
         @media screen and (min-width: 600px) {
-            body { padding: calc(18px + env(safe-area-inset-top, 0px)) 24px calc(16px + env(safe-area-inset-bottom, 0px)) 24px !important; }
+            body { padding-top: calc(14px + env(safe-area-inset-top, 0px)) !important; padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px)) !important; padding-left: 24px !important; padding-right: 24px !important; }
             .main-display { padding: 24px 30px !important; border-radius: 30px !important; }
             .media-eyebrow { font-size: 13px !important; letter-spacing: 1px !important; }
             .media-title { font-size: 25px !important; }
@@ -1456,10 +1457,14 @@
     </div>
 
     <script>
-        // スタンドアロン起動（ホーム画面追加）の検出とクラス付与
-        if (window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches) {
-            document.documentElement.classList.add('standalone-mode');
+        // 画面の本当の高さ（実際の物理描画領域）を動的取得してCSSに同期
+        function updateAppHeight() {
+            const doc = document.documentElement;
+            doc.style.setProperty('--app-height', `${window.innerHeight}px`);
         }
+        window.addEventListener('resize', updateAppHeight);
+        window.addEventListener('orientationchange', () => { setTimeout(updateAppHeight, 150); });
+        updateAppHeight();
 
         function getDishAdvice(vol) {
             const minDishes = Math.round(vol / 7);
@@ -3101,8 +3106,8 @@
                     const activeAddIndex = visibleAddList.findIndex(a => a.key === currentAdditiveKey);
                     if (activeAddIndex !== -1) {
                         const targetScrollLeft = (activeAddIndex + 1) * additiveCarouselContainer.clientWidth;
-                        if (instantJump) { additiveCarouselContainer.style.scrollBehavior = 'auto'; additiveCarouselContainer.scrollLeft = targetScrollLeft; requestAnimationFrame(() => { requestAnimationFrame(() => { additiveCarouselContainer.style.scrollBehavior = 'smooth'; }); }); }
-                        else setTimeout(() => { additiveCarouselContainer.scrollLeft = targetScrollLeft; }, 10);
+                        if (instantJump) { additiveCarouselContainer.style.scrollBehavior = 'auto'; additiveCarouselContainer.style.scrollLeft = targetScrollLeft; requestAnimationFrame(() => { requestAnimationFrame(() => { additiveCarouselContainer.style.scrollBehavior = 'smooth'; }); }); }
+                        else setTimeout(() => { additiveCarouselContainer.style.scrollBehavior = 'smooth'; }, 10);
                     }
                     bindInfiniteCarousel(additiveCarouselContainer, visibleAddList, (newKey) => { currentAdditiveKey = newKey; localStorage.setItem('lab_additiveKey', newKey); });
                 }
@@ -3123,7 +3128,7 @@
                     const activeEcoliIndex = visibleEcoliList.findIndex(ec => ec.key === currentEcoliKey);
                     if (activeEcoliIndex !== -1) {
                         const targetScrollLeft = (activeEcoliIndex + 1) * ecoliCarouselContainer.clientWidth;
-                        if (instantJump) { ecoliCarouselContainer.style.scrollBehavior = 'auto'; ecoliCarouselContainer.scrollLeft = targetScrollLeft; requestAnimationFrame(() => { requestAnimationFrame(() => { ecoliCarouselContainer.style.scrollBehavior = 'smooth'; }); }); }
+                        if (instantJump) { ecoliCarouselContainer.style.scrollBehavior = 'auto'; ecoliCarouselContainer.style.scrollLeft = targetScrollLeft; requestAnimationFrame(() => { requestAnimationFrame(() => { ecoliCarouselContainer.style.scrollBehavior = 'smooth'; }); }); }
                         else setTimeout(() => { ecoliCarouselContainer.scrollLeft = targetScrollLeft; }, 10);
                     }
                     bindInfiniteCarousel(ecoliCarouselContainer, visibleEcoliList, (newKey) => { currentEcoliKey = newKey; localStorage.setItem('lab_ecoliKey', newKey); });
@@ -3145,8 +3150,8 @@
                     const activeAgroIndex = visibleAgroList.findIndex(a => a.key === currentAgroKey);
                     if (activeAgroIndex !== -1) {
                         const targetScrollLeft = (activeAgroIndex + 1) * agroCarouselContainer.clientWidth;
-                        if (instantJump) { agroCarouselContainer.style.scrollBehavior = 'auto'; agroCarouselContainer.scrollLeft = targetScrollLeft; requestAnimationFrame(() => { requestAnimationFrame(() => { agroCarouselContainer.style.scrollBehavior = 'smooth'; }); }); }
-                        else setTimeout(() => { agroCarouselContainer.scrollLeft = targetScrollLeft; }, 10);
+                        if (instantJump) { agroCarouselContainer.style.scrollBehavior = 'auto'; agroCarouselContainer.style.scrollLeft = targetScrollLeft; requestAnimationFrame(() => { requestAnimationFrame(() => { agroCarouselContainer.style.scrollBehavior = 'smooth'; }); }); }
+                        else setTimeout(() => { agroCarouselContainer.style.scrollBehavior = 'smooth'; }, 10);
                     }
                     bindInfiniteCarousel(agroCarouselContainer, visibleAgroList, (newKey) => { currentAgroKey = newKey; localStorage.setItem('lab_agroKey', newKey); });
                 }
@@ -3167,7 +3172,7 @@
                     const activeProtoIndex = visibleProtoList.findIndex(p => p.key === currentProtoKey);
                     if (activeProtoIndex !== -1) {
                         const targetScrollLeft = (activeProtoIndex + 1) * protoCarouselContainer.clientWidth;
-                        if (instantJump) { protoCarouselContainer.style.scrollBehavior = 'auto'; protoCarouselContainer.scrollLeft = targetScrollLeft; requestAnimationFrame(() => { requestAnimationFrame(() => { protoCarouselContainer.style.scrollBehavior = 'smooth'; }); }); }
+                        if (instantJump) { protoCarouselContainer.style.scrollBehavior = 'auto'; protoCarouselContainer.style.scrollLeft = targetScrollLeft; requestAnimationFrame(() => { requestAnimationFrame(() => { protoCarouselContainer.style.scrollBehavior = 'smooth'; }); }); }
                         else setTimeout(() => { protoCarouselContainer.scrollLeft = targetScrollLeft; }, 10);
                     }
                     bindInfiniteCarousel(protoCarouselContainer, visibleProtoList, (newKey) => { currentProtoKey = newKey; localStorage.setItem('lab_protoKey', newKey); });
