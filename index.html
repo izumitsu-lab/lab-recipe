@@ -2369,7 +2369,7 @@
             }
         }
 
-        function formatDurationHMS(totalSeconds) {
+        function formatDurationTimeOnly(totalSeconds) {
             const h = Math.floor(totalSeconds / 3600);
             const m = Math.floor((totalSeconds % 3600) / 60);
             const s = totalSeconds % 60;
@@ -3032,8 +3032,8 @@
                         ${volumeBadgeHtml}
                     </div>
                     ${modeSwitchHtml}
-                    <div class="advice-box ${adviceFeatureEnabled ? 'visible' : ''}">${data.getAdvice ? data.getAdvice(vol) : ''}</div>
-                    <div class="cost-box ${costFeatureEnabled ? 'visible' : ''}">${data.calculateCost ? data.calculateCost(vol) : ''}</div>
+                    <div class="advice-box ${adviceFeatureEnabled && currentPcrMode === 'recipe' ? 'visible' : ''}">${data.getAdvice ? data.getAdvice(vol) : ''}</div>
+                    <div class="cost-box ${costFeatureEnabled && currentPcrMode === 'recipe' ? 'visible' : ''}">${data.calculateCost ? data.calculateCost(vol) : ''}</div>
                     <div class="list-container-wrapper"><ul class="ingredient-list" id="${resetType}List_${loopIdx}"></ul></div>
                     <div class="reset-banner">
                         <span class="reset-text">チェックが入っています</span>
@@ -3116,7 +3116,7 @@
                         let headerRightHtml = ``;
                         if (!isRecommended) {
                             const totalSec = pdataCalcDuration(pData, pcrSize);
-                            const durationStr = formatDurationHMS(totalSec);
+                            const durationStr = formatDurationTimeOnly(totalSec);
                             headerRightHtml = `<span style="background: var(--accent-soft); padding: 2px 8px; border-radius: 8px;">⏱️ ${durationStr}</span>`;
                         }
 
@@ -3135,8 +3135,8 @@
                                     <button class="mode-btn ${currentPcrMode === 'recipe' ? 'active' : ''}" onclick="setPcrMode('recipe')">反応液組成</button>
                                     <button class="mode-btn ${currentPcrMode === 'cycle' ? 'active' : ''}" onclick="setPcrMode('cycle')">サイクル条件</button>
                                 </div>
-                                <div class="advice-box ${adviceFeatureEnabled ? 'visible' : ''}">${pData.getAdvice(vol)}</div>
-                                <div class="cost-box ${costFeatureEnabled ? 'visible' : ''}">${pData.calculateCost(vol)}</div>
+                                <div class="advice-box ${adviceFeatureEnabled && currentPcrMode === 'recipe' ? 'visible' : ''}">${pData.getAdvice(vol)}</div>
+                                <div class="cost-box ${costFeatureEnabled && currentPcrMode === 'recipe' ? 'visible' : ''}">${pData.calculateCost(vol)}</div>
                                 
                                 <div class="pcr-cycle-header" onclick="openPcrSizeModal('${pKey}')" style="${currentPcrMode === 'cycle' ? 'display:flex;' : 'display:none;'}">
                                     <span>🎯 条件: <b>${sizeLabel}</b></span>
@@ -3243,8 +3243,8 @@
                                     <span class="volume-badge" onclick="openCardVolumeModal('${mKey}')">${vol} ${mData.unit || 'mL'}</span>
                                 </div>
                                 ${modeSwitchHtml}
-                                <div class="advice-box ${adviceFeatureEnabled ? 'visible' : ''}">${mData.getAdvice(vol)}</div>
-                                <div class="cost-box ${costFeatureEnabled ? 'visible' : ''}">${mData.calculateCost(vol)}</div>
+                                <div class="advice-box ${adviceFeatureEnabled && currentPcrMode === 'recipe' ? 'visible' : ''}">${mData.getAdvice(vol)}</div>
+                                <div class="cost-box ${costFeatureEnabled && currentPcrMode === 'recipe' ? 'visible' : ''}">${mData.calculateCost(vol)}</div>
                                 <div class="list-container-wrapper"><ul class="ingredient-list" id="mediaList_${mKey}_${loopIdx}"></ul></div>
                                 <div class="reset-banner">
                                     <span class="reset-text">チェックが入っています</span>
@@ -3321,7 +3321,7 @@
                                             <div class="media-title-row"><h1 class="media-title">${eData.fullName}</h1></div>
                                         </div>
                                     </div>
-                                    <div class="advice-box ${adviceFeatureEnabled ? 'visible' : ''}">${eData.advice}</div>
+                                    <div class="advice-box ${adviceFeatureEnabled && currentPcrMode === 'recipe' ? 'visible' : ''}">${eData.advice}</div>
                                     <div class="list-container-wrapper" style="overflow-y: hidden;">
                                         <div class="gel-ladder-wrapper">
                                             <div class="gel-box">
