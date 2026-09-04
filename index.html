@@ -1729,6 +1729,48 @@
                     { bp: "421 bp", top: "85.0%", thick: false }
                 ]
             },
+            "lambda_maker_recipe": {
+                name: "ラムダマーカー作成",
+                fullName: "ラムダマーカー作製レシピ",
+                eyebrow: "Electrophoresis Recipe",
+                type: "recipe",
+                baseVolume: 900,
+                unit: "µL",
+                hasVolume: true,
+                presets: [900],
+                hasModes: true,
+                modeLabels: ["10x Loading Dye", "6x Loading Dye (滅菌済)"],
+                getAdvice: (vol) => `💡 37℃で3時間処理後、Loading Dyeを添加`,
+                calculateCost: (vol) => `💰 概算コスト: -`,
+                info: {
+                    title: "ラムダマーカー作製についての解説",
+                    body: "ラムダDNAを制限酵素EcoT14iで処理してDNAマーカーを自作するレシピです。<br><br><strong>【反応条件】</strong><br>37℃で3時間インキュベートし、その後Loading Dyeを加えます。<br>・10x Loading Dyeを使用する場合: <b>100 µL</b>添加<br>・滅菌済6x Loading Dyeを使用する場合: <b>180 µL</b>添加"
+                },
+                modes: {
+                    "dye10x": {
+                        ingredients: [
+                            { name: "ラムダDNA (OD 7.7)", amount: 130.0, unit: "µL" },
+                            { name: "10x H Buffer", amount: 90.0, unit: "µL" },
+                            { name: "制限酵素 EcoT14i", amount: 5.0, unit: "µL" },
+                            { name: "滅菌水", amount: 675.0, unit: "µL" }
+                        ],
+                        postIngredients: [
+                            { name: "10x Loading Dye (滅菌済)", amount: 100.0, unit: "µL" }
+                        ]
+                    },
+                    "dye6x": {
+                        ingredients: [
+                            { name: "ラムダDNA (OD 7.7)", amount: 130.0, unit: "µL" },
+                            { name: "10x H Buffer", amount: 90.0, unit: "µL" },
+                            { name: "制限酵素 EcoT14i", amount: 5.0, unit: "µL" },
+                            { name: "滅菌水", amount: 675.0, unit: "µL" }
+                        ],
+                        postIngredients: [
+                            { name: "6x Loading Dye (滅菌済)", amount: 180.0, unit: "µL" }
+                        ]
+                    }
+                }
+            },
             "ladder_100bp": {
                 name: "100bpラダー", fullName: "100bp DNAラダーマーカー", eyebrow: "Electrophoresis Marker", type: "pseudo_ladder", hasVolume: false,
                 advice: "💡 100〜1,500 bpのサイズ識別用（500, 1000, 1500 bpは太い基準バンド）",
@@ -1757,7 +1799,7 @@
                 ingredients: [{ name: "蒸留水", amount: 100.0, unit: "mL" }, { name: "GelRed (10000x)", amount: 30.0, unit: "µL" }]
             },
             "tae_50x": {
-                name: "50xTAEバッファ", fullName: "50xTAE バッファ", eyebrow: "Electrophoresis Buffer", type: "recipe", baseVolume: 1000, unit: "mL", presets: [25, 50, 100, 200, 500, 1000], hasVolume: true,
+                name: "50xTAEバッファ", fullName: "50xTAE バッファ", eyebrow: "Electrophoresis Buffer", type: "recipe", baseVolume: 1000, unit: "mL", presets: [100, 200, 500, 1000], hasVolume: true,
                 getAdvice: (vol) => `💡 電気泳動用 50倍濃縮ストックバッファ`, calculateCost: (vol) => `💰 概算コスト: -`,
                 info: { title: "50xTAEバッファについての解説", body: "蒸留水で1xに希釈（50倍希釈）してゲル作製および泳動槽に満たして使用します。" },
                 ingredients: [{ name: "Tris (トリス塩基)", amount: 242.0, unit: "g" }, { name: "酢酸 (氷酢酸)", amount: 57.1, unit: "mL" }, { name: "0.5M EDTA (pH 8.0)", amount: 100.0, unit: "mL" }, { name: "蒸留水 (メスアップ)", amount: 1000.0, unit: "mLまで" }]
@@ -1765,7 +1807,7 @@
             "loading_dye_6x": {
                 name: "6xLoading Dye", fullName: "6x Loading Dye", eyebrow: "Electrophoresis Buffer", type: "recipe", baseVolume: 100, unit: "mL", presets: [25, 50, 100, 200, 500, 1000], hasVolume: true,
                 getAdvice: (vol) => `💡 染色液につき衣服等の付着に注意・保護具着用`, calculateCost: (vol) => `💰 概算コスト: -`,
-                info: { title: "6x Loading Dyeについての解説", body: "70mLのTEバッファに色素を完全に溶かした後、グリセロールを添加して混合します。白衣・手袋着用推奨。" },
+                info: { title: "6x Loading Dyeについての解説", body: "70mLのTEバッファに色素を完全に溶かしこんだ後、グリセロールを添加して混合します。白衣・手袋着用推奨。" },
                 ingredients: [{ name: "TEバッファ", amount: 70.0, unit: "mL" }, { name: "ブロモフェノールブルー", amount: 0.25, unit: "g" }, { name: "キシレンシアノール", amount: 0.25, unit: "g" }, { name: "グリセロール", amount: 30.0, unit: "mL" }]
             },
             "ethanol_70": {
@@ -1841,7 +1883,7 @@
                 ingredients: [{ name: "PEG", amount: 40.0, unit: "g" }, { name: "ソルビトール", amount: 21.8, unit: "g" }, { name: "CaCl<sub>2</sub>・2H<sub>2</sub>O", amount: 0.736, unit: "g" }, { name: "1M Tris-HCl (pH7.5)", amount: 1000, unit: "µL" }, { name: "2N NaOH", amount: 300, unit: "µL" }, { name: "Water (メスアップ)", amount: 100.0, unit: "mLまで" }]
             },
             "cell_wall_enzyme": {
-                name: "細胞壁分解酵素", fullName: "細胞壁分解酵素溶液", eyebrow: "Protoplasting Enzyme", type: "recipe", baseVolume: 50, unit: "mL", presets: [25, 50, 100, 200, 500], hasVolume: true,
+                name: "細胞壁分解酵素", fullName: "細胞壁分解酵素溶液", eyebrow: "Protoplasting Enzyme", type: "recipe", baseVolume: 50, unit: "mL", presets: [20, 30, 40, 50], hasVolume: true,
                 getAdvice: (vol) => `💡 フィルター滅菌して使用`, calculateCost: (vol) => `💰 概算コスト: -`,
                 info: { title: "細胞壁分解酵素溶液についての解説", body: "糸状菌の細胞壁を消化してプロトプラスト化します。酵素が失活するため加熱滅菌不可、フィルター滅菌を使用。" },
                 ingredients: [{ name: "等張液", amount: 50.0, unit: "mL" }, { name: "Vinotaste Pro", amount: 2.5, unit: "g" }, { name: "キタラーゼ", amount: 0.5, unit: "g" }]
@@ -2091,10 +2133,10 @@
         ];
 
         let electrophoresisOrderConfig = JSON.parse(localStorage.getItem('lab_electrophoresisOrderConfig')) || [
-            { key: "lambda_marker", visible: true }, { key: "ladder_100bp", visible: true }, { key: "loading_dye_6x", visible: true }, { key: "gel_red", visible: true }, { key: "tae_50x", visible: true }
+            { key: "lambda_marker", visible: true }, { key: "lambda_maker_recipe", visible: true }, { key: "ladder_100bp", visible: true }, { key: "loading_dye_6x", visible: true }, { key: "gel_red", visible: true }, { key: "tae_50x", visible: true }
         ];
-        if (!electrophoresisOrderConfig.some(e => e.key === "ladder_100bp")) {
-            electrophoresisOrderConfig.splice(1, 0, { key: "ladder_100bp", visible: true });
+        if (!electrophoresisOrderConfig.some(e => e.key === "lambda_maker_recipe")) {
+            electrophoresisOrderConfig.splice(1, 0, { key: "lambda_maker_recipe", visible: true });
         }
 
         let additiveOrderConfig = JSON.parse(localStorage.getItem('lab_additiveOrderConfig')) || [
@@ -2120,6 +2162,7 @@
         let favorites = JSON.parse(localStorage.getItem('lab_favorites')) || [];
         let currentMediaMode = "stock"; 
         let currentSobMode = "stock";
+        let currentLambdaMakerMode = "dye10x";
         let currentViewIndex = parseInt(localStorage.getItem('lab_viewIndex'), 10) || 0;
         let currentMediaKey = localStorage.getItem('lab_mediaKey') || "cm";
 
@@ -2829,7 +2872,11 @@
                 const btn = document.createElement("button");
                 btn.className = `option-item ${key === currentElecKey ? 'selected' : ''}`;
                 btn.innerHTML = item.name;
-                btn.onclick = () => { currentElecKey = key; localStorage.setItem('lab_elecKey', key); closeModal('electrophoresisModal'); updateView(true); };
+                btn.onclick = () => {
+                    currentElecKey = key; localStorage.setItem('lab_elecKey', key);
+                    if (item.hasModes) currentLambdaMakerMode = Object.keys(item.modes)[0];
+                    closeModal('electrophoresisModal'); updateView(true);
+                };
                 elecListEl.appendChild(btn);
             });
         }
@@ -2944,6 +2991,7 @@
         function setPcrMode(mode) { currentPcrMode = mode; updateView(); }
         function setMediaMode(modeKey) { currentMediaMode = modeKey; updateView(); }
         function setSobMode(modeKey) { currentSobMode = modeKey; updateView(); }
+        function setLambdaMakerMode(modeKey) { currentLambdaMakerMode = modeKey; updateView(); }
 
         function toggleCheckFeature(el) {
             checkFeatureEnabled = el ? el.checked : !checkFeatureEnabled;
@@ -3013,11 +3061,12 @@
             let modeSwitchHtml = "";
             if (data.hasModes) {
                 const modeKeys = Object.keys(data.modes);
-                if (!data.modes[currentSobMode]) currentSobMode = modeKeys[0];
+                let currentActiveMode = (itemKey === 'lambda_maker_recipe') ? currentLambdaMakerMode : currentSobMode;
+                if (!data.modes[currentActiveMode]) currentActiveMode = modeKeys[0];
                 modeSwitchHtml = `
                     <div class="mode-switch-container">
-                        <button class="mode-btn ${currentSobMode === modeKeys[0] ? 'active' : ''}" onclick="setSobMode('${modeKeys[0]}')">${data.modeLabels[0]}</button>
-                        <button class="mode-btn ${currentSobMode === modeKeys[1] ? 'active' : ''}" onclick="setSobMode('${modeKeys[1]}')">${data.modeLabels[1]}</button>
+                        <button class="mode-btn ${currentActiveMode === modeKeys[0] ? 'active' : ''}" onclick="${itemKey === 'lambda_maker_recipe' ? "setLambdaMakerMode('" + modeKeys[0] + "')" : "setSobMode('" + modeKeys[0] + "')"}">${data.modeLabels[0]}</button>
+                        <button class="mode-btn ${currentActiveMode === modeKeys[1] ? 'active' : ''}" onclick="${itemKey === 'lambda_maker_recipe' ? "setLambdaMakerMode('" + modeKeys[1] + "')" : "setSobMode('" + modeKeys[1] + "')"}">${data.modeLabels[1]}</button>
                     </div>
                 `;
             }
@@ -3043,7 +3092,8 @@
             `;
             const listContainer = panel.querySelector(`#${resetType}List_${loopIdx}`);
             const ratio = vol / data.baseVolume;
-            let currentIngredients = (data.hasModes && data.modes[currentSobMode]) ? data.modes[currentSobMode].ingredients : data.ingredients;
+            let activeModeKey = (data.hasModes && itemKey === 'lambda_maker_recipe') ? currentLambdaMakerMode : ((data.hasModes && data.modes[currentSobMode]) ? currentSobMode : null);
+            let currentIngredients = (data.hasModes && activeModeKey && data.modes[activeModeKey]) ? data.modes[activeModeKey].ingredients : data.ingredients;
 
             currentIngredients.forEach(ing => {
                 let formatted = ing.amount;
@@ -3061,11 +3111,11 @@
                 listContainer.appendChild(li);
             });
 
-            let currentPostIngredients = (data.hasModes && data.modes[currentSobMode]) ? (data.modes[currentSobMode].postIngredients || []) : (data.postIngredients || []);
+            let currentPostIngredients = (data.hasModes && activeModeKey && data.modes[activeModeKey]) ? (data.modes[activeModeKey].postIngredients || []) : (data.postIngredients || []);
             if (currentPostIngredients.length > 0) {
                 const sectionHeader = document.createElement("div");
                 sectionHeader.className = "recipe-section-header";
-                sectionHeader.innerHTML = `⚡ オートクレーブ後に追加`;
+                sectionHeader.innerHTML = `⚡ 処理後・追加試薬`;
                 listContainer.appendChild(sectionHeader);
 
                 currentPostIngredients.forEach(ing => {
@@ -3366,7 +3416,7 @@
                     if (activeAddIndex !== -1) {
                         const targetScrollLeft = (activeAddIndex + 1) * additiveCarouselContainer.clientWidth;
                         if (instantJump) { additiveCarouselContainer.style.scrollBehavior = 'auto'; additiveCarouselContainer.style.scrollLeft = targetScrollLeft; requestAnimationFrame(() => { requestAnimationFrame(() => { additiveCarouselContainer.style.scrollBehavior = 'smooth'; }); }); }
-                        else setTimeout(() => { additiveCarouselContainer.style.scrollBehavior = 'smooth'; }, 10);
+                        else setTimeout(() => { additiveCarouselContainer.scrollLeft = targetScrollLeft; }, 10);
                     }
                     bindInfiniteCarousel(additiveCarouselContainer, visibleAddList, (newKey) => { currentAdditiveKey = newKey; localStorage.setItem('lab_additiveKey', newKey); });
                 }
